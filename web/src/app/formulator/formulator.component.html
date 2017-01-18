@@ -1,0 +1,37 @@
+<div id="showcase">
+   <div class="container">
+      <div class="section_header">
+         <h3>Least Cost Ration Formulator</h3>
+      </div>
+      <div class="row feature_wrapper">
+         <div class="form-group">
+            <label>Formulation</label>
+            <typeahead [(ngModel)]="selectedFormulation" [list]="formulationsList" [searchProperty]="'searchText'" [displayProperty]="'name'"
+            [maxSuggestions]="6" (suggestionSelected)="onSelect_Formulation($event)" placeholder="Begin typing a formulation">
+            </typeahead>
+            <small class="form-text text-muted">We'll never share your email with anyone else.</small>
+         </div>
+         <label>Feedstuff</label>
+         <div class="row" *ngFor="let item of feedstufffs;">
+            <div class="form-group">
+               <div class="col-md-6">
+                  <typeahead [(ngModel)]="item.selectedFeedstuff" [list]="feedstufffsList" [searchProperty]="'searchText'" [displayProperty]="'name'"
+                  [maxSuggestions]="6" (suggestionSelected)="item.onSelect_Feedstuff($event)" placeholder="Begin typing a feedstuff">
+                  </typeahead>
+               </div>
+               <div class="col-md-2">
+                  <input class="form-control" ng-model="feedstuff.Minimum" type="text" />
+               </div>
+               <div class="col-md-2">
+                  <input class="form-control" ng-model="feedstuff.Maximum" type="text" />
+               </div>
+               <div class="col-md-2">
+                  <div class="form-group number">
+                     <input type="text" ng-model="feedstuff.Cost" class="form-control">
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
