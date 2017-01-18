@@ -5,9 +5,9 @@
     </div>
     <div class="row feature_wrapper">
       <div class="form-group">
-        <label>Formulation</label>
-        <typeahead [(ngModel)]="selectedFormulation" [list]="formulationsList" [searchProperty]="'searchText'" [displayProperty]="'name'"
-          [maxSuggestions]="6" (suggestionSelected)="onSelect_Formulation($event)" placeholder="Begin typing a formulation">
+        <label>Formula</label>
+        <typeahead [(ngModel)]="selectedFormula" [list]="formulaList" [searchProperty]="'searchText'" [displayProperty]="'name'"
+          [maxSuggestions]="6" (suggestionSelected)="onSelect_Formula($event)" placeholder="Begin typing a formula">
         </typeahead>
         <small class="form-text text-muted">We'll never share your email with anyone else.</small>
       </div>

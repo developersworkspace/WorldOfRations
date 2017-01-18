@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 // Services
 import { FeedstuffService } from '../services/feedstuff.service';
+import { FormulaService } from '../services/formula.service';
 
 @Component({
   selector: 'app-formulator',
@@ -10,13 +11,7 @@ import { FeedstuffService } from '../services/feedstuff.service';
 })
 export class FormulatorComponent implements OnInit {
 
-  formulationsList: any[] = [
-    {
-      id: 1,
-      name: 'Test',
-      searchText: 'test hello world'
-    }
-  ];
+  formulaList: any[] = [];
 
   feedstufffsList: any[] = [];
 
@@ -32,18 +27,25 @@ export class FormulatorComponent implements OnInit {
     }
   ];
 
-  selectedFormulation: any = null;
+  selectedFormula: any = null;
 
-  constructor(private feedstuffService: FeedstuffService) { }
+  constructor(private feedstuffService: FeedstuffService, private formulaService: FormulaService) { }
 
   ngOnInit() {
-    this.feedstuffService.getFeedstuff().subscribe((x: any[]) => {
+    this.feedstuffService.listFeedstuff().subscribe((x: any[]) => {
       this.feedstufffsList = x;
-      console.log(x);
+    }, (error: any) => {
+      
+    });
+
+    this.formulaService.listFormula().subscribe((x: any[]) => {
+      this.formulaList = x;
+    }, (error: any) => {
+      
     });
   }
 
-  onSelect_Formulation(item) {
+  onSelect_Formula(item) {
     console.log(item);
   }
 

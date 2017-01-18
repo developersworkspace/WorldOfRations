@@ -12,6 +12,7 @@ import { FormulatorComponent } from './formulator/formulator.component';
 
 // Services
 import { FeedstuffService } from './services/feedstuff.service';
+import { FormulaService } from './services/formula.service';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,7 @@ import { FeedstuffService } from './services/feedstuff.service';
     FormsModule,
     HttpModule
   ],
-  providers: [FeedstuffService],
+  providers: [FeedstuffService, FormulaService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

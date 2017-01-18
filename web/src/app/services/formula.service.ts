@@ -7,7 +7,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 @Injectable()
-export class FeedstuffService {
+export class FormulaService {
 
 
   private feedstuffs: any[] = [
@@ -21,8 +21,8 @@ export class FeedstuffService {
 
   constructor(private http: Http) { }
 
-  public listFeedstuff() {
-    return this.http.get('http://localhost:9001/api/feedstuff/list')
+  public listFormula() {
+    return this.http.get('http://localhost:9001/api/formula/list')
       .map((res: Response) => res.json());
   }
 

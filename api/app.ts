@@ -2,6 +2,9 @@
 
 import express = require("express");
 
+import feedstuffRoute = require('./routes/feedstuff');
+import formulaRoute = require('./routes/formula');
+
 export class WebApi {
     /**
      * @param app - express application
@@ -20,9 +23,8 @@ export class WebApi {
     }
 
     private configureRoutes(app: express.Express) {
-        //app.use("/customer", customerRouter );
-        // mount more routers here
-        // e.g. app.use("/organisation", organisationRouter);
+        app.use("/api/feedstuff", feedstuffRoute);
+        app.use("/api/formula", formulaRoute);
     }
 
     public run() {
@@ -31,7 +33,7 @@ export class WebApi {
 }
 
 
-let port = 5000; 
+let port = 9001; 
 let api = new WebApi(express(), port);
 api.run();
 console.info(`listening on ${port}`);
