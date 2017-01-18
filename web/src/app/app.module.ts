@@ -3,10 +3,15 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
+// Plugins
 import { Typeahead } from 'ng2-typeahead';
 
+// Components
 import { AppComponent } from './app.component';
 import { FormulatorComponent } from './formulator/formulator.component';
+
+// Services
+import { FeedstuffService } from './services/feedstuff.service';
 
 @NgModule({
   declarations: [
@@ -19,7 +24,7 @@ import { FormulatorComponent } from './formulator/formulator.component';
     FormsModule,
     HttpModule
   ],
-  providers: [],
+  providers: [FeedstuffService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
