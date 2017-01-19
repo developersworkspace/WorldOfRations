@@ -13,7 +13,7 @@ export class FeedstuffService {
 
   constructor(private http: Http) { }
 
-  public listFeedstuff() {
+  public listFeedstuffs() {
     return this.http.get(config.api.uri + '/api/feedstuff/list')
       .map((res: Response) => res.json());
   }
@@ -23,7 +23,7 @@ export class FeedstuffService {
       .map((res: Response) => res.json());
   }
 
-  public listExampleFeedstuff() {
+  public listExampleFeedstuffs() {
     return this.http.get(config.api.uri + '/api/feedstuff/listExample')
       .map((res: Response) => {
         let result: any[] = res.json();
@@ -36,7 +36,7 @@ export class FeedstuffService {
               name: result[i].name,
               searchText: result[i].searchText
             },
-            mininum: result[i].minimum,
+            minimum: result[i].minimum,
             maximum: result[i].maximum,
             cost: result[i].cost,
             isLoading: false

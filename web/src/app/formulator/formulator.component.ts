@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 // Services
 import { FeedstuffService } from '../services/feedstuff.service';
 import { FormulaService } from '../services/formula.service';
+import { FormulatorService } from '../services/formulator.service';
 
 @Component({
   selector: 'app-formulator',
@@ -13,36 +14,39 @@ export class FormulatorComponent implements OnInit {
 
   formulaList: any[] = [];
 
-  feedstufffsList: any[] = [];
+  feedstuffList: any[] = [];
 
   feedstufffs: any[] = [];
 
   selectedFormula: any = null;
 
-  constructor(private feedstuffService: FeedstuffService, private formulaService: FormulaService) { }
+  errorMessage: string = null;
+
+  formulatorResult: any = null;
+
+  constructor(private feedstuffService: FeedstuffService, private formulaService: FormulaService, private formulatorService: FormulatorService) { }
 
   ngOnInit() {
-    this.feedstuffService.listFeedstuff().subscribe((x: any[]) => {
-      this.feedstufffsList = x;
+    this.feedstuffService.listFeedstuffs().subscribe((x: any[]) => {
+      this.feedstuffList = x;
     }, (error: any) => {
 
     });
 
-    this.formulaService.listFormula().subscribe((x: any[]) => {
+    this.formulaService.listFormulas().subscribe((x: any[]) => {
       this.formulaList = x;
     }, (error: any) => {
 
     });
 
-    this.feedstuffService.listExampleFeedstuff().subscribe((x: any[]) => {
+    this.feedstuffService.listExampleFeedstuffs().subscribe((x: any[]) => {
       this.feedstufffs = x;
     }, (error: any) => {
 
     });
   }
 
-  update_SuggestedValues(item, instance) {
-    console.log(this.selectedFormula);
+  onUpdate_SuggestedValues(item, instance) {
     if (item != null && this.selectedFormula != null) {
       instance.isLoading = true;
       this.feedstuffService.getSuggestedValues(this.selectedFormula.id, item.id).subscribe((x: any[]) => {
@@ -59,14 +63,14 @@ export class FormulatorComponent implements OnInit {
     this.selectedFormula = item;
 
     for (let i = 0; i < this.feedstufffs.length; i++) {
-      this.update_SuggestedValues(this.feedstufffs[i], this.feedstufffs[i]);
+      this.onUpdate_SuggestedValues(this.feedstufffs[i], this.feedstufffs[i]);
     }
   }
 
   onClick_AddFeedstuff() {
     this.feedstufffs.push({
       selectedFeedstuff: null,
-      mininum: 0,
+      minimum: 0,
       maximum: 1000,
       cost: 4000,
       isLoading: false
@@ -77,8 +81,37 @@ export class FormulatorComponent implements OnInit {
     this.feedstufffs.splice(this.feedstufffs.indexOf(item), 1);
   }
 
-  onClick_Formulate() {
-    console.log(this.feedstufffs);
+  onClick_ResetToDefaults() {
+    this.feedstuffService.listExampleFeedstuffs().subscribe((x: any[]) => {
+      this.feedstufffs = x;
+    }, (error: any) => {
+
+    });
   }
 
+  onClick_Formulate() {
+    if (this.selectedFormula == null) {
+      this.errorMessage = 'Please select a formula'
+    } else {
+      this.errorMessage = null;
+      let feedstuffs: any[] = [];
+      for (let i = 0; i < this.feedstufffs.length; i++) {
+        if (this.feedstufffs[i].selectedFeedstuff != null) {
+          feedstuffs.push({
+            id: this.feedstufffs[i].selectedFeedstuff.id,
+            cost: this.feedstufffs[i].cost,
+            minimum: this.feedstufffs[i].minimum,
+            maximum: this.feedstufffs[i].maximum
+          });
+        }
+      }
+      let obj = {
+        formulaId: this.selectedFormula.id,
+        feedstuffs: feedstuffs
+      }
+      this.formulatorService.formulate(obj).subscribe((x: any) => {
+        this.formulatorResult = x;
+      });
+    }
+  }
 }

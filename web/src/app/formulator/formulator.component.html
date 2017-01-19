@@ -4,6 +4,7 @@
       <h3>Least Cost Ration Formulator</h3>
     </div>
     <div class="row feature_wrapper">
+      <p class="text-danger">{{errorMessage}}</p>
       <div class="form-group">
         <label>Formula</label>
         <typeahead [(ngModel)]="selectedFormula" [list]="formulaList" [searchProperty]="'searchText'" [displayProperty]="'name'"
@@ -12,18 +13,19 @@
         <small class="form-text text-muted">We'll never share your email with anyone else.</small>
       </div>
       <div class="form-group">
-        <label>Feedstuff</label>
-        <button class="btn btn-primary pull-right" (click)="onClick_AddFeedstuff()">Add Feedstuff</button>
+        <label>Feedstuffs</label>
+        <button class="btn btn-primary pull-right padded" (click)="onClick_AddFeedstuff()"><i class="fa fa-plus"></i>&nbsp;Add Feedstuff</button>
+        <button class="btn btn-default pull-right padded" (click)="onClick_ResetToDefaults()"><i class="fa fa-undo"></i>&nbsp;Reset to Defaults</button>
       </div>
       <div class="row" *ngFor="let item of feedstufffs;">
         <div class="form-group">
           <div class="col-md-4">
-            <typeahead [(ngModel)]="item.selectedFeedstuff" [list]="feedstufffsList" [searchProperty]="'searchText'" [displayProperty]="'name'"
-              [maxSuggestions]="6" (suggestionSelected)="update_SuggestedValues($event, item)" placeholder="Begin typing a feedstuff">
+            <typeahead [(ngModel)]="item.selectedFeedstuff" [list]="feedstuffList" [searchProperty]="'searchText'" [displayProperty]="'name'"
+              [maxSuggestions]="6" (suggestionSelected)="onUpdate_SuggestedValues($event, item)" placeholder="Begin typing a feedstuff">
             </typeahead>
           </div>
           <div class="col-md-2">
-            <input class="form-control" [(ngModel)]="item.mininum" type="text" />
+            <input class="form-control" [(ngModel)]="item.minimum" type="text" />
           </div>
           <div class="col-md-2">
             <input class="form-control" [(ngModel)]="item.maximum" type="text" />
@@ -35,13 +37,26 @@
           </div>
           <div class="col-md-2">
             <i class="fa fa-refresh fa-spin pull-left margin-10" *ngIf="item.isLoading"></i>
-            <button class="btn btn-danger pull-right" (click)="onClick_RemoveFeedstuff(item)">Remove</button>
+            <button class="btn btn-danger pull-right" (click)="onClick_RemoveFeedstuff(item)"><i class="fa fa-trash"></i></button>
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col-md-12">
-          <button class="btn btn-success pull-right" (click)="onClick_Formulate()">Formulate</button>
+          <button class="btn btn-success pull-right" (click)="onClick_Formulate()"><i class="fa fa-calculator"></i>&nbsp;Formulate</button>
+        </div>
+      </div>
+      <br/>
+      <br/>
+      <div class="row" *ngIf="formulatorResult != null && formulatorResult.feasible">
+        <div class="col-md-12">
+          <div class="alert alert-success">
+            <p>
+              We have successfully formulated a ration with a total cost of {{formulatorResult.cost}}.
+              <br />
+              <br /> Click <a href="/LeastCostRationFormulator/Formulation">here</a> to view the details of this formulation.
+            </p>
+          </div>
         </div>
       </div>
     </div>

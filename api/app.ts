@@ -4,6 +4,7 @@ import express = require("express");
 
 import feedstuffRoute = require('./routes/feedstuff');
 import formulaRoute = require('./routes/formula');
+import formulatorRoute = require('./routes/formulator');
 
 export class WebApi {
     /**
@@ -25,6 +26,7 @@ export class WebApi {
     private configureRoutes(app: express.Express) {
         app.use("/api/feedstuff", feedstuffRoute);
         app.use("/api/formula", formulaRoute);
+        app.use("/api/formulator", formulatorRoute);
     }
 
     public run() {

@@ -5,7 +5,8 @@ import config from './../config';
 
 export class FormulaService {
 
-    constructor() { }
+    constructor() {
+     }
 
     public listFormula() {
         return new Promise((resolve: Function, reject: Function) => {
