@@ -1,6 +1,7 @@
 /// <reference path="./typings/index.d.ts"/>
 
 import express = require("express");
+import bodyParser = require('body-parser');
 
 import feedstuffRoute = require('./routes/feedstuff');
 import formulaRoute = require('./routes/formula');
@@ -20,7 +21,8 @@ export class WebApi {
      * @param app - express application
      */
     private configureMiddleware(app: express.Express) {
-        //app.use(requestLogger);
+        app.use(bodyParser.json());
+        app.use(bodyParser.urlencoded({ extended: false }));
     }
 
     private configureRoutes(app: express.Express) {
@@ -30,12 +32,12 @@ export class WebApi {
     }
 
     public run() {
-        this.app.listen(this.port);  
+        this.app.listen(this.port);
     }
 }
 
 
-let port = 9001; 
+let port = 9001;
 let api = new WebApi(express(), port);
 api.run();
 console.info(`listening on ${port}`);

@@ -27,6 +27,30 @@ export class FormulatorService {
         return results;
     }
 
+    public loadFeedstuffWithElements(feedstuffs: Feedstuff[]) {
+        let parent = this;
+        return new Promise((resolve: Function, reject: Function) => {
+            new sql.Connection(config.db)
+                .connect().then(function (connection: any) {
+                    let listOfPromise = [];
+                    for (let i = 0; i < feedstuffs.length; i++) {
+                        listOfPromise.push(parent.loadFeedstuffElements(connection, feedstuffs[i]));
+                    }
+
+                    Promise.all(listOfPromise).then((values) => {
+                        resolve(values);
+                    });
+                });
+        });
+    }
+
+    private loadFeedstuffElements(connection: any, feedstuff: Feedstuff) {
+        return new Promise((resolve: Function, reject: Function) => {
+            feedstuff.id = 'hello';
+            resolve(feedstuff);
+        });
+    }
+
     private buildConstraints(feedstuffs: Feedstuff[], formula: Formula) {
         let constraints = {};
 
