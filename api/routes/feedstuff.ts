@@ -25,4 +25,14 @@ router.get('/suggestedValues', function (req: Request, res: Response, next: Func
     })
 });
 
+router.get('/listExample', function (req: Request, res: Response, next: Function) {
+    let feedstuffService = new FeedstuffService();
+
+    feedstuffService.listExampleFeedstuff().then((result: any[]) => {
+        res.json(result);
+    }).catch((err: Error) => {
+        res.json(err.message);
+    })
+});
+
 export = router;

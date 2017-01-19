@@ -6,6 +6,8 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
+import config from './../config';
+
 @Injectable()
 export class FormulaService {
 
@@ -22,7 +24,7 @@ export class FormulaService {
   constructor(private http: Http) { }
 
   public listFormula() {
-    return this.http.get('http://localhost:9001/api/formula/list')
+    return this.http.get(config.api.uri + '/api/formula/list')
       .map((res: Response) => res.json());
   }
 

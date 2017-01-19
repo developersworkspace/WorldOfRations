@@ -15,15 +15,7 @@ export class FormulatorComponent implements OnInit {
 
   feedstufffsList: any[] = [];
 
-  feedstufffs: any[] = [
-    {
-      selectedFeedstuff: null,
-      mininum: 0,
-      maximum: 1000,
-      cost: 4000,
-      isLoading: false
-    }
-  ];
+  feedstufffs: any[] = [];
 
   selectedFormula: any = null;
 
@@ -38,6 +30,12 @@ export class FormulatorComponent implements OnInit {
 
     this.formulaService.listFormula().subscribe((x: any[]) => {
       this.formulaList = x;
+    }, (error: any) => {
+
+    });
+
+    this.feedstuffService.listExampleFeedstuff().subscribe((x: any[]) => {
+      this.feedstufffs = x;
     }, (error: any) => {
 
     });
@@ -60,9 +58,9 @@ export class FormulatorComponent implements OnInit {
   onSelect_Formula(item) {
     this.selectedFormula = item;
 
-    for (let i = 0; i < this.feedstufffs.length; i ++) {
+    for (let i = 0; i < this.feedstufffs.length; i++) {
       this.update_SuggestedValues(this.feedstufffs[i], this.feedstufffs[i]);
-    } 
+    }
   }
 
   onClick_AddFeedstuff() {
@@ -77,6 +75,10 @@ export class FormulatorComponent implements OnInit {
 
   onClick_RemoveFeedstuff(item) {
     this.feedstufffs.splice(this.feedstufffs.indexOf(item), 1);
+  }
+
+  onClick_Formulate() {
+    console.log(this.feedstufffs);
   }
 
 }
