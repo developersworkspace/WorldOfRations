@@ -8,7 +8,7 @@ let formulatorService = new FormulatorService();
 
 let formulation = new Formulation();
 
-let formula = new Formula();
+let formula = new Formula('');
 
 formula.elements.push(new Element('', 'Protein', 30, 100000, -1));
 formula.elements.push(new Element('', 'Energy', 250, 100000, -1));

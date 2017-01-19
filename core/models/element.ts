@@ -4,6 +4,7 @@ export class Element {
     minimum: number;
     maximum: number;
     value: number;
+    unit: string;
 
     constructor(id, name, minimum, maximum, value) {
         this.id = id;

@@ -10,7 +10,7 @@ export class FeedstuffService {
     public listFeedstuff() {
         return new Promise((resolve: Function, reject: Function) => {
             new sql.Connection(config.db)
-                .connect().then(function (connection: any) {
+                .connect().then((connection: any) => {
                     new sql.Request(connection)
                         .execute('[dbo].[listFeedstuff]').then(function (recordsets: any[]) {
                             resolve(recordsets[0]);
@@ -24,7 +24,7 @@ export class FeedstuffService {
     public listExampleFeedstuff() {
         return new Promise((resolve: Function, reject: Function) => {
             new sql.Connection(config.db)
-                .connect().then(function (connection: any) {
+                .connect().then((connection: any) => {
                     new sql.Request(connection)
                         .execute('[dbo].[listExampleFeedstuff]').then(function (recordsets: any[]) {
                             resolve(recordsets[0]);
@@ -38,7 +38,7 @@ export class FeedstuffService {
     public getSuggestedValues(formulaId: string, feedstuffId: string) {
         return new Promise((resolve: Function, reject: Function) => {
             new sql.Connection(config.db)
-                .connect().then(function (connection: any) {
+                .connect().then((connection: any) => {
                     new sql.Request(connection)
                         .input('formulaId', sql.UNIQUEIDENTIFIER, formulaId)
                         .input('feedstuffId', sql.UNIQUEIDENTIFIER, feedstuffId)

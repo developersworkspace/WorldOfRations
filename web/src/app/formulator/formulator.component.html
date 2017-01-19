@@ -10,7 +10,7 @@
         <typeahead [(ngModel)]="selectedFormula" [list]="formulaList" [searchProperty]="'searchText'" [displayProperty]="'name'"
           [maxSuggestions]="6" (suggestionSelected)="onSelect_Formula($event)" placeholder="Begin typing a formula">
         </typeahead>
-        <small class="form-text text-muted">We'll never share your email with anyone else.</small>
+        <small class="form-text text-muted">search over 900 formulas</small>
       </div>
       <div class="form-group">
         <label>Feedstuffs</label>
@@ -52,7 +52,7 @@
         <div class="col-md-12">
           <div class="alert alert-success">
             <p>
-              We have successfully formulated a ration with a total cost of {{formulatorResult.cost}}.
+              We have successfully formulated a ration with a total cost of <b>{{formulatorResult.cost | currency:'USD':true}}</b>.
               <br />
               <br /> Click <a href="/LeastCostRationFormulator/Formulation">here</a> to view the details of this formulation.
             </p>
