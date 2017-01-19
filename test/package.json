@@ -1,24 +1,19 @@
 {
-  "name": "core",
+  "name": "test",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "gulp ts & mocha ./services/**/*.js"
   },
   "author": "Barend Erasmus",
   "license": "MIT",
   "dependencies": {
-    "events": "^1.1.1",
-    "express": "^4.14.0",
+    "chai": "^3.5.0",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
     "gulp-typescript": "^3.1.4",
-    "javascript-lp-solver": "^0.4.3",
     "mocha": "^3.2.0",
-    "mssql": "^3.3.0",
-    "tedious": "^1.14.0",
-    "ts-node": "^2.0.0",
-    "typescript": "^2.1.5"
+    "typings": "^2.1.0"
   }
 }

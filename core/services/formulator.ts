@@ -5,6 +5,7 @@ import config from './../config';
 import * as solver from './../node_modules/javascript-lp-solver/src/solver';
 import { Formulation } from './../models/formulation';
 import { Feedstuff } from './../models/feedstuff';
+import { Formula } from './../models/formula';
 
 export class FormulatorService {
 
@@ -17,37 +18,51 @@ export class FormulatorService {
         let model = {
             "optimize": "cost",
             "opType": "min",
-            "constraints": {
-                "Protein": { "min": 30 },
-                "Energy": { "min": 250 },
-                "Calcium": { "min": 50, "max": 150 },
-                "weight": { "max": 100 },
-                "Fishmeal": { "min": 27 }
-            },
+            "constraints": this.buildConstraints(obj.feedstuffs, obj.formula),
             variables: this.buildVariables(obj.feedstuffs)
         };
 
-        console.log(model);
         results = solver.Solve(model);
-        console.log(results);
+
+        return results;
     }
 
-    private buildVariables(obj: Feedstuff[]) {
+    private buildConstraints(feedstuffs: Feedstuff[], formula: Formula) {
+        let constraints = {};
+
+        for (let i = 0; i < formula.elements.length; i++) {
+            constraints[formula.elements[i].id] = {
+                min: formula.elements[i].minimum,
+                max: formula.elements[i].maximum
+            };
+        }
+
+        for (let i = 0; i < feedstuffs.length; i++) {
+            constraints[feedstuffs[i].id] = {
+                min: feedstuffs[i].minimum,
+                max: feedstuffs[i].maximum
+            };
+        }
+
+        return constraints;
+    }
+
+    private buildVariables(feedstuffs: Feedstuff[]) {
         let variables = {};
 
-        for (let i = 0; i < obj.length; i++) {
+        for (let i = 0; i < feedstuffs.length; i++) {
             let t = {
-                'cost': obj[i].cost,
+                'cost': feedstuffs[i].cost,
                 'weight': 1
             };
 
-            for (let j = 0; j < obj[i].elements.length; j++) {
-                t[obj[i].elements[j].name] = obj[i].elements[j].value;
+            for (let j = 0; j < feedstuffs[i].elements.length; j++) {
+                t[feedstuffs[i].elements[j].id] = feedstuffs[i].elements[j].value;
             }
 
-            t[obj[i].name] = 1;
+            t[feedstuffs[i].id] = 1;
 
-            variables[obj[i].name] = t;
+            variables[feedstuffs[i].id] = t;
         }
 
         return variables;

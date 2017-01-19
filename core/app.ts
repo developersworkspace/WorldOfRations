@@ -2,11 +2,19 @@ import { FormulatorService } from './services/formulator'
 import { Formulation } from './models/formulation';
 import { Feedstuff } from './models/feedstuff';
 import { Element } from './models/element';
+import { Formula } from './models/formula';
 
 let formulatorService = new FormulatorService();
 
 let formulation = new Formulation();
 
+let formula = new Formula();
+
+formula.elements.push(new Element('', 'Protein', 30, 100000, -1));
+formula.elements.push(new Element('', 'Energy', 250, 100000, -1));
+formula.elements.push(new Element('', 'Calcium', 50, 150, -1));
+
+formulation.formula = formula;
 
 let maize = new Feedstuff('', 'Maize', 'Maize', 0, 100, 2.15);
 maize.elements.push(new Element('', 'Protein', -1, -1, 9));

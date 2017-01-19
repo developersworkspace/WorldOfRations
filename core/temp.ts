@@ -9,7 +9,7 @@ let model = {
                 "fishmeal": {"min": 27} 
             },
             "variables": {
-                "maize": {
+                "maize": { 
                     "protein": 9,
                     "energy": 1.1,
                     "calcium": 0.02,
