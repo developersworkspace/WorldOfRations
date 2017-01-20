@@ -4,5 +4,14 @@
 // The list of which env maps to which file can be found in `angular-cli.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  api: {
+        uri: 'http://localhost:9001'
+    },
+    oauth: {
+        'uri': 'http://localhost:9009/api/auth/authorize',
+        'redirectUri': 'http://localhost:4200/login',
+        'clientId': '123',
+        'clientSecret': '987'
+    }
 };

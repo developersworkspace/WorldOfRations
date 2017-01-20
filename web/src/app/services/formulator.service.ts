@@ -6,7 +6,7 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
-import config from './../config';
+import { environment } from './../../environments/environment';
 
 @Injectable()
 export class FormulatorService {
@@ -14,7 +14,7 @@ export class FormulatorService {
   constructor(private http: Http) { }
 
   public formulate(obj: any) {
-    return this.http.post(config.api.uri + '/api/formulator/formulate', obj)
+    return this.http.post(environment.api.uri + '/api/formulator/formulate', obj)
       .map((res: Response) => res.json());
   }
 

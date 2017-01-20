@@ -1,4 +1,4 @@
-export default {
+export var config = {
     db: {
         user: 'sa',
         password: 'Galjoen501',

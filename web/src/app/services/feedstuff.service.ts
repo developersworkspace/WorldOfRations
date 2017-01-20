@@ -6,7 +6,7 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
-import config from './../config';
+import { environment } from './../../environments/environment';
 
 @Injectable()
 export class FeedstuffService {
@@ -14,17 +14,17 @@ export class FeedstuffService {
   constructor(private http: Http) { }
 
   public listFeedstuffs() {
-    return this.http.get(config.api.uri + '/api/feedstuff/list')
+    return this.http.get(environment.api.uri + '/api/feedstuff/list')
       .map((res: Response) => res.json());
   }
 
   public getSuggestedValues(formulaId: string, feedstuffId: string) {
-    return this.http.get(config.api.uri + '/api/feedstuff/suggestedValues?formulaId=' + formulaId + '&feedstuffId=' + feedstuffId)
+    return this.http.get(environment.api.uri + '/api/feedstuff/suggestedValues?formulaId=' + formulaId + '&feedstuffId=' + feedstuffId)
       .map((res: Response) => res.json());
   }
 
   public listExampleFeedstuffs() {
-    return this.http.get(config.api.uri + '/api/feedstuff/listExample')
+    return this.http.get(environment.api.uri + '/api/feedstuff/listExample')
       .map((res: Response) => {
         let result: any[] = res.json();
         let resultArr: any[] = []

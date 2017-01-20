@@ -6,7 +6,7 @@ export class Formula {
     id: string;
     elements: Element[] = [];
 
-    constructor(id) {
+    constructor(id: string) {
         this.id = id;
     }
 }

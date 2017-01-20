@@ -1,7 +1,7 @@
 /// <reference path="./../typings/index.d.ts"/>
 
 import * as sql from 'mssql';
-import config from './../config';
+import { config } from './../config';
 import * as solver from './../node_modules/javascript-lp-solver/src/solver';
 import { Formulation } from './../models/formulation';
 import { Feedstuff } from './../models/feedstuff';
@@ -54,10 +54,10 @@ export class FormulatorService {
                 .connect().then((connection: any) => {
                     new sql.Request(connection)
                         .input('formulaId', formula.id)
-                        .execute('[dbo].[listElementsForFormula]').then(function (recordsets: any[]) {
+                        .execute('[dbo].[listElementsForFormula]').then((recordsets: any[]) => {
                             formula.elements = recordsets[0];
                             resolve(formula);
-                        }).catch(function (err: Error) {
+                        }).catch((err: Error) => {
                             reject(err);
                         });
                 });
@@ -74,7 +74,7 @@ export class FormulatorService {
                         listOfPromise.push(parent.loadFeedstuffElements(connection, feedstuffs[i]));
                     }
 
-                    Promise.all(listOfPromise).then((values) => {
+                    Promise.all(listOfPromise).then((values: any[]) => {
                         resolve(values);
                     });
                 });
@@ -85,10 +85,10 @@ export class FormulatorService {
         return new Promise((resolve: Function, reject: Function) => {
             new sql.Request(connection)
                 .input('feedstuffId', feedstuff.id)
-                .execute('[dbo].[listElementsForFeedstuff]').then(function (recordsets: any[]) {
+                .execute('[dbo].[listElementsForFeedstuff]').then((recordsets: any[]) => {
                     feedstuff.elements = recordsets[0];
                     resolve(feedstuff);
-                }).catch(function (err: Error) {
+                }).catch((err: Error) => {
                     reject(err);
                 });
         });

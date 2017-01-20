@@ -11,6 +11,9 @@ import { Typeahead } from 'ng2-typeahead';
 import { AppComponent } from './app.component';
 import { FormulatorComponent } from './formulator/formulator.component';
 import { HomeComponent } from './home/home.component';
+import { AboutComponent } from './about/about.component';
+import { LoginComponent } from './login/login.component';
+import { NavbarComponent } from './navbar/navbar.component';
 
 // Services
 import { FeedstuffService } from './services/feedstuff.service';
@@ -24,6 +27,14 @@ var router = RouterModule.forRoot([
     component: HomeComponent
   },
   {
+    path: 'about',
+    component: AboutComponent
+  },
+  {
+    path: 'login',
+    component: LoginComponent
+  },
+  {
     path: 'formulator',
     component: FormulatorComponent
   }
@@ -35,7 +46,10 @@ var router = RouterModule.forRoot([
     AppComponent,
     FormulatorComponent,
     Typeahead,
-    HomeComponent
+    HomeComponent,
+    AboutComponent,
+    LoginComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
@@ -44,6 +58,6 @@ var router = RouterModule.forRoot([
     router
   ],
   providers: [FeedstuffService, FormulaService, FormulatorService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent, NavbarComponent]
 })
 export class AppModule { }

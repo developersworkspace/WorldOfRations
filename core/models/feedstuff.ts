@@ -10,7 +10,7 @@ export class Feedstuff {
     cost: number;
     elements: Element[] = [];
 
-    constructor(id, name, searchText, minimum, maximum, cost) {
+    constructor(id: string, name: string, searchText: string, minimum: number, maximum: number, cost: number) {
         this.id = id;
         this.name = name;
         this.searchText = searchText;

@@ -1,7 +1,7 @@
 /// <reference path="./../typings/index.d.ts"/>
 
 import * as sql from 'mssql';
-import config from './../config';
+import { config } from './../config';
 
 export class FormulaService {
 
