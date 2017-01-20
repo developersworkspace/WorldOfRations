@@ -1,0 +1,28 @@
+{
+  "name": "worldofrations",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "gulp --cwd ./core clean & gulp --cwd ./api clean",
+    "start": "concurrently \"gulp --cwd ./core ts & gulp --cwd ./api ts & node ./api/app.js\" \"cd ./web & ng serve\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/developersworkspace/WorldOfRations.git"
+  },
+  "author": "Barend Erasmus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/developersworkspace/WorldOfRations/issues"
+  },
+  "homepage": "https://github.com/developersworkspace/WorldOfRations#readme",
+  "dependencies": {
+    "concurrently": "^3.1.0",
+     "gulp": "^3.9.1"
+  }
+}
