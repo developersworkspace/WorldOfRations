@@ -14,6 +14,7 @@ import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
 import { LoginComponent } from './login/login.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { FormulationComponent } from './formulation/formulation.component';
 
 // Services
 import { FeedstuffService } from './services/feedstuff.service';
@@ -37,7 +38,11 @@ var router = RouterModule.forRoot([
   {
     path: 'formulator',
     component: FormulatorComponent
-  }
+  },
+  {
+    path: 'formulation',
+    component: FormulationComponent
+  },
 ]);
 
 
@@ -49,7 +54,8 @@ var router = RouterModule.forRoot([
     HomeComponent,
     AboutComponent,
     LoginComponent,
-    NavbarComponent
+    NavbarComponent,
+    FormulationComponent
   ],
   imports: [
     BrowserModule,

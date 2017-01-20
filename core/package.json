@@ -16,6 +16,7 @@
     "gulp-typescript": "^3.1.4",
     "javascript-lp-solver": "^0.4.3",
     "mocha": "^3.2.0",
+    "mongodb": "^2.2.21",
     "mssql": "^3.3.0",
     "tedious": "^1.14.0",
     "ts-node": "^2.0.0",

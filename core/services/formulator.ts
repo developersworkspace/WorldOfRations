@@ -7,6 +7,7 @@ import { Formulation } from './../models/formulation';
 import { Feedstuff } from './../models/feedstuff';
 import { Formula } from './../models/formula';
 import * as uuid from 'uuid';
+import * as mongodb from 'mongodb';
 
 export class FormulatorService {
 
@@ -31,19 +32,37 @@ export class FormulatorService {
         });
     }
 
-    public formulate(obj: Formulation) {
+    public formulate(formulation: Formulation) {
         let results: any;
         let model = {
             optimize: "cost",
             opType: "min",
-            constraints: this.buildConstraints(obj.feedstuffs, obj.formula),
-            variables: this.buildVariables(obj.feedstuffs)
+            constraints: this.buildConstraints(formulation.feedstuffs, formulation.formula),
+            variables: this.buildVariables(formulation.feedstuffs)
         };
         results = solver.Solve(model);
+
+        let mongoClient = new mongodb.MongoClient();
+        mongoClient.connect('mongodb://' + config.mongodb.server + ':27017/' + config.mongodb.database, (err, db) => {
+            if (err) {
+                console.log('error');
+            } else {
+                var collection = db.collection('fomulations');
+                collection.insertOne(formulation, (err, result) => {
+                    console.log(result);
+                    db.close();
+                });
+            }
+        });
+
+        formulation.cost = results.result;
+        formulation.feasible = results.feasible;
+        formulation.id = uuid.v4();
+
         return {
-            cost: results.result / 1000,
-            feasible: results.feasible,
-            id: uuid.v4()
+            cost: formulation.cost,
+            feasible: formulation.feasible,
+            id: formulation.id
         };
     }
 

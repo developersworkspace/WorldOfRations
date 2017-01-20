@@ -4,5 +4,9 @@ export var config = {
         password: 'Galjoen501',
         server: 'epons.dedicated.co.za',
         database: 'WoR'
+    },
+    mongodb: {
+        server: 'localhost',
+        database: 'WoR'
     }
 }

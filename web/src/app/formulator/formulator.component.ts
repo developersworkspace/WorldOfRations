@@ -87,6 +87,7 @@ export class FormulatorComponent implements OnInit {
 
   onClick_Formulate() {
     this.formulatorResult = null;
+    console.log('a');
     if (this.selectedFormula == null) {
       this.errorMessage = 'Please select a formula'
     } else {
