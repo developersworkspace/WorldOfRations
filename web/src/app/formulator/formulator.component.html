@@ -8,7 +8,7 @@
       <div class="form-group">
         <label>Formula</label>
         <typeahead [(ngModel)]="selectedFormula" [list]="formulaList" [searchProperty]="'searchText'" [displayProperty]="'name'"
-          [maxSuggestions]="6" (suggestionSelected)="onSelect_Formula($event)" placeholder="Begin typing a formula">
+          [maxSuggestions]="30" (suggestionSelected)="onSelect_Formula($event)" placeholder="Begin typing a formula">
         </typeahead>
         <small class="form-text text-muted">search over 900 formulas</small>
       </div>
@@ -21,7 +21,7 @@
         <div class="form-group">
           <div class="col-md-4">
             <typeahead [(ngModel)]="item.selectedFeedstuff" [list]="feedstuffList" [searchProperty]="'searchText'" [displayProperty]="'name'"
-              [maxSuggestions]="6" (suggestionSelected)="onUpdate_SuggestedValues($event, item)" placeholder="Begin typing a feedstuff">
+              [maxSuggestions]="10" (suggestionSelected)="onUpdate_SuggestedValues($event, item)" placeholder="Begin typing a feedstuff">
             </typeahead>
           </div>
           <div class="col-md-2">
@@ -48,13 +48,22 @@
       </div>
       <br/>
       <br/>
-      <div class="row" *ngIf="formulatorResult != null && formulatorResult.feasible">
+      <div class="row" *ngIf="formulatorResult != null && formulatorResult.feasible == true">
         <div class="col-md-12">
           <div class="alert alert-success">
             <p>
               We have successfully formulated a ration with a total cost of <b>{{formulatorResult.cost | currency:'USD':true}}</b>.
               <br />
-              <br /> Click <a href="/LeastCostRationFormulator/Formulation">here</a> to view the details of this formulation.
+              <br /> Click <a href="/formulator?formulationId={{formulatorResult.id}}">here</a> to view the details of this formulation.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="formulatorResult != null && formulatorResult.feasible == false">
+        <div class="col-md-12">
+          <div class="alert alert-danger">
+            <p>
+              We could not formulate a feasible ration. Please change your selection of feedstuff and retry.
             </p>
           </div>
         </div>

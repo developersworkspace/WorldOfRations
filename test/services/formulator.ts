@@ -14,7 +14,7 @@ describe('formulate', () => {
 
     let formulation = new Formulation();
 
-    let formula = new Formula();
+    let formula = new Formula('');
 
     let proteinId = uuid.v4();
     let energyId = uuid.v4();

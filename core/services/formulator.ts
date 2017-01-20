@@ -6,6 +6,7 @@ import * as solver from './../node_modules/javascript-lp-solver/src/solver';
 import { Formulation } from './../models/formulation';
 import { Feedstuff } from './../models/feedstuff';
 import { Formula } from './../models/formula';
+import * as uuid from 'uuid';
 
 export class FormulatorService {
 
@@ -41,7 +42,8 @@ export class FormulatorService {
         results = solver.Solve(model);
         return {
             cost: results.result / 1000,
-            feasible: results.feasible
+            feasible: results.feasible,
+            id: uuid.v4()
         };
     }
 

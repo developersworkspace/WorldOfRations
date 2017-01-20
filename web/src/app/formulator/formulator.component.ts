@@ -30,20 +30,16 @@ export class FormulatorComponent implements OnInit {
     this.feedstuffService.listFeedstuffs().subscribe((x: any[]) => {
       this.feedstuffList = x;
     }, (error: any) => {
-
+      this.errorMessage = 'An error has occurred while loading feedstuff';
     });
 
     this.formulaService.listFormulas().subscribe((x: any[]) => {
       this.formulaList = x;
     }, (error: any) => {
-
+      this.errorMessage = 'An error has occurred while loading formulas';
     });
 
-    this.feedstuffService.listExampleFeedstuffs().subscribe((x: any[]) => {
-      this.feedstufffs = x;
-    }, (error: any) => {
-
-    });
+    this.onClick_ResetToDefaults();
   }
 
   onUpdate_SuggestedValues(item, instance) {
@@ -85,11 +81,12 @@ export class FormulatorComponent implements OnInit {
     this.feedstuffService.listExampleFeedstuffs().subscribe((x: any[]) => {
       this.feedstufffs = x;
     }, (error: any) => {
-
+      this.errorMessage = 'An error has occurred while loading example feedstuff';
     });
   }
 
   onClick_Formulate() {
+    this.formulatorResult = null;
     if (this.selectedFormula == null) {
       this.errorMessage = 'Please select a formula'
     } else {
@@ -109,8 +106,10 @@ export class FormulatorComponent implements OnInit {
         formulaId: this.selectedFormula.id,
         feedstuffs: feedstuffs
       }
-      this.formulatorService.formulate(obj).subscribe((x: any) => {
-        this.formulatorResult = x;
+      this.formulatorService.formulate(obj).subscribe((result: any) => {
+        this.formulatorResult = result;
+      }, (error: any) => {
+        this.errorMessage = 'An error has occurred while formulating';
       });
     }
   }
