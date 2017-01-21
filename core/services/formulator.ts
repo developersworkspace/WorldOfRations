@@ -46,7 +46,7 @@ export class FormulatorService {
             formulation.feedstuffs[i].weight = results[formulation.feedstuffs[i].id];
         }
 
-        formulation.cost = results.result;
+        formulation.cost = results.result / 1000;
         formulation.feasible = results.feasible;
         formulation.id = uuid.v4();
 
