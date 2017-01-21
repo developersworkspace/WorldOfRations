@@ -2,6 +2,7 @@
   <div class="container">
     <div class="section_header">
       <h3>Least Cost Ration Formulator - Results</h3>
+      <h5 *ngIf="formulation != null">{{formulation.formula.name}}</h5>
     </div>
     <div class="row feature_wrapper">
       <h4>Feedstuffs Composition</h4>
@@ -19,21 +20,11 @@
             </th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>John</td>
-            <td>Doe</td>
-            <td>john@example.com</td>
-          </tr>
-          <tr>
-            <td>Mary</td>
-            <td>Moe</td>
-            <td>mary@example.com</td>
-          </tr>
-          <tr>
-            <td>July</td>
-            <td>Dooley</td>
-            <td>july@example.com</td>
+        <tbody *ngIf="formulation != null">
+          <tr *ngFor="let item of formulation.feedstuffs;">
+            <td *ngIf="item.weight != null">{{item.name}}</td>
+            <td *ngIf="item.weight != null">{{item.weight | number:'1.2-2'}}</td>
+            <td *ngIf="item.weight != null">{{item.cost | currency:'USD':true}} per 1000</td>
           </tr>
         </tbody>
       </table>
@@ -85,7 +76,7 @@
         <tbody>
           <tr>
             <td>
-             Hello
+              Hello
             </td>
             <td>
               aaa

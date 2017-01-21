@@ -42,28 +42,47 @@ export class FormulatorService {
         };
         results = solver.Solve(model);
 
-        let mongoClient = new mongodb.MongoClient();
-        mongoClient.connect('mongodb://' + config.mongodb.server + ':27017/' + config.mongodb.database, (err, db) => {
-            if (err) {
-                console.log('error');
-            } else {
-                var collection = db.collection('fomulations');
-                collection.insertOne(formulation, (err, result) => {
-                    console.log(result);
-                    db.close();
-                });
-            }
-        });
+        for (let i = 0; i < formulation.feedstuffs.length; i++) {
+            formulation.feedstuffs[i].weight = results[formulation.feedstuffs[i].id];
+        }
 
         formulation.cost = results.result;
         formulation.feasible = results.feasible;
         formulation.id = uuid.v4();
 
+        let mongoClient = new mongodb.MongoClient();
+        mongoClient.connect('mongodb://' + config.mongodb.server + ':27017/' + config.mongodb.database, (err, db) => {
+            if (err) {
+
+            } else {
+                var collection = db.collection('fomulations');
+                collection.insertOne(formulation, (err, result) => {
+                    db.close();
+                });
+            }
+        });
         return {
             cost: formulation.cost,
             feasible: formulation.feasible,
             id: formulation.id
         };
+    }
+
+    public getFormulation(formulationId: string) {
+        return new Promise((resolve: Function, reject: Function) => {
+            let mongoClient = new mongodb.MongoClient();
+            mongoClient.connect('mongodb://' + config.mongodb.server + ':27017/' + config.mongodb.database, (err, db) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    var collection = db.collection('fomulations');
+                    collection.findOne({ id: formulationId }, (err, result) => {
+                        resolve(result);
+                        db.close();
+                    });
+                }
+            });
+        });
     }
 
 
@@ -73,9 +92,18 @@ export class FormulatorService {
                 .connect().then((connection: any) => {
                     new sql.Request(connection)
                         .input('formulaId', formula.id)
-                        .execute('[dbo].[listElementsForFormula]').then((recordsets: any[]) => {
-                            formula.elements = recordsets[0];
-                            resolve(formula);
+                        .execute('[dbo].[listElementsForFormula]').then((recordsets1: any[]) => {
+                            formula.elements = recordsets1[0];
+
+                            new sql.Request(connection)
+                                .input('formulaId', formula.id)
+                                .execute('[dbo].[getFormula]').then((recordsets2: any[]) => {
+                                    formula.name = recordsets2[0][0].name;
+                                    resolve(formula);
+                                }).catch((err: Error) => {
+                                    reject(err);
+                                });
+
                         }).catch((err: Error) => {
                             reject(err);
                         });
@@ -104,9 +132,19 @@ export class FormulatorService {
         return new Promise((resolve: Function, reject: Function) => {
             new sql.Request(connection)
                 .input('feedstuffId', feedstuff.id)
-                .execute('[dbo].[listElementsForFeedstuff]').then((recordsets: any[]) => {
-                    feedstuff.elements = recordsets[0];
-                    resolve(feedstuff);
+                .execute('[dbo].[listElementsForFeedstuff]').then((recordsets1: any[]) => {
+                    feedstuff.elements = recordsets1[0];
+
+
+                    new sql.Request(connection)
+                        .input('feedstuffId', feedstuff.id)
+                        .execute('[dbo].[getFeedstuff]').then((recordsets2: any[]) => {
+                            feedstuff.name = recordsets2[0][0].name;
+                            resolve(feedstuff);
+                        }).catch((err: Error) => {
+                            reject(err);
+                        });
+
                 }).catch((err: Error) => {
                     reject(err);
                 });

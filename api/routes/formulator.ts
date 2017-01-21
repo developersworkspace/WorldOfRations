@@ -16,4 +16,13 @@ router.post('/formulate', function (req: Request, res: Response, next: Function)
     });
 });
 
+router.get('/formulation', function (req: Request, res: Response, next: Function) {
+    let formulatorService = new FormulatorService();
+    formulatorService.getFormulation(req.query.formulationId).then((formulation: Formulation) => {
+        res.json(formulation);
+    }).catch((err: Error) => {
+        console.log(err.message);
+    });
+});
+
 export = router;

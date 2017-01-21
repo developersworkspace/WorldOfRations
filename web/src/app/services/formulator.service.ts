@@ -18,4 +18,9 @@ export class FormulatorService {
       .map((res: Response) => res.json());
   }
 
+  public getFormulation(formulationId: string) {
+    return this.http.get(environment.api.uri + '/api/formulator/formulation?formulationId=' + formulationId)
+      .map((res: Response) => res.json());
+  }
+
 }

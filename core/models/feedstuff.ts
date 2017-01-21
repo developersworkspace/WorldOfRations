@@ -8,6 +8,7 @@ export class Feedstuff {
     minimum: number;
     maximum: number;
     cost: number;
+    weight: number;
     elements: Element[] = [];
 
     constructor(id: string, name: string, searchText: string, minimum: number, maximum: number, cost: number) {
