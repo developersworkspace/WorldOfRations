@@ -6,6 +6,7 @@ import * as solver from './../node_modules/javascript-lp-solver/src/solver';
 import { Formulation } from './../models/formulation';
 import { Feedstuff } from './../models/feedstuff';
 import { Formula } from './../models/formula';
+import { Element } from './../models/element';
 import * as uuid from 'uuid';
 import * as mongodb from 'mongodb';
 
@@ -14,7 +15,6 @@ export class FormulatorService {
     constructor() {
 
     }
-
 
     public createFormulation(feedstuffs: Feedstuff[], formulaId: string) {
         return new Promise((resolve: Function, reject: Function) => {
@@ -51,12 +51,12 @@ export class FormulatorService {
         formulation.id = uuid.v4();
 
         let mongoClient = new mongodb.MongoClient();
-        mongoClient.connect('mongodb://' + config.mongodb.server + ':27017/' + config.mongodb.database, (err, db) => {
+        mongoClient.connect('mongodb://' + config.mongodb.server + ':27017/' + config.mongodb.database, (err: Error, db: mongodb.Db) => {
             if (err) {
 
             } else {
                 var collection = db.collection('fomulations');
-                collection.insertOne(formulation, (err, result) => {
+                collection.insertOne(formulation, (err: Error, result: any) => {
                     db.close();
                 });
             }
@@ -71,13 +71,15 @@ export class FormulatorService {
     public getFormulation(formulationId: string) {
         return new Promise((resolve: Function, reject: Function) => {
             let mongoClient = new mongodb.MongoClient();
-            mongoClient.connect('mongodb://' + config.mongodb.server + ':27017/' + config.mongodb.database, (err, db) => {
+            mongoClient.connect('mongodb://' + config.mongodb.server + ':27017/' + config.mongodb.database, (err: Error, db: mongodb.Db) => {
                 if (err) {
                     reject(err);
                 } else {
                     var collection = db.collection('fomulations');
-                    collection.findOne({ id: formulationId }, (err, result) => {
-                        resolve(result);
+                    collection.findOne({ id: formulationId }, (err: Error, formulation: Formulation) => {
+                        formulation = this.loadComposition(formulation);
+                        formulation = this.cleanFormulationData(formulation);
+                        resolve(formulation);
                         db.close();
                     });
                 }
@@ -85,11 +87,40 @@ export class FormulatorService {
         });
     }
 
+    private loadComposition(formulation: Formulation) {
+        for (let i = 0; i < formulation.formula.elements.length; i++) {
+            let elementId = formulation.formula.elements[i].id;
+            let elementName = formulation.formula.elements[i].name;
+            let elementMinimum = formulation.formula.elements[i].minimum;
+            let elementMaximum = formulation.formula.elements[i].maximum;
+            let elementUnit = formulation.formula.elements[i].unit;
+            let sum = 0;
+            for (let j = 0; j < formulation.feedstuffs.length; j++) {
+                let feedstuffElements = formulation.feedstuffs[j].elements.filter((x) => x.id == elementId);
+                if (feedstuffElements.length > 0) {
+                    sum += feedstuffElements[0].value * formulation.feedstuffs[j].weight;
+                }
+            }
+            formulation.composition.push(new Element(elementId, elementName, elementMinimum, elementMinimum, sum, elementUnit));
+        }
+
+        return formulation;
+    }
+
+    private cleanFormulationData(formulation: Formulation) {
+        for (let i = 0; i < formulation.feedstuffs.length; i++) {
+            formulation.feedstuffs[i].elements = null;
+        }
+
+        formulation.formula.elements = null;
+
+        return formulation;
+    }
 
     private loadFormulaElements(formula: Formula) {
         return new Promise((resolve: Function, reject: Function) => {
             new sql.Connection(config.db)
-                .connect().then((connection: any) => {
+                .connect().then((connection: sql.Connection) => {
                     new sql.Request(connection)
                         .input('formulaId', formula.id)
                         .execute('[dbo].[listElementsForFormula]').then((recordsets1: any[]) => {
@@ -115,27 +146,24 @@ export class FormulatorService {
         let parent = this;
         return new Promise((resolve: Function, reject: Function) => {
             new sql.Connection(config.db)
-                .connect().then((connection: any) => {
+                .connect().then((connection: sql.Connection) => {
                     let listOfPromise = [];
                     for (let i = 0; i < feedstuffs.length; i++) {
                         listOfPromise.push(parent.loadFeedstuffElements(connection, feedstuffs[i]));
                     }
-
-                    Promise.all(listOfPromise).then((values: any[]) => {
+                    Promise.all(listOfPromise).then((values: Feedstuff[]) => {
                         resolve(values);
                     });
                 });
         });
     }
 
-    private loadFeedstuffElements(connection: any, feedstuff: Feedstuff) {
+    private loadFeedstuffElements(connection: sql.Connection, feedstuff: Feedstuff) {
         return new Promise((resolve: Function, reject: Function) => {
             new sql.Request(connection)
                 .input('feedstuffId', feedstuff.id)
                 .execute('[dbo].[listElementsForFeedstuff]').then((recordsets1: any[]) => {
                     feedstuff.elements = recordsets1[0];
-
-
                     new sql.Request(connection)
                         .input('feedstuffId', feedstuff.id)
                         .execute('[dbo].[getFeedstuff]').then((recordsets2: any[]) => {

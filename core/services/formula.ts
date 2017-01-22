@@ -11,9 +11,9 @@ export class FormulaService {
     public listFormula() {
         return new Promise((resolve: Function, reject: Function) => {
             new sql.Connection(config.db)
-                .connect().then((connection: any) => {
+                .connect().then((connection: sql.Connection) => {
                     new sql.Request(connection)
-                        .execute('[dbo].[listFormula]').then(function (recordsets: any[]) {
+                        .execute('[dbo].[listFormula]').then((recordsets: any[]) => {
                             resolve(recordsets[0]);
                         }).catch(function (err: Error) {
                             reject(err);

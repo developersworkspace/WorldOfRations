@@ -1,4 +1,3 @@
-/// <reference path="./../typings/index.d.ts"/>
 import { Express, Request, Response } from "express";
 import { FormulaService } from './../../core/services/formula'
 

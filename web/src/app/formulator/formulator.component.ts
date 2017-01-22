@@ -25,6 +25,8 @@ export class FormulatorComponent implements OnInit {
 
   formulatorResult: any = null;
 
+  isFormulating: boolean = false;
+
   constructor(private feedstuffService: FeedstuffService, private formulaService: FormulaService, private formulatorService: FormulatorService) { }
 
   ngOnInit() {
@@ -87,10 +89,10 @@ export class FormulatorComponent implements OnInit {
 
   onClick_Formulate() {
     this.formulatorResult = null;
-    console.log('a');
     if (this.selectedFormula == null) {
       this.errorMessage = 'Please select a formula'
     } else {
+      this.isFormulating = true;
       this.errorMessage = null;
       let feedstuffs: any[] = [];
       for (let i = 0; i < this.feedstufffs.length; i++) {
@@ -110,8 +112,10 @@ export class FormulatorComponent implements OnInit {
       
       this.formulatorService.formulate(obj).subscribe((result: any) => {
         this.formulatorResult = result;
+         this.isFormulating = false;
       }, (error: Error) => {
         this.errorMessage = 'An error has occurred while formulating';
+         this.isFormulating = false;
       });
     }
   }

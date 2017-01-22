@@ -17,6 +17,25 @@
         <button class="btn btn-primary pull-right padded" (click)="onClick_AddFeedstuff()"><i class="fa fa-plus"></i>&nbsp;Add Feedstuff</button>
         <button class="btn btn-default pull-right padded" (click)="onClick_ResetToDefaults()"><i class="fa fa-undo"></i>&nbsp;Reset to Defaults</button>
       </div>
+      <div class="row">
+        <div class="form-group">
+          <div class="col-md-4 text-center">
+            Feedstuff
+          </div>
+          <div class="col-md-2 text-center">
+            Minimum (kg)
+          </div>
+          <div class="col-md-2 text-center">
+            Maximum (kg)
+          </div>
+          <div class="col-md-2 text-center">
+            Cost ($ per tonne)
+          </div>
+          <div class="col-md-2 text-center">
+            Actions
+          </div>
+        </div>
+      </div>
       <div class="row" *ngFor="let item of feedstufffs;">
         <div class="form-group">
           <div class="col-md-4">
@@ -43,7 +62,7 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <button class="btn btn-success pull-right" (click)="onClick_Formulate()"><i class="fa fa-calculator"></i>&nbsp;Formulate</button>
+          <button class="btn btn-success pull-right" (click)="onClick_Formulate()" [disabled]="isFormulating"><i class="fa fa-calculator" *ngIf="!isFormulating"></i><i class="fa fa-refresh fa-spin" *ngIf="isFormulating"></i>&nbsp;Formulate</button>
         </div>
       </div>
       <br/>
@@ -54,7 +73,8 @@
             <p>
               We have successfully formulated a ration with a total cost of <b>{{formulatorResult.cost | currency:'USD':true}}</b>.
               <br />
-              <br /> Click <a href="/formulation?formulationId={{formulatorResult.id}}">here</a> to view the details of this formulation.
+              <br /> Click <a href="/formulation?formulationId={{formulatorResult.id}}">here</a> to view the details of this
+              formulation.
             </p>
           </div>
         </div>
