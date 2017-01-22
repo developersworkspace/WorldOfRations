@@ -77,10 +77,14 @@ export class FormulatorService {
                 } else {
                     var collection = db.collection('fomulations');
                     collection.findOne({ id: formulationId }, (err: Error, formulation: Formulation) => {
-                        formulation = this.loadComposition(formulation);
-                        formulation = this.cleanFormulationData(formulation);
-                        resolve(formulation);
-                        db.close();
+                        this.loadComposition(formulation).then((resultFormulation: Formulation) => {
+                            formulation = resultFormulation;
+                            formulation = this.cleanFormulationData(formulation);
+                            resolve(formulation);
+                            db.close();
+                        }).catch((err: Error) => {
+                            reject(err);
+                        });
                     });
                 }
             });
@@ -88,23 +92,54 @@ export class FormulatorService {
     }
 
     private loadComposition(formulation: Formulation) {
-        for (let i = 0; i < formulation.formula.elements.length; i++) {
-            let elementId = formulation.formula.elements[i].id;
-            let elementName = formulation.formula.elements[i].name;
-            let elementMinimum = formulation.formula.elements[i].minimum;
-            let elementMaximum = formulation.formula.elements[i].maximum;
-            let elementUnit = formulation.formula.elements[i].unit;
-            let sum = 0;
-            for (let j = 0; j < formulation.feedstuffs.length; j++) {
-                let feedstuffElements = formulation.feedstuffs[j].elements.filter((x) => x.id == elementId);
-                if (feedstuffElements.length > 0) {
-                    sum += feedstuffElements[0].value * formulation.feedstuffs[j].weight;
-                }
-            }
-            formulation.composition.push(new Element(elementId, elementName, elementMinimum, elementMinimum, sum, elementUnit));
-        }
 
-        return formulation;
+        return new Promise((resolve: Function, reject: Function) => {
+            new sql.Connection(config.db)
+                .connect().then((connection: sql.Connection) => {
+                    new sql.Request(connection)
+                        .input('formulaId', formulation.formula.id)
+                        .execute('[dbo].[getComparisonFormula]').then((recordsets1: any[]) => {
+                            let comparisonFormulaId = recordsets1[0][0].formulaId;
+                            new sql.Request(connection)
+                                .input('formulaId', comparisonFormulaId)
+                                .execute('[dbo].[listElementsForFormula]').then((recordsets2: any[]) => {
+                                    let comparisonFormulaElements: Element[] = recordsets2[0];
+
+                                    for (let i = 0; i < comparisonFormulaElements.length; i++) {
+                                        let elementId = comparisonFormulaElements[i].id;
+                                        let elementName = comparisonFormulaElements[i].name;
+                                        let elementMinimum = comparisonFormulaElements[i].minimum == null ? 0 : comparisonFormulaElements[i].minimum;
+                                        let elementMaximum = comparisonFormulaElements[i].maximum == null ? 1000000 : comparisonFormulaElements[i].maximum;
+                                        let elementUnit = comparisonFormulaElements[i].unit;
+                                        let elementSortOrder = comparisonFormulaElements[i].sortOrder;
+                                        let sum = 0;
+                                        for (let j = 0; j < formulation.feedstuffs.length; j++) {
+                                            let feedstuffElements = formulation.feedstuffs[j].elements.filter((x) => x.id == elementId);
+                                            if (feedstuffElements.length > 0) {
+                                                sum += feedstuffElements[0].value * formulation.feedstuffs[j].weight;
+                                            }
+                                        }
+
+                                        elementMinimum = comparisonFormulaElements[i].minimum == null ? 0 : comparisonFormulaElements[i].minimum;
+                                        elementMaximum = comparisonFormulaElements[i].maximum == null ? 1000000 : comparisonFormulaElements[i].maximum;
+
+                                        formulation.composition.push(new Element(elementId, elementName, this.roundToTwoDecimal(elementMinimum), this.roundToTwoDecimal(elementMaximum), this.roundToTwoDecimal(sum / 1000), elementUnit, elementSortOrder));
+                                    }
+
+                                    resolve(formulation);
+                                }).catch((err: Error) => {
+                                    reject(err);
+                                });
+
+                        }).catch((err: Error) => {
+                            reject(err);
+                        });
+                });
+        });
+    }
+
+    private roundToTwoDecimal(value: number) {
+        return Math.round(value * 100) / 100;
     }
 
     private cleanFormulationData(formulation: Formulation) {

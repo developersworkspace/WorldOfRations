@@ -22,6 +22,9 @@ export class FormulationComponent implements OnInit {
         formulation.feedstuffs.sort(function (a, b) {
           return (b.weight < a.weight) ? -1 : 1;
         });
+        formulation.composition.sort(function (a, b) {
+          return (a.sortOrder < b.sortOrder) ? -1 : 1;
+        });
         this.formulation = formulation;
       });
     });

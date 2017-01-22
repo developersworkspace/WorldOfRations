@@ -47,11 +47,14 @@
           <tr *ngFor="let item of formulation.composition;">
             <td>{{item.name}}</td>
             <td>{{item.value | number:'1.2-2'}} {{item.unit}}</td>
-            <td></td>
+            <td [ngClass]="item.value < item.minimum? 'text-warning' : item.value > item.maximum? 'text-danger' : 'text-success'">
+              {{item.value
+              < item.minimum? 'Inadequate' : item.value> item.maximum? 'Excessive' : 'Adequate'}}
+            </td>
           </tr>
         </tbody>
       </table>
-      <h4>Micro Nutrient Supplement Composition</h4>
+      <!--<h4>Micro Nutrient Supplement Composition</h4>
       <table class="table table-striped">
         <thead>
           <tr>
@@ -83,7 +86,7 @@
             </th>
           </tr>
         </thead>
-      </table>
+      </table>-->
     </div>
   </div>
 </div>

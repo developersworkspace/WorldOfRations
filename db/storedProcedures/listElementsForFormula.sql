@@ -6,7 +6,8 @@ SELECT
 [element].[Name] AS [name],
 [element].[Unit] AS [unit],
 [measurement].[MinValue] AS [minimum],
-[measurement].[MaxValue] AS [maximum]
+[measurement].[MaxValue] AS [maximum],
+[element].[SortOrder] AS [sortOrder]
 FROM [dbo].[FormulaMeasurement] AS [measurement]
 INNER JOIN [dbo].[Element] AS [element]
 ON [element].[Id] = [measurement].[ElementId]
