@@ -1,9 +1,17 @@
 import { Express, Request, Response } from "express";
 import { FormulaService } from './../../core/services/formula'
 
-let express = require('express');
+import * as express from 'express';
 let router = express.Router();
 
+/**
+ * @api {get} /formula/list RETRIEVE LIST OF FORMULAS
+ * @apiName FormulaList
+ * @apiGroup Formula
+ * 
+ * @apiSuccess {Object[]} response Empty.
+ * 
+ */
 router.get('/list', function (req: Request, res: Response, next: Function) {
     let formulaService = new FormulaService();
     formulaService.listFormula().then((result: any[]) => {

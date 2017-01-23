@@ -1,0 +1,17 @@
+{
+  "name": "World of Rations Api",
+  "version": "1.0.0",
+  "description": "An affordable, user-friendly and cloud-based ‘least-cost’ ration formulation program which can be used for a very wide range of animal species.",
+  "title": "World of Rations Api - World of Rations",
+  "url" : "http://worldofrations.com/api",
+  "sampleUrl": "http://worldofrations.com/api",
+  "order": [
+    "FeedstuffList",
+    "FeedstuffListExample",
+    "FeedstuffSuggestedValues"
+  ],
+  "template": {
+  	"withCompare": true,
+  	"withGenerator": true
+  }
+}
