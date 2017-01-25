@@ -30,4 +30,12 @@ export class FormulationComponent implements OnInit {
     });
   }
 
+  selectedSupplementFeedstuff(supplement, selectedSupplementFeedstuff) {
+    for (let i = 0; i < supplement.supplementFeedstuffs.length; i++) {
+      if (supplement.supplementFeedstuffs[i].id == selectedSupplementFeedstuff.id) {
+        supplement.value = supplement.supplementFeedstuffs[i].weight;
+      }
+    }
+  }
+
 }

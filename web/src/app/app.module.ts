@@ -15,6 +15,7 @@ import { AboutComponent } from './about/about.component';
 import { LoginComponent } from './login/login.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { FormulationComponent } from './formulation/formulation.component';
+import {SelectModule} from 'ng2-select';
 
 // Services
 import { FeedstuffService } from './services/feedstuff.service';
@@ -61,7 +62,8 @@ var router = RouterModule.forRoot([
     BrowserModule,
     FormsModule,
     HttpModule,
-    router
+    router,
+    SelectModule
   ],
   providers: [FeedstuffService, FormulaService, FormulatorService],
   bootstrap: [AppComponent, NavbarComponent]

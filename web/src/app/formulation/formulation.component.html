@@ -54,7 +54,7 @@
           </tr>
         </tbody>
       </table>
-      <!--<h4>Micro Nutrient Supplement Composition</h4>
+      <h4>Micro Nutrient Supplement Composition</h4>
       <table class="table table-striped">
         <thead>
           <tr>
@@ -66,14 +66,14 @@
             </th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
+        <tbody *ngIf="formulation != null">
+          <tr *ngFor="let item of formulation.supplementComposition;">
             <td>
-              Hello
+              <ng-select [allowClear]="true" [items]="item.supplementFeedstuffs"  (selected)="selectedSupplementFeedstuff(item, $event)"
+                 placeholder="No city selected">
+              </ng-select>
             </td>
-            <td>
-              aaa
-            </td>
+            <td>{{item.value}}</td>
           </tr>
         </tbody>
         <thead>
@@ -86,7 +86,7 @@
             </th>
           </tr>
         </thead>
-      </table>-->
+      </table>
     </div>
   </div>
 </div>
