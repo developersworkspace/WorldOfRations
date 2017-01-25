@@ -7,24 +7,27 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 import { environment } from './../../environments/environment';
+import { BaseService } from './baseService'; 
 
 @Injectable()
-export class FeedstuffService {
+export class FeedstuffService extends BaseService {
 
-  constructor(private http: Http) { }
+  constructor(http: Http) {
+    super(http);
+   }
 
   public listFeedstuffs() {
-    return this.http.get(environment.api.uri + '/api/feedstuff/list')
+    return this.get(environment.api.uri + '/api/feedstuff/list')
       .map((res: Response) => res.json());
   }
 
   public getSuggestedValues(formulaId: string, feedstuffId: string) {
-    return this.http.get(environment.api.uri + '/api/feedstuff/suggestedValues?formulaId=' + formulaId + '&feedstuffId=' + feedstuffId)
+    return this.get(environment.api.uri + '/api/feedstuff/suggestedValues?formulaId=' + formulaId + '&feedstuffId=' + feedstuffId)
       .map((res: Response) => res.json());
   }
 
   public listExampleFeedstuffs() {
-    return this.http.get(environment.api.uri + '/api/feedstuff/listExample')
+    return this.get(environment.api.uri + '/api/feedstuff/listExample')
       .map((res: Response) => {
         let result: any[] = res.json();
         let resultArr: any[] = []

@@ -7,24 +7,17 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 import { environment } from './../../environments/environment';
+import { BaseService } from './baseService'; 
 
 @Injectable()
-export class FormulaService {
+export class FormulaService extends BaseService {
 
-
-  private feedstuffs: any[] = [
-    {
-      id: 1,
-      name: 'Test',
-      searchText: 'test hello world'
-    }
-  ];
-
-
-  constructor(private http: Http) { }
+  constructor(http: Http) {
+    super(http);
+   }
 
   public listFormulas() {
-    return this.http.get(environment.api.uri + '/api/formula/list')
+    return this.get(environment.api.uri + '/api/formula/list')
       .map((res: Response) => res.json());
   }
 

@@ -17,11 +17,13 @@ export class FormulatorService extends BaseService {
    }
 
   public formulate(obj: any) {
-    return this.post(environment.api.uri + '/api/formulator/formulate', obj);
+    return this.post(environment.api.uri + '/api/formulator/formulate', obj)
+    .map((res: Response) => res.json());
   }
 
   public getFormulation(formulationId: string) {
-    return this.get(environment.api.uri + '/api/formulator/formulation?formulationId=' + formulationId);
+    return this.get(environment.api.uri + '/api/formulator/formulation?formulationId=' + formulationId)
+    .map((res: Response) => res.json());
   }
 
 }

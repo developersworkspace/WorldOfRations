@@ -21,7 +21,7 @@ export class BaseService {
 
         return this.http.post(uri, obj, {
             headers: headers
-        }).map((res: Response) => res.json());
+        });
     }
 
     get(uri) {
@@ -34,6 +34,6 @@ export class BaseService {
         
         return this.http.get(uri, {
             headers: headers
-        }).map((res: Response) => res.json());
+        });
     }
 }
