@@ -7,20 +7,21 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 import { environment } from './../../environments/environment';
+import { BaseService } from './baseService'; 
 
 @Injectable()
-export class FormulatorService {
+export class FormulatorService extends BaseService {
 
-  constructor(private http: Http) { }
+  constructor(http: Http) {
+    super(http);
+   }
 
   public formulate(obj: any) {
-    return this.http.post(environment.api.uri + '/api/formulator/formulate', obj)
-      .map((res: Response) => res.json());
+    return this.post(environment.api.uri + '/api/formulator/formulate', obj);
   }
 
   public getFormulation(formulationId: string) {
-    return this.http.get(environment.api.uri + '/api/formulator/formulation?formulationId=' + formulationId)
-      .map((res: Response) => res.json());
+    return this.get(environment.api.uri + '/api/formulator/formulation?formulationId=' + formulationId);
   }
 
 }
