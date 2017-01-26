@@ -30,12 +30,15 @@ export class FormulationComponent implements OnInit {
     });
   }
 
-  selectedSupplementFeedstuff(supplement, selectedSupplementFeedstuff) {
-    for (let i = 0; i < supplement.supplementFeedstuffs.length; i++) {
-      if (supplement.supplementFeedstuffs[i].id == selectedSupplementFeedstuff.id) {
-        supplement.value = supplement.supplementFeedstuffs[i].weight;
+  selectedSupplementFeedstuff(supplementElement, selectedSupplementFeedstuff) {
+    if (supplementElement == null || selectedSupplementFeedstuff == null || supplementElement.supplementFeedstuffs == null) {
+      return;
+    }
+
+    for (let i = 0; i < supplementElement.supplementFeedstuffs.length; i++) {
+      if (supplementElement.supplementFeedstuffs[i].id == selectedSupplementFeedstuff.id) {
+        supplementElement.selectedSupplementFeedstuff = [supplementElement.supplementFeedstuffs[i]];
       }
     }
   }
-
 }

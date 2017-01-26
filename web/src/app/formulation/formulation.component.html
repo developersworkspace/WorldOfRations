@@ -69,23 +69,16 @@
         <tbody *ngIf="formulation != null">
           <tr *ngFor="let item of formulation.supplementComposition;">
             <td>
-              <ng-select [allowClear]="true" [items]="item.supplementFeedstuffs"  (selected)="selectedSupplementFeedstuff(item, $event)"
-                 placeholder="No city selected">
+              <ng-select [allowClear]="true" [items]="item.supplementFeedstuffs" [active]="item.selectedSupplementFeedstuff" (selected)="selectedSupplementFeedstuff(item, $event)"
+                placeholder="No city selected">
               </ng-select>
             </td>
-            <td>{{item.value}}</td>
+            <td *ngIf="item.selectedSupplementFeedstuff != null && item.selectedSupplementFeedstuff.length > 0">
+              <span *ngIf="item.selectedSupplementFeedstuff[0].weight > 5">{{item.selectedSupplementFeedstuff[0].weight | number:'1.2-2'}} kg</span>
+              <span *ngIf="item.selectedSupplementFeedstuff[0].weight <= 5">{{item.selectedSupplementFeedstuff[0].weight * 1000 | number:'1.2-2'}} g</span>
+            </td>
           </tr>
         </tbody>
-        <thead>
-          <tr>
-            <th>
-              Total
-            </th>
-            <th>
-              1000 kg
-            </th>
-          </tr>
-        </thead>
       </table>
     </div>
   </div>

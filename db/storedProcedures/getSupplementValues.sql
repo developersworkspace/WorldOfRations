@@ -1,13 +1,22 @@
 CREATE PROCEDURE [getSupplementValues]
-@elementCode VARCHAR(255),
+@elementId UNIQUEIDENTIFIER,
 @supplementValueRequired FLOAT
 AS
+
+DECLARE @elementCode VARCHAR(255)
+
+SELECT @elementCode = [Code]
+FROM [dbo].[Element]
+WHERE [Id] = @elementId
+
 SELECT 
-[feedstuff].[Name] AS [name],
-@supplementValueRequired / [measurement].[Value] AS [value]
+[feedstuff].[Id] AS [id],
+[feedstuff].[Name] AS [text],
+@supplementValueRequired / [measurement].[Value] AS [weight]
   FROM [dbo].[FeedstuffMeasurement] AS [measurement]
   INNER JOIN [dbo].[Feedstuff] AS [feedstuff]
   ON [feedstuff].[Id] = [measurement].[FeedstuffId]
+  AND [measurement].[Value] != 0
   INNER JOIN [dbo].[Element] AS [element]
   ON [element].[Id] = [measurement].[ElementId]
   AND [element].[Code] = @elementCode
@@ -22,3 +31,4 @@ SELECT
   [feedstuffGroup].[Name] = 'Vitamins'
   )
   AND [feedstuff].[Name] LIKE @elementCode +'%'
+ 

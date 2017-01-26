@@ -7,6 +7,7 @@ import { Formulation } from './../models/formulation';
 import { Feedstuff } from './../models/feedstuff';
 import { Formula } from './../models/formula';
 import { Element } from './../models/element';
+import { SupplementFeedstuff } from './../models/supplementFeedstuff';
 import * as uuid from 'uuid';
 import * as mongodb from 'mongodb';
 
@@ -91,6 +92,33 @@ export class FormulatorService {
         });
     }
 
+
+    private loadSupplementComposition(formulation: Formulation) {
+
+        let parent = this;
+        return new Promise((resolve: Function, reject: Function) => {
+            new sql.Connection(config.db)
+                .connect().then((connection: sql.Connection) => {
+
+                    let supplementElements: Element[] = formulation.composition.filter((x) => x.value < x.minimum);
+                    formulation.supplementComposition = [];
+
+                    let listOfPromise = [];
+
+                    for (let i = 0; i < supplementElements.length; i++) {
+                         listOfPromise.push(parent.loadSupplementFeedstuff(connection, supplementElements[i]));
+                    }
+
+                    Promise.all(listOfPromise).then((values: Element[]) => {
+                        formulation.supplementComposition = values;
+                        resolve(formulation);
+                    }).catch((err: Error) => {
+                        reject(err);
+                    });
+                });
+        });
+    }
+
     private loadComposition(formulation: Formulation) {
 
         return new Promise((resolve: Function, reject: Function) => {
@@ -126,7 +154,12 @@ export class FormulatorService {
                                         formulation.composition.push(new Element(elementId, elementName, this.roundToTwoDecimal(elementMinimum), this.roundToTwoDecimal(elementMaximum), this.roundToTwoDecimal(sum / 1000), elementUnit, elementSortOrder));
                                     }
 
-                                    resolve(formulation);
+                                    this.loadSupplementComposition(formulation).then((result: Formulation) => {
+                                        resolve(result);
+                                    }).catch((err: Error) => {
+                                        reject(err);
+                                    });
+
                                 }).catch((err: Error) => {
                                     reject(err);
                                 });
@@ -189,6 +222,24 @@ export class FormulatorService {
                     Promise.all(listOfPromise).then((values: Feedstuff[]) => {
                         resolve(values);
                     });
+                });
+        });
+    }
+
+
+
+    private loadSupplementFeedstuff(connection: sql.Connection, element: Element) {
+        return new Promise((resolve: Function, reject: Function) => {
+            console.log(element);
+            new sql.Request(connection)
+                .input('elementId', element.id)
+                .input('supplementValueRequired', (element.minimum * 1000) - (element.value * 1000))
+                .execute('[dbo].[getSupplementValues]').then((recordsets1: any[]) => {
+                    element.supplementFeedstuffs = recordsets1[0].length == 0? [] : recordsets1[0];
+                    element.selectedSupplementFeedstuff = element.supplementFeedstuffs.length == 0? [] : [element.supplementFeedstuffs[0]];
+                    resolve(element);
+                }).catch((err: Error) => {
+                    reject(err);
                 });
         });
     }
