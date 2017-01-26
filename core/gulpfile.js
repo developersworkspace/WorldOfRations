@@ -11,6 +11,32 @@ gulp.task('ts', ['clean'], function() {
         .pipe(gulp.dest('./'));
 });
 
+
+gulp.task('build1', ['clean'], function () {
+    return gulp
+        .src('./../dist/api/core', { read: false })
+        .pipe(clean({force: true}));
+});
+
+gulp.task('build2', ['build1'], function () {
+    return gulp
+        .src(serverTS, { base: './' })
+        .pipe(ts({ module: 'commonjs', noImplicitAny: false, allowJs: true, allowUnreachableCode: true }))
+        .pipe(gulp.dest('./../dist/api/core'));
+});
+
+gulp.task('build3', ['build2'], function () {
+    return gulp
+        .src('./package.json')
+        .pipe(gulp.dest('./../dist/api/core'));
+});
+
+
+gulp.task('build', ['build3'], function () {
+
+});
+
+
 gulp.task('clean', function () {
     return gulp
         .src([

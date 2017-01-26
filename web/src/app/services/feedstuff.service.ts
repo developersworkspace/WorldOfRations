@@ -34,6 +34,7 @@ export class FeedstuffService extends BaseService {
 
         for (let i = 0; i < result.length; i++) {
           resultArr.push({
+            selectedFeedstuffName: result[i].name,
             selectedFeedstuff: {
               id: result[i].id,
               name: result[i].name,

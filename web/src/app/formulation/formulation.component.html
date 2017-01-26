@@ -59,6 +59,9 @@
         <thead>
           <tr>
             <th>
+              
+            </th>
+            <th>
               Name
             </th>
             <th>
@@ -69,8 +72,11 @@
         <tbody *ngIf="formulation != null">
           <tr *ngFor="let item of formulation.supplementComposition;">
             <td>
+              {{item.name}}
+            </td>
+            <td>
               <ng-select [allowClear]="true" [items]="item.supplementFeedstuffs" [active]="item.selectedSupplementFeedstuff" (selected)="selectedSupplementFeedstuff(item, $event)"
-                placeholder="No city selected">
+                placeholder="No feedstuff selected">
               </ng-select>
             </td>
             <td *ngIf="item.selectedSupplementFeedstuff != null && item.selectedSupplementFeedstuff.length > 0">

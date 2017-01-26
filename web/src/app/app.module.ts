@@ -5,7 +5,10 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
 // Plugins
-import { Typeahead } from 'ng2-typeahead';
+import { TypeaheadModule } from 'ng2-bootstrap';
+import { ComponentLoaderFactory } from 'ng2-bootstrap/component-loader';
+import { PositioningService } from 'ng2-bootstrap';
+import { SelectModule } from 'ng2-select';
 
 // Components
 import { AppComponent } from './app.component';
@@ -15,7 +18,7 @@ import { AboutComponent } from './about/about.component';
 import { LoginComponent } from './login/login.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { FormulationComponent } from './formulation/formulation.component';
-import {SelectModule} from 'ng2-select';
+
 
 // Services
 import { FeedstuffService } from './services/feedstuff.service';
@@ -51,7 +54,6 @@ var router = RouterModule.forRoot([
   declarations: [
     AppComponent,
     FormulatorComponent,
-    Typeahead,
     HomeComponent,
     AboutComponent,
     LoginComponent,
@@ -63,9 +65,10 @@ var router = RouterModule.forRoot([
     FormsModule,
     HttpModule,
     router,
-    SelectModule
+    SelectModule,
+    TypeaheadModule
   ],
-  providers: [FeedstuffService, FormulaService, FormulatorService],
+  providers: [FeedstuffService, FormulaService, FormulatorService, ComponentLoaderFactory, PositioningService],
   bootstrap: [AppComponent, NavbarComponent]
 })
 export class AppModule { }

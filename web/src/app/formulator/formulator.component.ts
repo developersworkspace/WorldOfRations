@@ -19,6 +19,7 @@ export class FormulatorComponent implements OnInit {
 
   feedstufffs: any[] = [];
 
+  selectedFormulaName: string;
   selectedFormula: any = null;
 
   errorMessage: string = null;
@@ -46,6 +47,10 @@ export class FormulatorComponent implements OnInit {
   }
 
   onUpdate_SuggestedValues(item: any, instance: any) {
+    if (item.item != null) {
+      instance.selectedFeedstuff = item.item;
+      instance.selectedFeedstuffName = item.item.name;
+    }
     if (item != null && this.selectedFormula != null) {
       instance.isLoading = true;
       this.feedstuffService.getSuggestedValues(this.selectedFormula.id, item.id).subscribe((result: any[]) => {
@@ -59,7 +64,7 @@ export class FormulatorComponent implements OnInit {
   }
 
   onSelect_Formula(item: any) {
-    this.selectedFormula = item;
+    this.selectedFormula = item.item;
     for (let i = 0; i < this.feedstufffs.length; i++) {
       this.onUpdate_SuggestedValues(this.feedstufffs[i], this.feedstufffs[i]);
     }
@@ -67,6 +72,7 @@ export class FormulatorComponent implements OnInit {
 
   onClick_AddFeedstuff() {
     this.feedstufffs.push({
+      selectedFeedstuffName: null,
       selectedFeedstuff: null,
       minimum: 0,
       maximum: 1000,
@@ -109,13 +115,13 @@ export class FormulatorComponent implements OnInit {
         formulaId: this.selectedFormula.id,
         feedstuffs: feedstuffs
       };
-      
+
       this.formulatorService.formulate(obj).subscribe((result: any) => {
         this.formulatorResult = result;
-         this.isFormulating = false;
+        this.isFormulating = false;
       }, (error: Error) => {
         this.errorMessage = 'An error has occurred while formulating';
-         this.isFormulating = false;
+        this.isFormulating = false;
       });
     }
   }
