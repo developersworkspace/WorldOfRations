@@ -7,17 +7,20 @@ import { Element } from './../models/element';
 import { SupplementFeedstuff } from './../models/supplementFeedstuff';
 import { FormulaRepository } from './../repositories/formula'
 import { FeedstuffRepository } from './../repositories/feedstuff'
+import { FormulationRepository } from './../repositories/formulation'
 import * as uuid from 'uuid';
-import * as mongodb from 'mongodb';
+
 
 export class FormulatorService {
 
     formulaRepository: FormulaRepository;
     feedstuffRepository: FeedstuffRepository;
+    formulationRepository: FormulationRepository;
 
     constructor() {
         this.formulaRepository = new FormulaRepository(config.db);
         this.feedstuffRepository = new FeedstuffRepository(config.db);
+        this.formulationRepository = new FormulationRepository(config.mongodb);
     }
 
     public createFormulation(feedstuffs: Feedstuff[], formulaId: string) {
@@ -54,17 +57,10 @@ export class FormulatorService {
         formulation.feasible = results.feasible;
         formulation.id = uuid.v4();
 
-        let mongoClient = new mongodb.MongoClient();
-        mongoClient.connect('mongodb://' + config.mongodb.server + ':27017/' + config.mongodb.database, (err: Error, db: mongodb.Db) => {
-            if (err) {
+        this.formulationRepository.saveFormulation(formulation).then((result) => {
 
-            } else {
-                var collection = db.collection('fomulations');
-                collection.insertOne(formulation, (err: Error, result: any) => {
-                    db.close();
-                });
-            }
         });
+
         return {
             cost: formulation.cost,
             feasible: formulation.feasible,
@@ -74,26 +70,18 @@ export class FormulatorService {
 
     public getFormulation(formulationId: string) {
         return new Promise((resolve: Function, reject: Function) => {
-            let mongoClient = new mongodb.MongoClient();
-            mongoClient.connect('mongodb://' + config.mongodb.server + ':27017/' + config.mongodb.database, (err: Error, db: mongodb.Db) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    var collection = db.collection('fomulations');
-                    collection.findOne({ id: formulationId }, (err: Error, formulation: Formulation) => {
-                        this.formulaRepository.loadCompositionForFormulation(formulation).then((formulationResult1: Formulation) => {
-                            formulation = formulationResult1;
-                            this.feedstuffRepository.loadSupplementFeedstuffsForFormulation(formulation).then((formulationResult2) => {
-                                 resolve(formulationResult2);
-                            }).catch((err:  Error) => {
+            this.formulationRepository.getFormulationById(formulationId).then((formulationResult1: Formulation) => {
+                this.formulaRepository.loadCompositionForFormulation(formulationResult1).then((formulationResult2: Formulation) => {
+                            this.feedstuffRepository.loadSupplementFeedstuffsForFormulation(formulationResult2).then((formulationResult3) => {
+                                resolve(formulationResult3);
+                            }).catch((err: Error) => {
                                 reject(err);
                             });
-                            db.close();
                         }).catch((err: Error) => {
                             reject(err);
                         });
-                    });
-                }
+            }).catch((err: Error) => {
+                reject(err);
             });
         });
     }
