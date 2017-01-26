@@ -1,4 +1,4 @@
-CREATE PROCEDURE [dbo].[listFeedstuff]
+CREATE PROCEDURE [dbo].[listFeedstuffs]
 AS
 SELECT 
 [Id] AS [id],

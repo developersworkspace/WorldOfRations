@@ -1,1 +1,0 @@
-declare function __log(message:string): void;

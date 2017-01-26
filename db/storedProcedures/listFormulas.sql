@@ -1,4 +1,4 @@
-CREATE PROCEDURE [dbo].[listFormula]
+CREATE PROCEDURE [dbo].[listFormulas]
 AS
 SELECT
 [formula].[Id] AS [id],
@@ -12,7 +12,16 @@ CASE
 	ELSE
 	[formulaGroup4].[Name] + ' - ' + [formulaGroup3].[Name] + ' - ' + [formulaGroup2].[Name] + ' - ' + [formula].[Name]
 END AS [name],
-[formula].[Name] AS [searchText]
+CASE
+	WHEN [formulaGroup3].[Name] IS NULL
+	THEN
+	[formulaGroup2].[Name] + ' - ' + [formula].[Name]
+	WHEN [formulaGroup4].[Name] IS NULL
+	THEN
+	[formulaGroup3].[Name] + ' - ' + [formulaGroup2].[Name] + ' - ' + [formula].[Name]
+	ELSE
+	[formulaGroup4].[Name] + ' - ' + [formulaGroup3].[Name] + ' - ' + [formulaGroup2].[Name] + ' - ' + [formula].[Name]
+END AS [searchText]
 FROM [dbo].[Formula] AS [formula]
 INNER JOIN [dbo].[FormulaGroup] AS [formulaGroup1]
 ON [formula].[FormulaGroupId] = [formulaGroup1].[Id]

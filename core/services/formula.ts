@@ -1,25 +1,16 @@
-/// <reference path="./../typings/index.d.ts"/>
-
-import * as sql from 'mssql';
 import { config } from './../config';
+import { FormulaRepository } from './../repositories/formula';
 
 export class FormulaService {
 
+    formulaRepository: FormulaRepository;
+
     constructor() {
+        this.formulaRepository = new FormulaRepository(config.db);
      }
 
     public listFormula() {
-        return new Promise((resolve: Function, reject: Function) => {
-            new sql.Connection(config.db)
-                .connect().then((connection: sql.Connection) => {
-                    new sql.Request(connection)
-                        .execute('[dbo].[listFormula]').then((recordsets: any[]) => {
-                            resolve(recordsets[0]);
-                        }).catch(function (err: Error) {
-                            reject(err);
-                        });
-                });
-        });
+      return this.formulaRepository.listFormulas();
     }
 }
 

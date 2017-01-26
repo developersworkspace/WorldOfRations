@@ -1,6 +1,3 @@
-/// <reference path="./../typings/index.d.ts"/>
-
-import * as sql from 'mssql';
 import { config } from './../config';
 import * as solver from './../node_modules/javascript-lp-solver/src/solver';
 import { Formulation } from './../models/formulation';
@@ -8,23 +5,29 @@ import { Feedstuff } from './../models/feedstuff';
 import { Formula } from './../models/formula';
 import { Element } from './../models/element';
 import { SupplementFeedstuff } from './../models/supplementFeedstuff';
+import { FormulaRepository } from './../repositories/formula'
+import { FeedstuffRepository } from './../repositories/feedstuff'
 import * as uuid from 'uuid';
 import * as mongodb from 'mongodb';
 
 export class FormulatorService {
 
-    constructor() {
+    formulaRepository: FormulaRepository;
+    feedstuffRepository: FeedstuffRepository;
 
+    constructor() {
+        this.formulaRepository = new FormulaRepository(config.db);
+        this.feedstuffRepository = new FeedstuffRepository(config.db);
     }
 
     public createFormulation(feedstuffs: Feedstuff[], formulaId: string) {
         return new Promise((resolve: Function, reject: Function) => {
-            this.loadFeedstuffsElements(feedstuffs).then((resultFeedstuffs: Feedstuff[]) => {
+            this.feedstuffRepository.loadElementsForFeedstuffs(feedstuffs).then((feedstuffsResult: Feedstuff[]) => {
                 let formula = new Formula(formulaId);
-                this.loadFormulaElements(formula).then((resultFormula: Formula) => {
+                this.formulaRepository.loadElementsForFormula(formula).then((formulaResult: Formula) => {
                     let formulation = new Formulation();
-                    formulation.feedstuffs = resultFeedstuffs;
-                    formulation.formula = resultFormula;
+                    formulation.feedstuffs = feedstuffsResult;
+                    formulation.formula = formulaResult;
                     resolve(formulation);
                 });
             }).catch((err: Error) => {
@@ -78,10 +81,13 @@ export class FormulatorService {
                 } else {
                     var collection = db.collection('fomulations');
                     collection.findOne({ id: formulationId }, (err: Error, formulation: Formulation) => {
-                        this.loadComposition(formulation).then((resultFormulation: Formulation) => {
-                            formulation = resultFormulation;
-                            formulation = this.cleanFormulationData(formulation);
-                            resolve(formulation);
+                        this.formulaRepository.loadCompositionForFormulation(formulation).then((formulationResult1: Formulation) => {
+                            formulation = formulationResult1;
+                            this.feedstuffRepository.loadSupplementFeedstuffsForFormulation(formulation).then((formulationResult2) => {
+                                 resolve(formulationResult2);
+                            }).catch((err:  Error) => {
+                                reject(err);
+                            });
                             db.close();
                         }).catch((err: Error) => {
                             reject(err);
@@ -90,89 +96,6 @@ export class FormulatorService {
                 }
             });
         });
-    }
-
-
-    private loadSupplementComposition(formulation: Formulation) {
-
-        let parent = this;
-        return new Promise((resolve: Function, reject: Function) => {
-            new sql.Connection(config.db)
-                .connect().then((connection: sql.Connection) => {
-
-                    let supplementElements: Element[] = formulation.composition.filter((x) => x.value < x.minimum);
-                    formulation.supplementComposition = [];
-
-                    let listOfPromise = [];
-
-                    for (let i = 0; i < supplementElements.length; i++) {
-                         listOfPromise.push(parent.loadSupplementFeedstuff(connection, supplementElements[i]));
-                    }
-
-                    Promise.all(listOfPromise).then((values: Element[]) => {
-                        formulation.supplementComposition = values;
-                        resolve(formulation);
-                    }).catch((err: Error) => {
-                        reject(err);
-                    });
-                });
-        });
-    }
-
-    private loadComposition(formulation: Formulation) {
-
-        return new Promise((resolve: Function, reject: Function) => {
-            new sql.Connection(config.db)
-                .connect().then((connection: sql.Connection) => {
-                    new sql.Request(connection)
-                        .input('formulaId', formulation.formula.id)
-                        .execute('[dbo].[getComparisonFormula]').then((recordsets1: any[]) => {
-                            let comparisonFormulaId = recordsets1[0][0].formulaId;
-                            new sql.Request(connection)
-                                .input('formulaId', comparisonFormulaId)
-                                .execute('[dbo].[listElementsForFormula]').then((recordsets2: any[]) => {
-                                    let comparisonFormulaElements: Element[] = recordsets2[0];
-
-                                    for (let i = 0; i < comparisonFormulaElements.length; i++) {
-                                        let elementId = comparisonFormulaElements[i].id;
-                                        let elementName = comparisonFormulaElements[i].name;
-                                        let elementMinimum = comparisonFormulaElements[i].minimum == null ? 0 : comparisonFormulaElements[i].minimum;
-                                        let elementMaximum = comparisonFormulaElements[i].maximum == null ? 1000000 : comparisonFormulaElements[i].maximum;
-                                        let elementUnit = comparisonFormulaElements[i].unit;
-                                        let elementSortOrder = comparisonFormulaElements[i].sortOrder;
-                                        let sum = 0;
-                                        for (let j = 0; j < formulation.feedstuffs.length; j++) {
-                                            let feedstuffElements = formulation.feedstuffs[j].elements.filter((x) => x.id == elementId);
-                                            if (feedstuffElements.length > 0) {
-                                                sum += feedstuffElements[0].value * formulation.feedstuffs[j].weight;
-                                            }
-                                        }
-
-                                        elementMinimum = comparisonFormulaElements[i].minimum == null ? 0 : comparisonFormulaElements[i].minimum;
-                                        elementMaximum = comparisonFormulaElements[i].maximum == null ? 1000000 : comparisonFormulaElements[i].maximum;
-
-                                        formulation.composition.push(new Element(elementId, elementName, this.roundToTwoDecimal(elementMinimum), this.roundToTwoDecimal(elementMaximum), this.roundToTwoDecimal(sum / 1000), elementUnit, elementSortOrder));
-                                    }
-
-                                    this.loadSupplementComposition(formulation).then((result: Formulation) => {
-                                        resolve(result);
-                                    }).catch((err: Error) => {
-                                        reject(err);
-                                    });
-
-                                }).catch((err: Error) => {
-                                    reject(err);
-                                });
-
-                        }).catch((err: Error) => {
-                            reject(err);
-                        });
-                });
-        });
-    }
-
-    private roundToTwoDecimal(value: number) {
-        return Math.round(value * 100) / 100;
     }
 
     private cleanFormulationData(formulation: Formulation) {
@@ -185,85 +108,6 @@ export class FormulatorService {
         return formulation;
     }
 
-    private loadFormulaElements(formula: Formula) {
-        return new Promise((resolve: Function, reject: Function) => {
-            new sql.Connection(config.db)
-                .connect().then((connection: sql.Connection) => {
-                    new sql.Request(connection)
-                        .input('formulaId', formula.id)
-                        .execute('[dbo].[listElementsForFormula]').then((recordsets1: any[]) => {
-                            formula.elements = recordsets1[0];
-
-                            new sql.Request(connection)
-                                .input('formulaId', formula.id)
-                                .execute('[dbo].[getFormula]').then((recordsets2: any[]) => {
-                                    formula.name = recordsets2[0][0].name;
-                                    resolve(formula);
-                                }).catch((err: Error) => {
-                                    reject(err);
-                                });
-
-                        }).catch((err: Error) => {
-                            reject(err);
-                        });
-                });
-        });
-    }
-
-    private loadFeedstuffsElements(feedstuffs: Feedstuff[]) {
-        let parent = this;
-        return new Promise((resolve: Function, reject: Function) => {
-            new sql.Connection(config.db)
-                .connect().then((connection: sql.Connection) => {
-                    let listOfPromise = [];
-                    for (let i = 0; i < feedstuffs.length; i++) {
-                        listOfPromise.push(parent.loadFeedstuffElements(connection, feedstuffs[i]));
-                    }
-                    Promise.all(listOfPromise).then((values: Feedstuff[]) => {
-                        resolve(values);
-                    });
-                });
-        });
-    }
-
-
-
-    private loadSupplementFeedstuff(connection: sql.Connection, element: Element) {
-        return new Promise((resolve: Function, reject: Function) => {
-            console.log(element);
-            new sql.Request(connection)
-                .input('elementId', element.id)
-                .input('supplementValueRequired', (element.minimum * 1000) - (element.value * 1000))
-                .execute('[dbo].[getSupplementValues]').then((recordsets1: any[]) => {
-                    element.supplementFeedstuffs = recordsets1[0].length == 0? [] : recordsets1[0];
-                    element.selectedSupplementFeedstuff = element.supplementFeedstuffs.length == 0? [] : [element.supplementFeedstuffs[0]];
-                    resolve(element);
-                }).catch((err: Error) => {
-                    reject(err);
-                });
-        });
-    }
-
-    private loadFeedstuffElements(connection: sql.Connection, feedstuff: Feedstuff) {
-        return new Promise((resolve: Function, reject: Function) => {
-            new sql.Request(connection)
-                .input('feedstuffId', feedstuff.id)
-                .execute('[dbo].[listElementsForFeedstuff]').then((recordsets1: any[]) => {
-                    feedstuff.elements = recordsets1[0];
-                    new sql.Request(connection)
-                        .input('feedstuffId', feedstuff.id)
-                        .execute('[dbo].[getFeedstuff]').then((recordsets2: any[]) => {
-                            feedstuff.name = recordsets2[0][0].name;
-                            resolve(feedstuff);
-                        }).catch((err: Error) => {
-                            reject(err);
-                        });
-
-                }).catch((err: Error) => {
-                    reject(err);
-                });
-        });
-    }
 
     private buildConstraints(feedstuffs: Feedstuff[], formula: Formula) {
         let constraints = {};
