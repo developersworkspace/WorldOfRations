@@ -54,8 +54,3 @@ gulp.task('clean', function () {
         .pipe(clean())
 });
 
-gulp.task('clean-build', ['clean'], function () {
-    return gulp
-        .src('./../dist/api', { read: false })
-        .pipe(clean({ force: true }));
-});
