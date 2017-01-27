@@ -1,10 +1,14 @@
 version: '2'
 services:
-  web:
-    build: .
-    ports:
-     - "5000:5000"
-    volumes:
-     - .:/code
-  redis:
-    image: "redis:alpine"
+    api:
+        build: api
+        ports:
+        - "9001:9001"
+    web:
+        build: web
+        ports:
+        - "80:80"
+        links: 
+        - mongo
+    mongo:
+        image: "mongo"
