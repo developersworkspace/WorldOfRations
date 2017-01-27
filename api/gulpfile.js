@@ -4,9 +4,9 @@ var clean = require('gulp-clean');
 
 var serverTS = ["**/*.ts", "!node_modules/**", "!typings/**"];
 
-gulp.task('ts', ['clean'], function() {
+gulp.task('ts', ['clean'], function () {
     return gulp
-        .src(serverTS, {base: './'})
+        .src(serverTS, { base: './' })
         .pipe(ts({ module: 'commonjs', noImplicitAny: false, allowJs: true, allowUnreachableCode: true }))
         .pipe(gulp.dest('./'));
 });
@@ -15,7 +15,7 @@ gulp.task('ts', ['clean'], function() {
 gulp.task('build1', ['clean'], function () {
     return gulp
         .src('./../dist/api/api', { read: false })
-        .pipe(clean({force: true}));
+        .pipe(clean({ force: true }));
 });
 
 gulp.task('build2', ['build1'], function () {
@@ -50,6 +50,12 @@ gulp.task('clean', function () {
             '**/*.js.map',
             '!node_modules/**',
             '!gulpfile.js'
-        ], {read: false})
+        ], { read: false })
         .pipe(clean())
+});
+
+gulp.task('clean-build', ['clean'], function () {
+    return gulp
+        .src('./../dist/api', { read: false })
+        .pipe(clean({ force: true }));
 });
