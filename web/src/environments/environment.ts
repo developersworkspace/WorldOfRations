@@ -4,14 +4,22 @@
 // The list of which env maps to which file can be found in `angular-cli.json`.
 
 export const environment = {
-  production: false,
-  api: {
-        uri: 'http://localhost:9001'
+    production: false,
+    api: {
+        uri: 'http://api.worldofrations.com:8083'
     },
     oauth: {
-        'uri': 'http://localhost:9009/api/auth/authorize',
-        'redirectUri': 'http://localhost:4200/login',
-        'clientId': '123',
-        'clientSecret': '987'
+        worldofrations: {
+            'uri': 'http://api.worldofrations.com:8081/api/auth/authorize',
+            'redirectUri': 'http://worldofrations.com/login',
+            'clientId': 'uvMOcnBdKi',
+            'clientSecret': '5JXUNDKDqr'
+        },
+        google: {
+            'uri': 'http://api.worldofrations.com:8081/api/auth/google',
+            'redirectUri': 'http://worldofrations.com/login',
+            'clientId': 'uvMOcnBdKi',
+            'clientSecret': '5JXUNDKDqr'
+        }
     }
 };

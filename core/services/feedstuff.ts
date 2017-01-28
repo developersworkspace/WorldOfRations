@@ -1,12 +1,11 @@
-import { config } from './../config';
 import { FeedstuffRepository } from './../repositories/feedstuff';
 
 export class FeedstuffService {
 
     feedstuffRepository: FeedstuffRepository;
 
-    constructor() { 
-        this.feedstuffRepository = new FeedstuffRepository(config.db);
+    constructor(private config: any) { 
+        this.feedstuffRepository = new FeedstuffRepository(this.config.db);
     }
 
     public listFeedstuff() {

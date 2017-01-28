@@ -1,12 +1,12 @@
 export const environment = {
-  production: true,
-  api: {
-        uri: 'http://worldofrations.com:9001'
+    production: true,
+    api: {
+        uri: 'http://api.worldofrations.com'
     },
     oauth: {
-        'uri': 'http://worldofrations.com/api/auth/authorize',
-        'redirectUri': 'http://worldofrations.com/login',
-        'clientId': '123',
-        'clientSecret': '987'
+        'uri': 'http://api.worldofrations.com/api/auth/authorize',
+        'redirectUri': 'http://worldofrations/login',
+        'clientId': 'uvMOcnBdKi',
+        'clientSecret': '5JXUNDKDqr'
     }
 };

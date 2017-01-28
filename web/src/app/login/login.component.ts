@@ -14,9 +14,9 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe((params: Params) => {
       if (params['token'] == null) {
-        let redirectUrl = environment.oauth.uri;
+        let redirectUrl = environment.oauth.google.uri;
 
-        redirectUrl += '?response_type=token&client_id=' + environment.oauth.clientId + '&redirect_uri=' + environment.oauth.redirectUri + '&scope=read';
+        redirectUrl += '?client_id=' + environment.oauth.google.clientId + '&redirect_uri=' + environment.oauth.google.redirectUri;
 
         window.location.href = redirectUrl;
       } else {

@@ -1,4 +1,3 @@
-import { config } from './../config';
 import * as solver from './../node_modules/javascript-lp-solver/src/solver';
 import { Formulation } from './../models/formulation';
 import { Feedstuff } from './../models/feedstuff';
@@ -17,10 +16,10 @@ export class FormulatorService {
     feedstuffRepository: FeedstuffRepository;
     formulationRepository: FormulationRepository;
 
-    constructor() {
-        this.formulaRepository = new FormulaRepository(config.db);
-        this.feedstuffRepository = new FeedstuffRepository(config.db);
-        this.formulationRepository = new FormulationRepository(config.mongodb);
+    constructor(private config: any) {
+        this.formulaRepository = new FormulaRepository(this.config.db);
+        this.feedstuffRepository = new FeedstuffRepository(this.config.db);
+        this.formulationRepository = new FormulationRepository(this.config.mongodb);
     }
 
     public createFormulation(feedstuffs: Feedstuff[], formulaId: string) {

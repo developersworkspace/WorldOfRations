@@ -1,5 +1,6 @@
 import { Express, Request, Response } from "express";
-import { FormulaService } from './../../core/services/formula'
+import { FormulaService } from './../../core/services/formula';
+import { config } from './../config';
 
 import * as express from 'express';
 let router = express.Router();
@@ -13,7 +14,7 @@ let router = express.Router();
  * 
  */
 router.get('/list', function (req: Request, res: Response, next: Function) {
-    let formulaService = new FormulaService();
+    let formulaService = new FormulaService(config);
     formulaService.listFormula().then((result: any[]) => {
         res.json(result);
     }).catch((err: Error) => {
