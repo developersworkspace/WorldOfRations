@@ -73,6 +73,7 @@ export class FormulatorService {
                 this.formulaRepository.loadCompositionForFormulation(formulationResult1).then((formulationResult2: Formulation) => {
                     this.feedstuffRepository.loadSupplementFeedstuffsForFormulation(formulationResult2).then((formulationResult3: Formulation) => {
                         let formulationResult = this.cleanFormulation(formulationResult3);
+                        resolve(formulationResult);
                     }).catch((err: Error) => {
                         reject(err);
                     });

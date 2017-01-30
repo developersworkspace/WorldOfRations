@@ -4,6 +4,7 @@ import bodyParser = require('body-parser');
 import feedstuffRoute = require('./routes/feedstuff');
 import formulaRoute = require('./routes/formula');
 import formulatorRoute = require('./routes/formulator');
+import * as cluster from 'cluster';
 
 export class WebApi {
     /**
@@ -39,8 +40,18 @@ export class WebApi {
     }
 }
 
+if (cluster.isMaster) {
+    // Count the machine's CPUs
+    var cpuCount = require('os').cpus().length;
 
-let port = 8083;
-let api = new WebApi(express(), port);
-api.run();
-console.info(`listening on ${port}`);
+    // Create a worker for each CPU
+    for (var i = 0; i < cpuCount; i += 1) {
+        cluster.fork();
+    }
+} else {
+
+    let port = 8083;
+    let api = new WebApi(express(), port);
+    api.run();
+    console.info(`listening on ${port}`);
+}

@@ -1,0 +1,27 @@
+{
+  "name": "mssql-to-mysql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Barend Erasmus",
+  "license": "MIT",
+  "dependencies": {
+    "@types/es6-promise": "0.0.32",
+    "@types/node": "^7.0.4",
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-typescript": "^3.1.4",
+    "mssql": "^3.3.0",
+    "string-format": "^0.5.0",
+    "tedious": "^1.14.0",
+    "ts-node": "^2.0.0",
+    "typescript": "^2.1.5",
+    "util": "^0.10.3"
+  },
+  "devDependencies": {
+    "@types/node": "^7.0.4"
+  }
+}

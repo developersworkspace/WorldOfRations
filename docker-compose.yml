@@ -4,11 +4,11 @@ services:
         build: api
         ports:
         - "8083:8083"
+        links: 
+        - mongo
     web:
         build: web
         ports:
         - "8084:8084"
-        links: 
-        - mongo
     mongo:
         image: "mongo"
