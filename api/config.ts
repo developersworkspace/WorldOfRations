@@ -6,7 +6,7 @@ export var config = {
         database: 'WoR'
     },
     mongodb: {
-        server: 'localhost',
+        server: 'mongo',
         database: 'WoR'
     }
 }
