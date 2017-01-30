@@ -71,30 +71,28 @@ export class FormulatorService {
         return new Promise((resolve: Function, reject: Function) => {
             this.formulationRepository.getFormulationById(formulationId).then((formulationResult1: Formulation) => {
                 this.formulaRepository.loadCompositionForFormulation(formulationResult1).then((formulationResult2: Formulation) => {
-                            this.feedstuffRepository.loadSupplementFeedstuffsForFormulation(formulationResult2).then((formulationResult3) => {
-                                resolve(formulationResult3);
-                            }).catch((err: Error) => {
-                                reject(err);
-                            });
-                        }).catch((err: Error) => {
-                            reject(err);
-                        });
+                    this.feedstuffRepository.loadSupplementFeedstuffsForFormulation(formulationResult2).then((formulationResult3: Formulation) => {
+                        let formulationResult = this.cleanFormulation(formulationResult3);
+                    }).catch((err: Error) => {
+                        reject(err);
+                    });
+                }).catch((err: Error) => {
+                    reject(err);
+                });
             }).catch((err: Error) => {
                 reject(err);
             });
         });
     }
 
-    private cleanFormulationData(formulation: Formulation) {
+    private cleanFormulation(formulation: Formulation) {
+
         for (let i = 0; i < formulation.feedstuffs.length; i++) {
             formulation.feedstuffs[i].elements = null;
         }
-
         formulation.formula.elements = null;
-
         return formulation;
     }
-
 
     private buildConstraints(feedstuffs: Feedstuff[], formula: Formula) {
         let constraints = {};
