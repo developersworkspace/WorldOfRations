@@ -1,12 +1,12 @@
 DELIMITER //
 
 CREATE PROCEDURE getFeedstuff ( 
-feedstuffId CHAR(36))
+p_feedstuffId CHAR(36))
 BEGIN
 SELECT 
 `name` AS `name`
 FROM sadfmcoz_dwtest.feedstuffs
-WHERE `id` = feedstuffId;
+WHERE `id` = p_feedstuffId;
 END;
 //
 

@@ -1,4 +1,8 @@
+// Imports
 import * as sql from 'mssql';
+import { winston } from './../../logger';
+
+// Import models
 import { Formulation } from './../../models/formulation';
 import { Feedstuff } from './../../models/feedstuff';
 import { Formula } from './../../models/formula';
@@ -12,13 +16,16 @@ export class FormulaRepository {
 
     public listFormulas() {
         return new Promise((resolve: Function, reject: Function) => {
+            winston.profile('FormulaRepository.listFormulas');
             new sql.Connection(this.config)
                 .connect().then((connection: sql.Connection) => {
                     new sql.Request(connection)
                         .execute('[dbo].[listFormulas]').then((listFormulasRecordSet: any[]) => {
                             resolve(listFormulasRecordSet[0]);
+                            winston.profile('FormulaRepository.listFormulas');
                         }).catch(function (err: Error) {
                             reject(err);
+                            winston.profile('FormulaRepository.listFormulas');
                         });
                 });
         });
@@ -27,6 +34,7 @@ export class FormulaRepository {
 
     public loadElementsForFormula(formula: Formula) {
         return new Promise((resolve: Function, reject: Function) => {
+            winston.profile('FormulaRepository.loadElementsForFormula');
             new sql.Connection(this.config)
                 .connect().then((connection: sql.Connection) => {
                     new sql.Request(connection)
@@ -38,12 +46,15 @@ export class FormulaRepository {
                                 .execute('[dbo].[getFormula]').then((getFormulaRecordSet: any[]) => {
                                     formula.name = getFormulaRecordSet[0][0].name;
                                     resolve(formula);
+                                    winston.profile('FormulaRepository.loadElementsForFormula');
                                 }).catch((err: Error) => {
                                     reject(err);
+                                    winston.profile('FormulaRepository.loadElementsForFormula');
                                 });
 
                         }).catch((err: Error) => {
                             reject(err);
+                            winston.profile('FormulaRepository.loadElementsForFormula');
                         });
                 });
         });
@@ -51,6 +62,7 @@ export class FormulaRepository {
 
     public loadCompositionForFormulation(formulation: Formulation) {
         return new Promise((resolve: Function, reject: Function) => {
+            winston.profile('FormulaRepository.loadCompositionForFormulation');
             new sql.Connection(this.config)
                 .connect().then((connection: sql.Connection) => {
                     new sql.Request(connection)
@@ -83,12 +95,15 @@ export class FormulaRepository {
                                         formulation.composition.push(new Element(elementId, elementName, this.roundToTwoDecimal(elementMinimum), this.roundToTwoDecimal(elementMaximum), this.roundToTwoDecimal(sum / 1000), elementUnit, elementSortOrder));
                                     }
                                     resolve(formulation);
+                                    winston.profile('FormulaRepository.loadCompositionForFormulation');
                                 }).catch((err: Error) => {
                                     reject(err);
+                                    winston.profile('FormulaRepository.loadCompositionForFormulation');
                                 });
 
                         }).catch((err: Error) => {
                             reject(err);
+                            winston.profile('FormulaRepository.loadCompositionForFormulation');
                         });
                 });
         });

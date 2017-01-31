@@ -1,5 +1,6 @@
 import express = require("express");
 import bodyParser = require('body-parser');
+import { winston } from './../core/logger';
 
 import feedstuffRoute = require('./routes/feedstuff');
 import formulaRoute = require('./routes/formula');

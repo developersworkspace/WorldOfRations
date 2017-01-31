@@ -28,7 +28,6 @@ function query(query, filename, map) {
                     });
                 }
                 catch (err) {
-                    console.log(err);
                     console.log('Failed mapping - ' + filename);
                 }
                 connection.close();

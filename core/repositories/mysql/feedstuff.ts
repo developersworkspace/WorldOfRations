@@ -1,9 +1,13 @@
+// Imports
+import { Base } from './base';
+import * as util from 'util';
+import { winston } from './../../logger';
+
+// Import models
 import { Formulation } from './../../models/formulation';
 import { Feedstuff } from './../../models/feedstuff';
 import { Formula } from './../../models/formula';
 import { Element } from './../../models/element';
-import { Base } from './base';
-import * as util from 'util';
 
 export class FeedstuffRepository extends Base {
 
@@ -12,28 +16,29 @@ export class FeedstuffRepository extends Base {
     }
 
     public listFeedstuffs() {
-        return this.query(null, 'Call listFeedstuffs();');
+        return this.query('CALL listFeedstuffs();');
     }
 
     public listExampleFeedstuffs() {
-        return this.query(null, 'Call listExampleFeedstuffs();');
+        return this.query('CALL listExampleFeedstuffs();');
     }
 
     public getSuggestedValues(formulaId: string, feedstuffId: string) {
-        return this.query(null, util.format('Call getSuggestedValues(%s, %s);', this.escapeAndFormat(formulaId), this.escapeAndFormat(feedstuffId)));
+        return this.query(util.format('CALL getSuggestedValues(%s, %s);', this.escapeAndFormat(formulaId), this.escapeAndFormat(feedstuffId)));
     }
 
     public loadElementsForFeedstuffs(feedstuffs: Feedstuff[]) {
         let parent = this;
         return new Promise((resolve: Function, reject: Function) => {
+            winston.profile('FeedstuffRepository.loadElementsForFeedstuffs');
             let connection = this.getConnection();
             let listOfPromise = [];
             for (let i = 0; i < feedstuffs.length; i++) {
-                listOfPromise.push(parent.loadElementsForFeedstuff(connection, feedstuffs[i]));
+                listOfPromise.push(parent.loadElementsForFeedstuff(feedstuffs[i]));
             }
             Promise.all(listOfPromise).then((feedstuffsResult: Feedstuff[]) => {
                 resolve(feedstuffsResult);
-                connection.close();
+                winston.profile('FeedstuffRepository.loadElementsForFeedstuffs');
             });
 
         });
@@ -42,6 +47,7 @@ export class FeedstuffRepository extends Base {
     public loadSupplementFeedstuffsForFormulation(formulation: Formulation) {
         let parent = this;
         return new Promise((resolve: Function, reject: Function) => {
+            winston.profile('FeedstuffRepository.loadSupplementFeedstuffsForFormulation');
             let connection = this.getConnection();
 
             let supplementElements: Element[] = formulation.composition.filter((x) => x.value < x.minimum);
@@ -50,51 +56,57 @@ export class FeedstuffRepository extends Base {
             let listOfPromise = [];
 
             for (let i = 0; i < supplementElements.length; i++) {
-                listOfPromise.push(parent.loadSupplementFeedstuffForElement(connection, supplementElements[i]));
+                listOfPromise.push(parent.loadSupplementFeedstuffForElement(supplementElements[i]));
             }
 
             Promise.all(listOfPromise).then((elementsResult: Element[]) => {
                 formulation.supplementComposition = elementsResult;
                 resolve(formulation);
-                connection.close();
+                winston.profile('FeedstuffRepository.loadSupplementFeedstuffsForFormulation');
             }).catch((err: Error) => {
                 reject(err);
-                connection.close();
+                winston.profile('FeedstuffRepository.loadSupplementFeedstuffsForFormulation');
             });
 
         });
     }
 
-    private loadSupplementFeedstuffForElement(connection: any, element: Element) {
+    private loadSupplementFeedstuffForElement(element: Element) {
         return new Promise((resolve: Function, reject: Function) => {
-            this.query(connection, util.format('Call getSupplementValues(%s, %s);', this.escapeAndFormat(element.id), (element.minimum * 1000) - (element.value * 1000)))
+            winston.profile('FeedstuffRepository.loadSupplementFeedstuffForElement');
+            this.query(util.format('CALL getSupplementValues(%s, %s);', this.escapeAndFormat(element.id), (element.minimum * 1000) - (element.value * 1000)))
                 .then((getSupplementValuesRecordSet: any[]) => {
                     element.supplementFeedstuffs = getSupplementValuesRecordSet.length == 0 ? [] : getSupplementValuesRecordSet;
                     element.selectedSupplementFeedstuff = element.supplementFeedstuffs.length == 0 ? [] : [element.supplementFeedstuffs[0]];
                     resolve(element);
+                    winston.profile('FeedstuffRepository.loadSupplementFeedstuffForElement');
                 }).catch((err: Error) => {
                     reject(err);
+                    winston.profile('FeedstuffRepository.loadSupplementFeedstuffForElement');
                 });
         });
     }
 
 
-    private loadElementsForFeedstuff(connection: any, feedstuff: Feedstuff) {
+    private loadElementsForFeedstuff(feedstuff: Feedstuff) {
         return new Promise((resolve: Function, reject: Function) => {
-            let connection = this.getConnection();
-        this.query(connection, util.format('CALL listElementsForFeedstuff(%s)', this.escapeAndFormat(feedstuff.id)))
+            winston.profile('FeedstuffRepository.loadElementsForFeedstuff');
+            this.query(util.format('CALL listElementsForFeedstuff(%s)', this.escapeAndFormat(feedstuff.id)))
                 .then((listElementsForFeedstuffRecordSet: any[]) => {
                     feedstuff.elements = listElementsForFeedstuffRecordSet;
-                    this.query(connection, util.format('CALL getFeedstuff(%s)', this.escapeAndFormat(feedstuff.id)))
+                    this.query(util.format('CALL getFeedstuff(%s)', this.escapeAndFormat(feedstuff.id)))
                         .then((getFeedstuffRecordSet: any[]) => {
                             feedstuff.name = getFeedstuffRecordSet[0].name;
                             resolve(feedstuff);
+                            winston.profile('FeedstuffRepository.loadElementsForFeedstuff');
                         }).catch((err: Error) => {
                             reject(err);
+                            winston.profile('FeedstuffRepository.loadElementsForFeedstuff');
                         });
 
                 }).catch((err: Error) => {
                     reject(err);
+                    winston.profile('FeedstuffRepository.loadElementsForFeedstuff');
                 });
         });
     }

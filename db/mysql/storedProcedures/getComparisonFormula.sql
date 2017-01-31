@@ -1,11 +1,11 @@
 DELIMITER //
 
 CREATE PROCEDURE getComparisonFormula (
-formulaId CHAR(36))
+p_formulaId CHAR(36))
 BEGIN
 SELECT `formulaId` AS `formulaId`
 FROM sadfmcoz_dwtest.comparisonFormulas
-WHERE `id` = formulaId;
+WHERE `id` = p_formulaId;
 END;
 //
 

@@ -1,4 +1,6 @@
+// Imports
 import * as mysql from 'mysql';
+import { winston } from './../../logger';
 
 export class Base {
 
@@ -6,27 +8,22 @@ export class Base {
 
     }
 
-    protected query(connection: any, query: string) {
+    protected query(query: string) {
         return new Promise((resolve: Function, reject: Function) => {
-
-            console.log('Executing - ' + query);
-            
-            let closeConnection = connection == null;
-
-            if (connection == null) {
-                connection = this.getConnection();
-            }
+            winston.profile('Base.query ' + query);
+            let connection = this.getConnection();
 
             connection.query(query, (err: Error, results: any[], fields) => {
                 if (err) {
                     reject(err);
+                    winston.profile('Base.query ' + query);
                 } else {
                     resolve(results[0]);
+                    winston.debug(results[0].length + ' results returned');
+                    winston.profile('Base.query ' + query);
                 }
 
-                if (closeConnection) {
-                    connection.end();
-                }
+                connection.end();
             });
         });
     }

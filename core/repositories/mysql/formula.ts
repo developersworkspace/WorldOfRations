@@ -1,9 +1,13 @@
+// Imports
+import { Base } from './base';
+import * as util from 'util';
+import { winston } from './../../logger';
+
+// Import models
 import { Formulation } from './../../models/formulation';
 import { Feedstuff } from './../../models/feedstuff';
 import { Formula } from './../../models/formula';
 import { Element } from './../../models/element';
-import { Base } from './base';
-import * as util from 'util';
 
 export class FormulaRepository extends Base {
 
@@ -12,27 +16,29 @@ export class FormulaRepository extends Base {
     }
 
     public listFormulas() {
-        return this.query(null, 'CALL listFormulas()');
+        return this.query('CALL listFormulas()');
     }
 
 
     public loadElementsForFormula(formula: Formula) {
         return new Promise((resolve: Function, reject: Function) => {
+            winston.profile('FormulaRepository.loadElementsForFormula');
             let connection = this.getConnection();
-            this.query(connection, util.format('CALL listElementsForFormula(%s)', this.escapeAndFormat(formula.id)))
+            this.query(util.format('CALL listElementsForFormula(%s)', this.escapeAndFormat(formula.id)))
                 .then((listElementsForFormulaRecordSet: any[]) => {
                     formula.elements = listElementsForFormulaRecordSet;
-                    this.query(connection, util.format('CALL getFormula(%s)', this.escapeAndFormat(formula.id)))
+                    this.query(util.format('CALL getFormula(%s)', this.escapeAndFormat(formula.id)))
                         .then((getFormulaRecordSet: any[]) => {
                             formula.name = getFormulaRecordSet[0].name;
                             resolve(formula);
-                            connection.close();
+                            winston.profile('FormulaRepository.loadElementsForFormula');
                         }).catch((err: Error) => {
                             reject(err);
-                            connection.close();
+                            winston.profile('FormulaRepository.loadElementsForFormula');
                         });
                 }).catch((err: Error) => {
                     reject(err);
+                    winston.profile('FormulaRepository.loadElementsForFormula');
                 });
 
         });
@@ -40,10 +46,11 @@ export class FormulaRepository extends Base {
 
     public loadCompositionForFormulation(formulation: Formulation) {
         return new Promise((resolve: Function, reject: Function) => {
+            winston.profile('FormulaRepository.loadCompositionForFormulation');
             let connection = this.getConnection();
-            this.query(connection, util.format('CALL getComparisonFormula(%s)', this.escapeAndFormat(formulation.formula.id))).then((getComparisonFormulaRecordSet: any[]) => {
+            this.query(util.format('CALL getComparisonFormula(%s)', this.escapeAndFormat(formulation.formula.id))).then((getComparisonFormulaRecordSet: any[]) => {
                     let comparisonFormulaId = getComparisonFormulaRecordSet[0].formulaId;
-                    this.query(connection, util.format('CALL listElementsForFormula(%s)', this.escapeAndFormat(comparisonFormulaId))).then((listElementsForFormulaRecordSet: any[]) => {
+                    this.query(util.format('CALL listElementsForFormula(%s)', this.escapeAndFormat(comparisonFormulaId))).then((listElementsForFormulaRecordSet: any[]) => {
                             let comparisonFormulaElements: Element[] = listElementsForFormulaRecordSet;
 
                             for (let i = 0; i < comparisonFormulaElements.length; i++) {
@@ -67,14 +74,15 @@ export class FormulaRepository extends Base {
                                 formulation.composition.push(new Element(elementId, elementName, this.roundToTwoDecimal(elementMinimum), this.roundToTwoDecimal(elementMaximum), this.roundToTwoDecimal(sum / 1000), elementUnit, elementSortOrder));
                             }
                             resolve(formulation);
-                            connection.close();
+                            winston.profile('FormulaRepository.loadCompositionForFormulation');
                         }).catch((err: Error) => {
                             reject(err);
-                            connection.close();
+                            winston.profile('FormulaRepository.loadCompositionForFormulation');
                         });
 
                 }).catch((err: Error) => {
                     reject(err);
+                    winston.profile('FormulaRepository.loadCompositionForFormulation');
                 });
 
         });

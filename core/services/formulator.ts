@@ -1,14 +1,19 @@
+// Imports
 import * as solver from './../node_modules/javascript-lp-solver/src/solver';
+import * as uuid from 'uuid';
+import { winston } from './../logger';
+
+// Import models
 import { Formulation } from './../models/formulation';
 import { Feedstuff } from './../models/feedstuff';
 import { Formula } from './../models/formula';
 import { Element } from './../models/element';
 import { SupplementFeedstuff } from './../models/supplementFeedstuff';
+
+// Imports repositories
 import { FormulaRepository } from './../repositories/mysql/formula'
 import { FeedstuffRepository } from './../repositories/mysql/feedstuff'
-import { FormulationRepository } from './../repositories/mysql/formulation'
-import * as uuid from 'uuid';
-
+import { FormulationRepository } from './../repositories/mongo/formulation'
 
 export class FormulatorService {
 
@@ -24,6 +29,7 @@ export class FormulatorService {
 
     public createFormulation(feedstuffs: Feedstuff[], formulaId: string) {
         return new Promise((resolve: Function, reject: Function) => {
+            winston.profile('FormulatorService.createFormulation');
             this.feedstuffRepository.loadElementsForFeedstuffs(feedstuffs).then((feedstuffsResult: Feedstuff[]) => {
                 let formula = new Formula(formulaId);
                 this.formulaRepository.loadElementsForFormula(formula).then((formulaResult: Formula) => {
@@ -31,16 +37,20 @@ export class FormulatorService {
                     formulation.feedstuffs = feedstuffsResult;
                     formulation.formula = formulaResult;
                     resolve(formulation);
+                    winston.profile('FormulatorService.createFormulation');
                 }).catch((err: Error) => {
                     reject(err);
+                    winston.profile('FormulatorService.createFormulation');
                 });
             }).catch((err: Error) => {
                 reject(err);
+                winston.profile('FormulatorService.createFormulation');
             });
         });
     }
 
     public formulate(formulation: Formulation) {
+        winston.profile('FormulatorService.formulate');
         let results: any;
         let model = {
             optimize: "cost",
@@ -63,6 +73,7 @@ export class FormulatorService {
 
         });
 
+        winston.profile('FormulatorService.formulate');
         return {
             cost: formulation.cost,
             feasible: formulation.feasible,
@@ -72,19 +83,24 @@ export class FormulatorService {
 
     public getFormulation(formulationId: string) {
         return new Promise((resolve: Function, reject: Function) => {
+            winston.profile('FormulatorService.getFormulation');
             this.formulationRepository.getFormulationById(formulationId).then((formulationResult1: Formulation) => {
                 this.formulaRepository.loadCompositionForFormulation(formulationResult1).then((formulationResult2: Formulation) => {
                     this.feedstuffRepository.loadSupplementFeedstuffsForFormulation(formulationResult2).then((formulationResult3: Formulation) => {
                         let formulationResult = this.cleanFormulation(formulationResult3);
                         resolve(formulationResult);
+                        winston.profile('FormulatorService.getFormulation');
                     }).catch((err: Error) => {
                         reject(err);
+                        winston.profile('FormulatorService.getFormulation');
                     });
                 }).catch((err: Error) => {
                     reject(err);
+                    winston.profile('FormulatorService.getFormulation');
                 });
             }).catch((err: Error) => {
                 reject(err);
+                winston.profile('FormulatorService.getFormulation');
             });
         });
     }

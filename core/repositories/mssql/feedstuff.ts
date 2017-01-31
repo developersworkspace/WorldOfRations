@@ -1,9 +1,12 @@
+// Imports
 import * as sql from 'mssql';
+import { winston } from './../../logger';
+
+// Import models
 import { Formulation } from './../../models/formulation';
 import { Feedstuff } from './../../models/feedstuff';
 import { Formula } from './../../models/formula';
 import { Element } from './../../models/element';
-import * as winston from 'winston';
 
 export class FeedstuffRepository {
 

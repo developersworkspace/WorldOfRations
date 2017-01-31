@@ -1,7 +1,7 @@
 DELIMITER //
 
 CREATE PROCEDURE listElementsForFormula (
-formulaId CHAR(36))
+p_formulaId CHAR(36))
 Begin
 SELECT 
 `measurement`.`elementId` AS `id`,
@@ -14,7 +14,7 @@ FROM sadfmcoz_dwtest.formulaMeasurements AS `measurement`
 INNER JOIN sadfmcoz_dwtest.elements AS `element`
 ON `element`.`id` = `measurement`.`elementId`
 AND
-`measurement`.`formulaId` = formulaId;
+`measurement`.`formulaId` = p_formulaId;
 END;
 //
 

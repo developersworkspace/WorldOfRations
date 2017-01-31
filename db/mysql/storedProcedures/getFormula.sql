@@ -1,7 +1,7 @@
 DELIMITER //
 
 CREATE PROCEDURE getFormula ( 
-formulaId CHAR(36))
+p_formulaId CHAR(36))
 BEGIN
 SELECT
 `formula`.`id` AS `id`,
@@ -27,7 +27,7 @@ LEFT JOIN sadfmcoz_dwtest.formulaGroups AS `formulaGroup4`
 ON `formulaGroup4`.`id` = `formulaGroup3`.`parentGroupId`
 LEFT JOIN sadfmcoz_dwtest.formulaGroups AS `formulaGroup5`
 ON `formulaGroup5`.`id` = `formulaGroup4`.`parentGroupId`
-WHERE `formula`.`Id` =  formulaId;
+WHERE `formula`.`Id` =  p_formulaId;
 END;
 //
 
