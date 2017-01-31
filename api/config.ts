@@ -10,10 +10,10 @@ export var config = {
         // server: 'epons.dedicated.co.za',
         // database: 'WoR'
 
-        server: 'hjlmedicalservicescc.dedicated.co.za',
-        user: 'sadfmcoz_barend',
-        password: 'MidericK96',
-        database: 'sadfmcoz_dwtest'
+        server: 'mysql',
+        user: 'worldofrations_user',
+        password: 'worldofrations_password',
+        database: 'worldofrations'
     },
     mongodb: {
         server: 'mongo',

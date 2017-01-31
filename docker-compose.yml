@@ -6,6 +6,7 @@ services:
         - "8083:8083"
         links: 
         - mongo
+        - mysql
     web:
         build: web
         ports:
@@ -16,7 +17,7 @@ services:
         build: mysql
         environment:
         - MYSQL_ROOT_PASSWORD=password
-        - MYSQL_DATABASE=WorldOfRations
+        - MYSQL_DATABASE=worldofrations
         - MYSQL_USER=worldofrations_user
         - MYSQL_PASSWORD=worldofrations_password
         

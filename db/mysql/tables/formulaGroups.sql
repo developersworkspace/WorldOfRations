@@ -1,4 +1,4 @@
-CREATE TABLE sadfmcoz_dwtest.formulaGroups(
+CREATE TABLE worldofrations.formulaGroups(
     `id`                CHAR(36)        NOT NULL,
     `parentGroupId`     CHAR(36)        NULL,
     `name`              VARCHAR(255)    NOT NULL,

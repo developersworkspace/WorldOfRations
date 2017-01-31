@@ -1,4 +1,4 @@
-CREATE TABLE sadfmcoz_dwtest.elements(
+CREATE TABLE worldofrations.elements(
     `id`            CHAR(36)        NOT NULL,
     `unit`          CHAR(36)         NOT NULL,
     `abbreviation`  CHAR(36)         NOT NULL,

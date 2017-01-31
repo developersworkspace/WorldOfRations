@@ -1,4 +1,4 @@
-CREATE TABLE sadfmcoz_dwtest.feedstuffs(
+CREATE TABLE worldofrations.feedstuffs(
     `id`                CHAR(36)        NOT NULL,
     `groupId`           CHAR(36)        NOT NULL,
     `name`              VARCHAR(255)    NOT NULL,

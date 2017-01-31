@@ -39,8 +39,8 @@ function query(query: string, filename: string, map: Function) {
 }
 
 function feedstuffs() {
-    query('SELECT * FROM [dbo].[Feedstuff]', './dist/feedstuffs.sql', (item) => {
-        return util.format(`INSERT INTO sadfmcoz_dwtest.feedstuffs
+    query('SELECT * FROM [dbo].[Feedstuff]', './dist/feedstuffs_data.sql', (item) => {
+        return util.format(`INSERT INTO worldofrations.feedstuffs
 (
 \`id\`,
 \`groupId\`,
@@ -60,8 +60,8 @@ VALUES
 }
 
 function feedstuffGroups() {
-    query('SELECT * FROM [dbo].[FeedstuffGroup]', './dist/feedstuffGroups.sql', (item) => {
-        return util.format(`INSERT INTO sadfmcoz_dwtest.feedstuffGroups
+    query('SELECT * FROM [dbo].[FeedstuffGroup]', './dist/feedstuffGroups_data.sql', (item) => {
+        return util.format(`INSERT INTO worldofrations.feedstuffGroups
 (
 \`id\`,
 \`parentGroupId\`,
@@ -81,8 +81,8 @@ VALUES
 }
 
 function feedstuffMeasurements() {
-    query('SELECT * FROM [dbo].[FeedstuffMeasurement]', './dist/feedstuffMeasurements.sql', (item) => {
-        return util.format(`INSERT INTO sadfmcoz_dwtest.feedstuffMeasurements
+    query('SELECT * FROM [dbo].[FeedstuffMeasurement]', './dist/feedstuffMeasurements_data.sql', (item) => {
+        return util.format(`INSERT INTO worldofrations.feedstuffMeasurements
 (
 \`feedstuffId\`,
 \`elementId\`,
@@ -98,8 +98,8 @@ VALUES
 }
 
 function formulaGroups() {
-    query('SELECT * FROM [dbo].[FormulaGroup]', './dist/formulaGroups.sql', (item) => {
-        return util.format(`INSERT INTO sadfmcoz_dwtest.formulaGroups
+    query('SELECT * FROM [dbo].[FormulaGroup]', './dist/formulaGroups_data.sql', (item) => {
+        return util.format(`INSERT INTO worldofrations.formulaGroups
 (
 \`id\`,
 \`parentGroupId\`,
@@ -120,8 +120,8 @@ VALUES
 
 
 function formulas() {
-    query('SELECT * FROM [dbo].[Formula]', './dist/formulas.sql', (item) => {
-        return util.format(`INSERT INTO sadfmcoz_dwtest.formulas
+    query('SELECT * FROM [dbo].[Formula]', './dist/formulas_data.sql', (item) => {
+        return util.format(`INSERT INTO worldofrations.formulas
 (
 \`id\`,
 \`groupId\`,
@@ -141,8 +141,8 @@ VALUES
 }
 
 function formulaMeasurements() {
-    query('SELECT * FROM [dbo].[FormulaMeasurement]', './dist/formulaMeasurements.sql', (item) => {
-        return util.format(`INSERT INTO sadfmcoz_dwtest.formulaMeasurements
+    query('SELECT * FROM [dbo].[FormulaMeasurement]', './dist/formulaMeasurements_data.sql', (item) => {
+        return util.format(`INSERT INTO worldofrations.formulaMeasurements
 (
 \`formulaId\`,
 \`elementId\`,
@@ -160,8 +160,8 @@ VALUES
 }
 
 function comparisonFormulas() {
-    query('SELECT * FROM [dbo].[ComparisonFormula]', './dist/comparisonFormulas.sql', (item) => {
-        return util.format(`INSERT INTO sadfmcoz_dwtest.comparisonFormulas
+    query('SELECT * FROM [dbo].[ComparisonFormula]', './dist/comparisonFormulas_data.sql', (item) => {
+        return util.format(`INSERT INTO worldofrations.comparisonFormulas
 (
 \`id\`,
 \`formulaId\`
@@ -175,8 +175,8 @@ VALUES
 }
 
 function elements() {
-    query('SELECT * FROM [dbo].[Element]', './dist/elements.sql', (item) => {
-        return util.format(`INSERT INTO sadfmcoz_dwtest.elements
+    query('SELECT * FROM [dbo].[Element]', './dist/elements_data.sql', (item) => {
+        return util.format(`INSERT INTO worldofrations.elements
 (
 \`id\`,
 \`unit\`,
@@ -198,8 +198,8 @@ VALUES
 }
 
 function suggestedValues() {
-    query('SELECT * FROM [dbo].[SugggestedValue]', './dist/suggestedValues.sql', (item) => {
-        return util.format(`INSERT INTO sadfmcoz_dwtest.suggestedValues
+    query('SELECT * FROM [dbo].[SugggestedValue]', './dist/suggestedValues_data.sql', (item) => {
+        return util.format(`INSERT INTO worldofrations.suggestedValues
 (
 \`feedstuffId\`,
 \`formulaGroupId\`,
