@@ -1,24 +1,27 @@
 import * as sql from 'mssql';
-import { Formulation } from './../models/formulation';
-import { Feedstuff } from './../models/feedstuff';
-import { Formula } from './../models/formula';
-import { Element } from './../models/element';
+import { Formulation } from './../../models/formulation';
+import { Feedstuff } from './../../models/feedstuff';
+import { Formula } from './../../models/formula';
+import { Element } from './../../models/element';
+import * as winston from 'winston';
 
 export class FeedstuffRepository {
 
     constructor(private config: any) {
-
     }
 
     public listFeedstuffs() {
         return new Promise((resolve: Function, reject: Function) => {
+            winston.profile('FeedstuffRepository.listFeedstuffs');
             new sql.Connection(this.config)
                 .connect().then((connection: sql.Connection) => {
                     new sql.Request(connection)
                         .execute('[dbo].[listFeedstuffs]').then((listFeedstuffRecordSet: any[]) => {
                             resolve(listFeedstuffRecordSet[0]);
+                            winston.profile('FeedstuffRepository.listFeedstuffs');
                         }).catch(function (err: Error) {
                             reject(err);
+                            winston.profile('FeedstuffRepository.listFeedstuffs');
                         });
                 });
         });
@@ -26,13 +29,16 @@ export class FeedstuffRepository {
 
     public listExampleFeedstuffs() {
         return new Promise((resolve: Function, reject: Function) => {
+            winston.profile('FeedstuffRepository.listExampleFeedstuffs');
             new sql.Connection(this.config)
                 .connect().then((connection: sql.Connection) => {
                     new sql.Request(connection)
                         .execute('[dbo].[listExampleFeedstuffs]').then((listExampleFeedstuffsRecordSet: any[]) => {
                             resolve(listExampleFeedstuffsRecordSet[0]);
+                            winston.profile('FeedstuffRepository.listExampleFeedstuffs');
                         }).catch(function (err: Error) {
                             reject(err);
+                            winston.profile('FeedstuffRepository.listExampleFeedstuffs');
                         });
                 });
         });
@@ -40,6 +46,7 @@ export class FeedstuffRepository {
 
     public getSuggestedValues(formulaId: string, feedstuffId: string) {
         return new Promise((resolve: Function, reject: Function) => {
+            winston.profile('FeedstuffRepository.getSuggestedValues');
             new sql.Connection(this.config)
                 .connect().then((connection: sql.Connection) => {
                     new sql.Request(connection)
@@ -47,8 +54,10 @@ export class FeedstuffRepository {
                         .input('feedstuffId', sql.UNIQUEIDENTIFIER, feedstuffId)
                         .execute('[dbo].[getSuggestedValues]').then((getSuggestedValuesRecordSet: any[]) => {
                             resolve(getSuggestedValuesRecordSet[0]);
+                            winston.profile('FeedstuffRepository.getSuggestedValues');
                         }).catch(function (err: Error) {
                             reject(err);
+                            winston.profile('FeedstuffRepository.getSuggestedValues');
                         });
                 });
         });
@@ -57,6 +66,7 @@ export class FeedstuffRepository {
     public loadElementsForFeedstuffs(feedstuffs: Feedstuff[]) {
         let parent = this;
         return new Promise((resolve: Function, reject: Function) => {
+            winston.profile('FeedstuffRepository.loadElementsForFeedstuffs');
             new sql.Connection(this.config)
                 .connect().then((connection: sql.Connection) => {
                     let listOfPromise = [];
@@ -65,6 +75,7 @@ export class FeedstuffRepository {
                     }
                     Promise.all(listOfPromise).then((feedstuffsResult: Feedstuff[]) => {
                         resolve(feedstuffsResult);
+                        winston.profile('FeedstuffRepository.loadElementsForFeedstuffs');
                     });
                 });
         });
@@ -73,6 +84,7 @@ export class FeedstuffRepository {
     public loadSupplementFeedstuffsForFormulation(formulation: Formulation) {
         let parent = this;
         return new Promise((resolve: Function, reject: Function) => {
+            winston.profile('FeedstuffRepository.loadSupplementFeedstuffsForFormulation');
             new sql.Connection(this.config)
                 .connect().then((connection: sql.Connection) => {
 
@@ -88,8 +100,10 @@ export class FeedstuffRepository {
                     Promise.all(listOfPromise).then((elementsResult: Element[]) => {
                         formulation.supplementComposition = elementsResult;
                         resolve(formulation);
+                        winston.profile('FeedstuffRepository.loadSupplementFeedstuffsForFormulation');
                     }).catch((err: Error) => {
                         reject(err);
+                        winston.profile('FeedstuffRepository.loadSupplementFeedstuffsForFormulation');
                     });
                 });
         });
@@ -97,6 +111,7 @@ export class FeedstuffRepository {
 
     private loadSupplementFeedstuffForElement(connection: sql.Connection, element: Element) {
         return new Promise((resolve: Function, reject: Function) => {
+            winston.profile('FeedstuffRepository.loadSupplementFeedstuffForElement');
             new sql.Request(connection)
                 .input('elementId', element.id)
                 .input('supplementValueRequired', (element.minimum * 1000) - (element.value * 1000))
@@ -104,8 +119,10 @@ export class FeedstuffRepository {
                     element.supplementFeedstuffs = getSupplementValuesRecordSet[0].length == 0 ? [] : getSupplementValuesRecordSet[0];
                     element.selectedSupplementFeedstuff = element.supplementFeedstuffs.length == 0 ? [] : [element.supplementFeedstuffs[0]];
                     resolve(element);
+                    winston.profile('FeedstuffRepository.loadSupplementFeedstuffForElement');
                 }).catch((err: Error) => {
                     reject(err);
+                    winston.profile('FeedstuffRepository.loadSupplementFeedstuffForElement');
                 });
         });
     }
@@ -113,6 +130,7 @@ export class FeedstuffRepository {
 
     private loadElementsForFeedstuff(connection: sql.Connection, feedstuff: Feedstuff) {
         return new Promise((resolve: Function, reject: Function) => {
+            winston.profile('FeedstuffRepository.loadElementsForFeedstuff');
             new sql.Request(connection)
                 .input('feedstuffId', feedstuff.id)
                 .execute('[dbo].[listElementsForFeedstuff]').then((listElementsForFeedstuffRecordSet: any[]) => {
@@ -122,12 +140,15 @@ export class FeedstuffRepository {
                         .execute('[dbo].[getFeedstuff]').then((getFeedstuffRecordSet: any[]) => {
                             feedstuff.name = getFeedstuffRecordSet[0][0].name;
                             resolve(feedstuff);
+                            winston.profile('FeedstuffRepository.loadElementsForFeedstuff');
                         }).catch((err: Error) => {
                             reject(err);
+                            winston.profile('FeedstuffRepository.loadElementsForFeedstuff');
                         });
 
                 }).catch((err: Error) => {
                     reject(err);
+                    winston.profile('FeedstuffRepository.loadElementsForFeedstuff');
                 });
         });
     }

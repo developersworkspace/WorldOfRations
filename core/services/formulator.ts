@@ -4,9 +4,9 @@ import { Feedstuff } from './../models/feedstuff';
 import { Formula } from './../models/formula';
 import { Element } from './../models/element';
 import { SupplementFeedstuff } from './../models/supplementFeedstuff';
-import { FormulaRepository } from './../repositories/formula'
-import { FeedstuffRepository } from './../repositories/feedstuff'
-import { FormulationRepository } from './../repositories/formulation'
+import { FormulaRepository } from './../repositories/mysql/formula'
+import { FeedstuffRepository } from './../repositories/mysql/feedstuff'
+import { FormulationRepository } from './../repositories/mysql/formulation'
 import * as uuid from 'uuid';
 
 
@@ -31,6 +31,8 @@ export class FormulatorService {
                     formulation.feedstuffs = feedstuffsResult;
                     formulation.formula = formulaResult;
                     resolve(formulation);
+                }).catch((err: Error) => {
+                    reject(err);
                 });
             }).catch((err: Error) => {
                 reject(err);
@@ -46,6 +48,7 @@ export class FormulatorService {
             constraints: this.buildConstraints(formulation.feedstuffs, formulation.formula),
             variables: this.buildVariables(formulation.feedstuffs)
         };
+
         results = solver.Solve(model);
 
         for (let i = 0; i < formulation.feedstuffs.length; i++) {

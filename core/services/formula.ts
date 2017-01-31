@@ -1,4 +1,4 @@
-import { FormulaRepository } from './../repositories/formula';
+import { FormulaRepository } from './../repositories/mysql/formula';
 
 export class FormulaService {
 

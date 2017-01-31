@@ -12,3 +12,11 @@ services:
         - "8084:8084"
     mongo:
         image: "mongo"
+    mysql:
+        build: mysql
+        environment:
+        - MYSQL_ROOT_PASSWORD=password
+        - MYSQL_DATABASE=WorldOfRations
+        - MYSQL_USER=worldofrations_user
+        - MYSQL_PASSWORD=worldofrations_password
+        

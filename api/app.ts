@@ -5,6 +5,7 @@ import feedstuffRoute = require('./routes/feedstuff');
 import formulaRoute = require('./routes/formula');
 import formulatorRoute = require('./routes/formulator');
 import * as cluster from 'cluster';
+import { CORS } from './middleware/common';
 
 export class WebApi {
     /**
@@ -22,11 +23,7 @@ export class WebApi {
     private configureMiddleware(app: express.Express) {
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({ extended: false }));
-        app.use((req, res, next) => {
-            res.set('Access-Control-Allow-Origin', '*');
-            res.set('Access-Control-Allow-Headers', 'Content-Type');
-            next();
-        });
+        app.use(CORS);
     }
 
     private configureRoutes(app: express.Express) {
@@ -42,7 +39,7 @@ export class WebApi {
 
 if (cluster.isMaster) {
     // Count the machine's CPUs
-    var cpuCount = require('os').cpus().length;
+    var cpuCount = require('os').cpus().length * 3;
 
     // Create a worker for each CPU
     for (var i = 0; i < cpuCount; i += 1) {

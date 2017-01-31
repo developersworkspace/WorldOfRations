@@ -1,8 +1,8 @@
 import * as sql from 'mssql';
-import { Formulation } from './../models/formulation';
-import { Feedstuff } from './../models/feedstuff';
-import { Formula } from './../models/formula';
-import { Element } from './../models/element';
+import { Formulation } from './../../models/formulation';
+import { Feedstuff } from './../../models/feedstuff';
+import { Formula } from './../../models/formula';
+import { Element } from './../../models/element';
 import * as mongodb from 'mongodb';
 
 export class FormulationRepository {

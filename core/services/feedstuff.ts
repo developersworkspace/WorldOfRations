@@ -1,4 +1,4 @@
-import { FeedstuffRepository } from './../repositories/feedstuff';
+import { FeedstuffRepository } from './../repositories/mysql/feedstuff';
 
 export class FeedstuffService {
 

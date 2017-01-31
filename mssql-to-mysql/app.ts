@@ -12,22 +12,28 @@ function query(query: string, filename: string, map: Function) {
         }).connect().then((connection: sql.Connection) => {
             new sql.Request(connection).query(query).then((resultSet: any[]) => {
                 let contents = '';
-
-                for (let i = 0; i < resultSet.length; i++) {
-                    contents += map(resultSet[i]);
-                }
-
-
-                fs.writeFile(filename, contents, function (err) {
-                    if (err) {
-                        return console.log(err);
+                console.log(resultSet.length + ' results - ' + filename);
+                try {
+                    for (let i = 0; i < resultSet.length; i++) {
+                        contents += map(resultSet[i]);
                     }
+                    console.log('Completes mapping - ' + filename);
 
-                    console.log("The file was saved!");
-                });
+                    fs.writeFile(filename, contents, function (err) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log("Saved - " + filename);
+                        }
+                    });
 
+                } catch (err) {
+                    console.log('Failed mapping - ' + filename);
+                }
                 connection.close();
             });
+        }).catch((err: Error) => {
+            console.log(err);
         });
     });
 }
@@ -44,12 +50,12 @@ function feedstuffs() {
 )
 VALUES
 (
-'%s',
-'%s',
-'%s',
-'%s',
+%s,
+%s,
+%s,
+%s,
 %s
-); \r\n`, item.Id, item.FeedstuffGroupId, escape(item.Name), escape(item.Description), item.SortOrder);
+); \r\n`, escapeAndFormat(item.Id), escapeAndFormat(item.FeedstuffGroupId), escapeAndFormat(item.Name), escapeAndFormat(item.Description), item.SortOrder);
     });
 }
 
@@ -65,12 +71,12 @@ function feedstuffGroups() {
 )
 VALUES
 (
-'%s',
-'%s',
-'%s',
-'%s',
+%s,
+%s,
+%s,
+%s,
 %s
-); \r\n`, item.Id, item.FeedstuffGroupParentId, escape(item.Name), escape(item.Description), item.SortOrder);
+); \r\n`, escapeAndFormat(item.Id), escapeAndFormat(item.FeedstuffGroupParentId), escapeAndFormat(item.Name), escapeAndFormat(item.Description), item.SortOrder);
     });
 }
 
@@ -103,12 +109,12 @@ function formulaGroups() {
 )
 VALUES
 (
-'%s',
-'%s',
-'%s',
-'%s',
+%s,
+%s,
+%s,
+%s,
 %s
-); \r\n`, item.Id, item.FormulaGroupParentId, escape(item.Name), escape(item.Description), item.SortOrder);
+); \r\n`, escapeAndFormat(item.Id), escapeAndFormat(item.FormulaGroupParentId), escapeAndFormat(item.Name), escapeAndFormat(item.Description), item.SortOrder);
     });
 }
 
@@ -125,12 +131,12 @@ function formulas() {
 )
 VALUES
 (
-'%s',
-'%s',
-'%s',
-'%s',
+%s,
+%s,
+%s,
+%s,
 %s
-); \r\n`, item.Id, item.FormulaGroupId, escape(item.Name), escape(item.Description), item.SortOrder);
+); \r\n`, escapeAndFormat(item.Id), escapeAndFormat(item.FormulaGroupId), escapeAndFormat(item.Name), escapeAndFormat(item.Description), item.SortOrder);
     });
 }
 
@@ -145,16 +151,16 @@ function formulaMeasurements() {
 )
 VALUES
 (
-'%s',
-'%s',
+%s,
+%s,
 %s,
 %s
-); \r\n`, item.FormulaId, item.ElementId, item.MinValue, item.MaxValue);
+); \r\n`, escapeAndFormat(item.FormulaId), escapeAndFormat(item.ElementId), item.MinValue, item.MaxValue);
     });
 }
 
 function comparisonFormulas() {
-    query('SELECT * FROM [dbo].[Formula]', './dist/comparisonFormulas.sql', (item) => {
+    query('SELECT * FROM [dbo].[ComparisonFormula]', './dist/comparisonFormulas.sql', (item) => {
         return util.format(`INSERT INTO sadfmcoz_dwtest.comparisonFormulas
 (
 \`id\`,
@@ -162,9 +168,9 @@ function comparisonFormulas() {
 )
 VALUES
 (
-'%s',
-'%s'
-); \r\n`, item.Id, item.FormulaId);
+%s,
+%s
+        ); \r\n`, escapeAndFormat(item.Id), escapeAndFormat(item.FormulaId));
     });
 }
 
@@ -181,13 +187,13 @@ function elements() {
 )
 VALUES
 (
-'%s',
-'%s',
-'%s',
-'%s',
-'%s',
+%s,
+%s,
+%s,
+%s,
+%s,
 %s
-); \r\n`, item.Id, item.Unit, item.Abbreviation, item.Code, item.Name, item.SortOrder);
+); \r\n`, escapeAndFormat(item.Id), escapeAndFormat(item.Unit), escapeAndFormat(item.Abbreviation), escapeAndFormat(item.Code), escapeAndFormat(item.Name), item.SortOrder);
     });
 }
 
@@ -202,29 +208,36 @@ function suggestedValues() {
 )
 VALUES
 (
-'%s',
-'%s',
+%s,
+%s,
 %s,
 %s
-); \r\n`, item.FeedstuffId, item.FormulaGroupId, item.Minimum, item.Maximum);
+); \r\n`, escapeAndFormat(item.FeedstuffId), escapeAndFormat(item.FormulaGroupId), item.Minimum, item.Maximum);
     });
 }
 
-function escape(str: string) {
+function escapeAndFormat(str: string) {
+
+    if (str == null || str == 'null') {
+        return 'null';
+    }
 
     str = str.replace('\'', '\\\'');
 
-    return str;
+    return '\'' + str + '\'';
 }
 
 
-
-feedstuffs();
-feedstuffGroups();
-feedstuffMeasurements();
 formulas();
 formulaGroups();
 formulaMeasurements();
+feedstuffs();
+feedstuffGroups();
+feedstuffMeasurements();
 comparisonFormulas();
 elements();
 suggestedValues();
+
+setTimeout(() => {
+    console.log('Done');
+}, 15000);
