@@ -1,10 +1,12 @@
+// Imports
 import { Express, Request, Response } from "express";
-import { FeedstuffService } from './../../core/services/feedstuff';
+import * as express from 'express';
 import { config } from './../config';
 
-import * as express from 'express';
-let router = express.Router();
+// Imports services
+import { FeedstuffService } from './../../core/services/feedstuff';
 
+let router = express.Router();
 
 /**
  * @api {get} /feedstuff/list RETRIEVE LIST OF FEEDSTUFFS

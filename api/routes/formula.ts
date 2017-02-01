@@ -1,8 +1,11 @@
+// Imports
 import { Express, Request, Response } from "express";
-import { FormulaService } from './../../core/services/formula';
+import * as express from 'express';
 import { config } from './../config';
 
-import * as express from 'express';
+// Imports services
+import { FormulaService } from './../../core/services/formula';
+
 let router = express.Router();
 
 /**

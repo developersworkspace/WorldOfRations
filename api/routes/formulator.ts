@@ -1,10 +1,16 @@
+// Imports
 import { Express, Request, Response } from "express";
-import { FormulatorService } from './../../core/services/formulator';
-import { Formulation } from './../../core/models/formulation';
+import * as express from 'express';
 import { config } from './../config';
 
-import * as express from 'express';
+// Import models
+import { Formulation } from './../../core/models/formulation';
+
+// Imports services
+import { FormulatorService } from './../../core/services/formulator';
+
 let router = express.Router();
+
 
 /**
  * @api {POST} /formulator/formulate RETRIEVE LIST OF FORMULAS

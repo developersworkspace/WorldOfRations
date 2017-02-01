@@ -1,26 +1,24 @@
+// Imports
 import express = require("express");
 import bodyParser = require('body-parser');
 import { winston } from './../core/logger';
+import * as cluster from 'cluster';
 
+// Imports middleware
+import { CORS } from './middleware/common';
+
+// Imports routes
 import feedstuffRoute = require('./routes/feedstuff');
 import formulaRoute = require('./routes/formula');
 import formulatorRoute = require('./routes/formulator');
-import * as cluster from 'cluster';
-import { CORS } from './middleware/common';
 
 export class WebApi {
-    /**
-     * @param app - express application
-     * @param port - port to listen on
-     */
+
     constructor(private app: express.Express, private port: number) {
         this.configureMiddleware(app);
         this.configureRoutes(app);
     }
 
-    /**
-     * @param app - express application
-     */
     private configureMiddleware(app: express.Express) {
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({ extended: false }));
@@ -39,10 +37,7 @@ export class WebApi {
 }
 
 if (cluster.isMaster) {
-    // Count the machine's CPUs
     var cpuCount = require('os').cpus().length * 3;
-
-    // Create a worker for each CPU
     for (var i = 0; i < cpuCount; i += 1) {
         cluster.fork();
     }
