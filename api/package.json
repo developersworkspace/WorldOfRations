@@ -4,26 +4,28 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "docs": "apidoc -i ./routes/ -o docs/",
-    "build": "gulp --cwd ./../core ts & gulp ts",
-    "build-prod": "gulp --cwd ./../core build & gulp build",
-    "start": "gulp --cwd ./../core ts & gulp ts & node ./app.js"
+    "docs": "apidoc -i ./src/ -o docs/",
+    "build": "gulp build",
+    "start": "gulp ts & node ./src/app.js"
   },
   "author": "Barend Erasmus",
   "license": "MIT",
   "dependencies": {
-    "@types/es6-promise": "0.0.32",
+    "@types/mongodb": "^2.1.37",
     "@types/node": "^7.0.1",
     "@types/winston": "^2.2.0",
     "body-parser": "^1.16.0",
-    "events": "^1.1.1",
     "express": "^4.14.0",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
     "gulp-typescript": "^3.1.4",
-    "http": "0.0.0",
-    "net": "^1.0.2",
+    "javascript-lp-solver": "^0.4.3",
+    "mongodb": "^2.2.22",
+    "mssql": "^3.3.0",
+    "mysql": "^2.13.0",
+    "tedious": "^1.14.0",
     "typescript": "^2.1.5",
+    "uuid": "^3.0.1",
     "winston": "^2.3.1"
   }
 }

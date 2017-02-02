@@ -1,13 +1,8 @@
 FROM node:6.9.4
 
-ADD ./api /api
-WORKDIR /api
+WORKDIR ./WorldOfRations/api
+
+COPY ./dist ./
 RUN npm install
 
-ADD ./core /core
-WORKDIR /core
-RUN npm install
-
-WORKDIR /
-
-CMD ["node", "./api/app.js"]
+CMD ["node", "./app.js"]

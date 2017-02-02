@@ -1,63 +1,39 @@
 // Imports
 var gulp = require('gulp');
-var ts = require('gulp-typescript');
 var clean = require('gulp-clean');
+var ts = require('gulp-typescript');
 
-var serverTS = ["**/*.ts", "!node_modules/**", "!typings/**"];
 
-// Compiles typescript files
+// Compile typescript files
 gulp.task('ts', ['clean'], function () {
     return gulp
-        .src(serverTS, { base: './' })
-        .pipe(ts({ module: 'commonjs', noImplicitAny: false, allowJs: true, allowUnreachableCode: true }))
-        .pipe(gulp.dest('./'));
+        .src(["./src/**/*.ts"], { base: './src' })
+        .pipe(ts({ module: 'commonjs', target: 'es6', noImplicitAny: false, allowJs: true, allowUnreachableCode: true }))
+        .pipe(gulp.dest('./src'));
 });
 
-
-// Cleans 'api' build directory
-gulp.task('build1', ['clean'], function () {
-    return gulp
-        .src('./../dist/api/api', { read: false })
-        .pipe(clean({ force: true }));
-});
-
-// Compiles typescript files to 'api' build directory
-gulp.task('build2', ['build1'], function () {
-    return gulp
-        .src(serverTS, { base: './' })
-        .pipe(ts({ module: 'commonjs', noImplicitAny: false, allowJs: true, allowUnreachableCode: true }))
-        .pipe(gulp.dest('./../dist/api/api'));
-});
-
-// Copies 'package.json' file to 'api' build directory
-gulp.task('build3', ['build2'], function () {
-    return gulp
-        .src('./package.json')
-        .pipe(gulp.dest('./../dist/api/api'));
-});
-
-// Copies 'Dockerfile' file to 'api' build directory
-gulp.task('build4', ['build3'], function () {
-    return gulp
-        .src('./Dockerfile')
-        .pipe(gulp.dest('./../dist/api'));
-});
-
-// Build 'api' to build directory
-gulp.task('build', ['build4'], function () {
-
-});
-
-// Removes js files
+// Removes compiled js files
 gulp.task('clean', function () {
     return gulp
         .src([
-            'app.js',
-            '**/*.js',
-            '**/*.js.map',
-            '!node_modules/**',
-            '!gulpfile.js'
+            './src/**/*.js',
+            './dist'
         ], { read: false })
         .pipe(clean())
 });
 
+// Copies 'package.json' file to build directory
+gulp.task('build1', ['clean'], function () {
+    return gulp
+        .src('./package.json')
+        .pipe(gulp.dest('./dist'));
+});
+
+
+// Compile typescript files
+gulp.task('build', ['build1'], function () {
+    return gulp
+        .src(["./src/**/*.ts"], { base: './src' })
+        .pipe(ts({ module: 'commonjs', target: 'es6', noImplicitAny: false, allowJs: true, allowUnreachableCode: true }))
+        .pipe(gulp.dest('./dist'));
+});

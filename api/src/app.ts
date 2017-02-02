@@ -1,7 +1,7 @@
 // Imports
 import express = require("express");
 import bodyParser = require('body-parser');
-import { winston } from './../core/logger';
+import { winston } from './core/logger';
 import * as cluster from 'cluster';
 
 // Imports middleware

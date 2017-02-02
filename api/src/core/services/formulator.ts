@@ -1,5 +1,5 @@
 // Imports
-import * as solver from './../node_modules/javascript-lp-solver/src/solver';
+import * as solver from './../../../node_modules/javascript-lp-solver/src/solver';
 import * as uuid from 'uuid';
 import { winston } from './../logger';
 
