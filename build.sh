@@ -4,6 +4,7 @@ sudo apt-get install -y nodejs
 sudo apt-get install -y npm
 npm install -g typescript
 npm install -g gulp
+npm install -g @angular/cli
 git clone https://github.com/developersworkspace/WorldOfRations.git
 
 cd ./WorldOfRations/api
