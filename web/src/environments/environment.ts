@@ -6,20 +6,20 @@
 export const environment = {
     production: false,
     api: {
-        uri: 'http://api.worldofrations.com:8083'
+        uri: 'http://localhost:8083'
     },
-    oauth: {
-        worldofrations: {
-            'uri': 'http://api.worldofrations.com:8081/api/auth/authorize',
-            'redirectUri': 'http://worldofrations.com/login',
-            'clientId': 'uvMOcnBdKi',
-            'clientSecret': '5JXUNDKDqr'
-        },
-        google: {
-            'uri': 'http://api.worldofrations.com:8081/api/auth/google',
-            'redirectUri': 'http://worldofrations.com/login',
-            'clientId': 'uvMOcnBdKi',
-            'clientSecret': '5JXUNDKDqr'
-        }
-    }
+    // oauth: {
+    //     worldofrations: {
+    //         'uri': 'http://api.worldofrations.com:8081/api/auth/authorize',
+    //         'redirectUri': 'http://worldofrations.com/login',
+    //         'clientId': 'uvMOcnBdKi',
+    //         'clientSecret': '5JXUNDKDqr'
+    //     },
+    //     google: {
+    //         'uri': 'http://api.worldofrations.com:8081/api/auth/google',
+    //         'redirectUri': 'http://worldofrations.com/login',
+    //         'clientId': 'uvMOcnBdKi',
+    //         'clientSecret': '5JXUNDKDqr'
+    //     }
+    // }
 };
