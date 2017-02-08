@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { JwtHelper } from 'angular2-jwt';
+
 
 @Component({
   selector: 'app-navbar',
@@ -8,10 +10,12 @@ import { Component, OnInit } from '@angular/core';
 export class NavbarComponent implements OnInit {
 
   isAuthenticated: boolean;
+  decodedToken: any;
 
   constructor() { }
 
   ngOnInit() {
+    this.decodedToken = localStorage.getItem('jwt.token') != null? new JwtHelper().decodeToken(localStorage.getItem('jwt.token')) : null;
     this.isAuthenticated = localStorage.getItem('jwt.token') != null;
   }
 
