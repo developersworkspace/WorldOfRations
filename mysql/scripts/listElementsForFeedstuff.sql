@@ -8,8 +8,8 @@ SELECT
 `element`.`name` AS `name`,
 `element`.`unit` AS `unit`,
 `measurement`.`value` AS `value`
-FROM sadfmcoz_dwtest.feedstuffMeasurements AS `measurement`
-INNER JOIN sadfmcoz_dwtest.elements AS `element`
+FROM worldofrations.feedstuffMeasurements AS `measurement`
+INNER JOIN worldofrations.elements AS `element`
 ON `element`.`id` = `measurement`.`elementId`
 AND
 `feedstuffId` = p_feedstuffId;

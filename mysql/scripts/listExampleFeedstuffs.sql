@@ -24,7 +24,7 @@ INSERT INTO temp
 )
 (
 SELECT `id`, `name`, LOWER(`name`), 2300, 0, 1000
-FROM sadfmcoz_dwtest.feedstuffs WHERE `name` = 'Alfalfa hay, dehy 17% CP'
+FROM worldofrations.feedstuffs WHERE `name` = 'Alfalfa hay, dehy 17% CP'
 );
 
 
@@ -39,7 +39,7 @@ INSERT INTO temp
 )
 (
 SELECT `id`, `name`, LOWER(`name`), 800, 0, 1000
-FROM sadfmcoz_dwtest.feedstuffs WHERE `name` = 'Sunflower seed hulls'
+FROM worldofrations.feedstuffs WHERE `name` = 'Sunflower seed hulls'
 );
 
 INSERT INTO temp
@@ -53,7 +53,7 @@ INSERT INTO temp
 )
 (
 SELECT `id`, `name`, LOWER(`name`), 3800, 0, 1000
-FROM sadfmcoz_dwtest.feedstuffs WHERE `name` = 'Corn grain (maize),  yellow'
+FROM worldofrations.feedstuffs WHERE `name` = 'Corn grain (maize),  yellow'
 );
 
 INSERT INTO temp
@@ -67,7 +67,7 @@ INSERT INTO temp
 )
 (
 SELECT `id`, `name`, LOWER(`name`), 3000, 0, 1000
-FROM sadfmcoz_dwtest.feedstuffs WHERE `name` = 'Oats, grain'
+FROM worldofrations.feedstuffs WHERE `name` = 'Oats, grain'
 );
 
 
@@ -82,7 +82,7 @@ INSERT INTO temp
 )
 (
 SELECT `id`, `name`, LOWER(`name`), 4500, 0, 80
-FROM sadfmcoz_dwtest.feedstuffs WHERE `name` = 'Molasses, sugarcane (syrup)'
+FROM worldofrations.feedstuffs WHERE `name` = 'Molasses, sugarcane (syrup)'
 );
 
 INSERT INTO temp
@@ -96,7 +96,7 @@ INSERT INTO temp
 )
 (
 SELECT `id`, `name`, LOWER(`name`), 6000, 0, 1000
-FROM sadfmcoz_dwtest.feedstuffs WHERE `name` = 'Fish meal, herring'
+FROM worldofrations.feedstuffs WHERE `name` = 'Fish meal, herring'
 );
 
 INSERT INTO temp
@@ -110,7 +110,7 @@ INSERT INTO temp
 )
 (
 SELECT `id`, `name`, LOWER(`name`), 7000, 0, 120
-FROM sadfmcoz_dwtest.feedstuffs WHERE `name` = 'Cottonseed o/c meal, mech extr'
+FROM worldofrations.feedstuffs WHERE `name` = 'Cottonseed o/c meal, mech extr'
 );
 
 INSERT INTO temp
@@ -124,7 +124,7 @@ INSERT INTO temp
 )
 (
 SELECT `id`, `name`, LOWER(`name`), 6000, 0, 4
-FROM sadfmcoz_dwtest.feedstuffs WHERE `name` = 'Urea 46% Nitrogen'
+FROM worldofrations.feedstuffs WHERE `name` = 'Urea 46% Nitrogen'
 );
 
 INSERT INTO temp
@@ -138,7 +138,7 @@ INSERT INTO temp
 )
 (
 SELECT `id`, `name`, LOWER(`name`), 7500, 0, 1000
-FROM sadfmcoz_dwtest.feedstuffs WHERE `name` = 'Canola (Rapeseed) oil'
+FROM worldofrations.feedstuffs WHERE `name` = 'Canola (Rapeseed) oil'
 );
 
 INSERT INTO temp
@@ -152,7 +152,7 @@ INSERT INTO temp
 )
 (
 SELECT `id`, `name`, LOWER(`name`), 1200, 0, 1000
-FROM sadfmcoz_dwtest.feedstuffs WHERE `name` = 'Ca, as ground Limestone'
+FROM worldofrations.feedstuffs WHERE `name` = 'Ca, as ground Limestone'
 );
 
 
@@ -167,7 +167,7 @@ INSERT INTO temp
 )
 (
 SELECT `id`, `name`, LOWER(`name`), 900, 4, 4
-FROM sadfmcoz_dwtest.feedstuffs WHERE `name` = 'Na and Cl, as Salt'
+FROM worldofrations.feedstuffs WHERE `name` = 'Na and Cl, as Salt'
 );
 
 INSERT INTO temp
@@ -181,7 +181,7 @@ INSERT INTO temp
 )
 (
 SELECT `id`, `name`, LOWER(`name`), 2000, 0, 1000
-FROM sadfmcoz_dwtest.feedstuffs WHERE `name` = 'K, as Potassium Chloride (KCl)'
+FROM worldofrations.feedstuffs WHERE `name` = 'K, as Potassium Chloride (KCl)'
 );
 
 INSERT INTO temp
@@ -195,7 +195,7 @@ INSERT INTO temp
 )
 (
 SELECT `id`, `name`, LOWER(`name`), 2500, 0, 1000
-FROM sadfmcoz_dwtest.feedstuffs WHERE `name` = 'Mg, as Magnesium oxide (MgO)'
+FROM worldofrations.feedstuffs WHERE `name` = 'Mg, as Magnesium oxide (MgO)'
 );
 
 

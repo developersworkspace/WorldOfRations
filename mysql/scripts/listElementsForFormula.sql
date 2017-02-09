@@ -10,8 +10,8 @@ SELECT
 `measurement`.`minimum` AS `minimum`,
 `measurement`.`maximum` AS `maximum`,
 `element`.`sortOrder` AS `sortOrder`
-FROM sadfmcoz_dwtest.formulaMeasurements AS `measurement`
-INNER JOIN sadfmcoz_dwtest.elements AS `element`
+FROM worldofrations.formulaMeasurements AS `measurement`
+INNER JOIN worldofrations.elements AS `element`
 ON `element`.`id` = `measurement`.`elementId`
 AND
 `measurement`.`formulaId` = p_formulaId;
