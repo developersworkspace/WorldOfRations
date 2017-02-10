@@ -1,7 +1,7 @@
 export const environment = {
     production: true,
     api: {
-        uri: 'http://worldofrations.developersworksapce.co.za'
+        uri: 'http://worldofrations.com'
     },
     // oauth: {
     //     'uri': 'http://api.worldofrations.com/api/auth/authorize',
