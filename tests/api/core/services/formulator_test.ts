@@ -12,7 +12,9 @@ import { FormulaRepository } from './../../../../api/src/core/repositories/mysql
 
 
 // Imports models
-import { Feedstuff } from './../../../../api/src/core/data-models/feedstuff';
+//import { Feedstuff } from './../../../../api/src/core/data-models/feedstuff';
+import { Formulation } from './../../../../api/src/core/models/formulation';
+import { Feedstuff } from './../../../../api/src/core/models/feedstuff';
 
 describe('FeedstuffService', () => {
 
@@ -41,19 +43,53 @@ describe('FeedstuffService', () => {
         feedstuffRepository.listExampleFeedstuffs().then((exampleFeedstuff: Feedstuff[]) => {
             feedstuffs = exampleFeedstuff;
             done();
-        });        
+        });
     });
 
-    // describe('createFormulation', () => {
-    //     it('should return formulation with feedstuff element populated', (done) => {
-    //         formulatorService.createFormulation(feedstuffs, '').then((result: any[]) => {
-    //             expect(result).to.be.not.null;
-    //             expect(result.length).to.be.greaterThan(0);
-    //             done();
-    //         }).catch((err: Error) => {
-    //             done(err);
-    //         });
-    //     });
-    // });
+    describe('createFormulation', () => {
+
+
+        it('should return formulation with feedstuff elements populated', (done) => {
+            formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: Formulation) => {
+                for (let i = 0; i < formulation.feedstuffs.length; i++) {
+                    expect(formulation.feedstuffs[i].elements.length).to.be.greaterThan(0);
+                }
+                done();
+            }).catch((err: Error) => {
+                done(err);
+            });
+        });
+
+        it('should return formulation with formula elements populated', (done) => {
+            formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: Formulation) => {
+                expect(formulation.formula.elements.length).to.be.greaterThan(0);
+                done();
+            }).catch((err: Error) => {
+                done(err);
+            });
+        });
+
+
+    });
+
+
+    describe('formulate', () => {
+
+
+        it('should return result that is feasible given formulation', (done) => {
+            formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: Formulation) => {
+
+                let result = formulatorService.formulate(formulation)
+                expect(result.feasible).to.be.true;
+                
+                done();
+
+            }).catch((err: Error) => {
+                done(err);
+            });
+        });
+
+    });
+
 
 });

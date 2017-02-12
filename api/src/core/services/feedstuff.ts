@@ -20,5 +20,7 @@ export class FeedstuffService {
     public getSuggestedValues(formulaId: string, feedstuffId: string) {
         return this.feedstuffRepository.getSuggestedValues(formulaId, feedstuffId);
     }
+
+    
 }
 
