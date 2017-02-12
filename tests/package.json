@@ -4,15 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "gulp --cwd ./../api ts & gulp ts & mocha --timeout=5000 ./core/**/*.js",
-    "cover": "gulp --cwd ./../api ts & gulp ts & istanbul cover node_modules/mocha/bin/_mocha --root ./../api/src/core ./core/**/*.js",
+    "test": "gulp --cwd ./../api ts & gulp ts & mocha --timeout=5000 ./api/**/*.js",
+    "cover": "gulp --cwd ./../api ts & gulp ts & istanbul cover node_modules/mocha/bin/_mocha --root ./../api/src/core ./api/**/*.js",
     "clean": "gulp --cwd ./../api clean & gulp clean "
   },
   "author": "Barend Erasmus",
   "license": "MIT",
   "dependencies": {
     "@types/chai": "^3.4.34",
-    "@types/es6-promise": "0.0.32",
     "@types/mocha": "^2.2.38",
     "chai": "^3.5.0",
     "gulp": "^3.9.1",

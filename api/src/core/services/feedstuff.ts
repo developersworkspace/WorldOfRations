@@ -9,11 +9,11 @@ export class FeedstuffService {
         this.feedstuffRepository = new FeedstuffRepository(this.config.db);
     }
 
-    public listFeedstuff() {
+    public listFeedstuffs() {
         return this.feedstuffRepository.listFeedstuffs();
     }
 
-    public listExampleFeedstuff() {
+    public listExampleFeedstuffs() {
         return this.feedstuffRepository.listExampleFeedstuffs();
     }
 

@@ -18,7 +18,7 @@ let router = express.Router();
  */
 router.get('/list', function (req: Request, res: Response, next: Function) {
     let feedstuffService = new FeedstuffService(config);
-    feedstuffService.listFeedstuff().then((result: any[]) => {
+    feedstuffService.listFeedstuffs().then((result: any[]) => {
         res.json(result);
     }).catch((err: Error) => {
         res.json(err.message);
@@ -57,7 +57,7 @@ router.get('/suggestedValues', function (req: Request, res: Response, next: Func
  */
 router.get('/listExample', function (req: Request, res: Response, next: Function) {
     let feedstuffService = new FeedstuffService(config);
-    feedstuffService.listExampleFeedstuff().then((result: any[]) => {
+    feedstuffService.listExampleFeedstuffs().then((result: any[]) => {
         res.json(result);
     }).catch((err: Error) => {
         res.json(err.message);
