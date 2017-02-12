@@ -11,9 +11,12 @@ import { Element } from './../models/element';
 import { SupplementFeedstuff } from './../models/supplement-feedstuff';
 
 // Imports repositories
-import { FormulaRepository } from './../repositories/mysql/formula'
-import { FeedstuffRepository } from './../repositories/mysql/feedstuff'
-import { FormulationRepository } from './../repositories/mongo/formulation'
+import { FormulaRepository } from './../repositories/mysql/formula';
+import { FeedstuffRepository } from './../repositories/mysql/feedstuff';
+import { FormulationRepository } from './../repositories/mongo/formulation';
+
+// Imports services
+import { FeedstuffService } from './../services/feedstuff';
 
 export class FormulatorService {
 
@@ -21,16 +24,20 @@ export class FormulatorService {
     feedstuffRepository: FeedstuffRepository;
     formulationRepository: FormulationRepository;
 
+    feedstuffService: FeedstuffService;
+
     constructor(private config: any) {
         this.formulaRepository = new FormulaRepository(this.config.db);
         this.feedstuffRepository = new FeedstuffRepository(this.config.db);
         this.formulationRepository = new FormulationRepository(this.config.mongodb);
+        
+        this.feedstuffService = new FeedstuffService(this.config.db);
     }
 
     public createFormulation(feedstuffs: Feedstuff[], formulaId: string) {
         return new Promise((resolve: Function, reject: Function) => {
             winston.profile('FormulatorService.createFormulation');
-            this.feedstuffRepository.loadElementsForFeedstuffs(feedstuffs).then((feedstuffsResult: Feedstuff[]) => {
+            this.feedstuffService.loadElementsForFeedstuffs(feedstuffs).then((feedstuffsResult: Feedstuff[]) => {
                 let formula = new Formula(formulaId);
                 this.formulaRepository.loadElementsForFormula(formula).then((formulaResult: Formula) => {
                     let formulation = new Formulation();

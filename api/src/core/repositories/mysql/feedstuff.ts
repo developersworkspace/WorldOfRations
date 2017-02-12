@@ -114,4 +114,20 @@ export class FeedstuffRepository extends Base {
                 });
         });
     }
+
+    ///////////////////////
+
+
+    public listElementsForFeedstuff(feedstuffId: string) {
+        return new Promise((resolve: Function, reject: Function) => {
+            winston.profile('FeedstuffRepository.listElementsForFeedstuff');
+            this.query(util.format('CALL listElementsForFeedstuff(%s)', this.escapeAndFormat(feedstuffId)))
+                .then((listElementsForFeedstuffRecordSet: any[]) => {
+                    resolve(listElementsForFeedstuffRecordSet);
+                }).catch((err: Error) => {
+                    reject(err);
+                    winston.profile('FeedstuffRepository.listElementsForFeedstuff');
+                });
+        });
+    }
 }
