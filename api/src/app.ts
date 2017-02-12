@@ -31,6 +31,10 @@ export class WebApi {
         app.use("/api/formulator", formulatorRoute);
     }
 
+    public getApp() {
+        return this.app;
+    }
+
     public run() {
         this.app.listen(this.port);
     }
