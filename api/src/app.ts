@@ -36,15 +36,15 @@ export class WebApi {
     }
 }
 
-if (cluster.isMaster) {
-    var cpuCount = require('os').cpus().length;
-    for (var i = 0; i < cpuCount; i += 1) {
-        cluster.fork();
-    }
-} else {
+// if (cluster.isMaster) {
+//     var cpuCount = require('os').cpus().length;
+//     for (var i = 0; i < cpuCount; i += 1) {
+//         cluster.fork();
+//     }
+// } else {
 
     let port = 8083;
     let api = new WebApi(express(), port);
     api.run();
     console.info(`listening on ${port}`);
-}
+//}

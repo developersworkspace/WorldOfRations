@@ -31,16 +31,19 @@ export class FeedstuffRepository extends Base {
         let parent = this;
         return new Promise((resolve: Function, reject: Function) => {
             winston.profile('FeedstuffRepository.loadElementsForFeedstuffs');
-            let connection = this.getConnection();
-            let listOfPromise = [];
-            for (let i = 0; i < feedstuffs.length; i++) {
-                listOfPromise.push(parent.loadElementsForFeedstuff(feedstuffs[i]));
-            }
-            Promise.all(listOfPromise).then((feedstuffsResult: Feedstuff[]) => {
-                resolve(feedstuffsResult);
-                winston.profile('FeedstuffRepository.loadElementsForFeedstuffs');
-            });
+            this.getConnection().then((connection: any) => {
+                let listOfPromise = [];
+                for (let i = 0; i < feedstuffs.length; i++) {
+                    listOfPromise.push(parent.loadElementsForFeedstuff(feedstuffs[i]));
+                }
+                Promise.all(listOfPromise).then((feedstuffsResult: Feedstuff[]) => {
+                    resolve(feedstuffsResult);
+                    winston.profile('FeedstuffRepository.loadElementsForFeedstuffs');
+                });
 
+            }).catch((err: Error) => {
+                reject(err);
+            });
         });
     }
 
@@ -48,26 +51,27 @@ export class FeedstuffRepository extends Base {
         let parent = this;
         return new Promise((resolve: Function, reject: Function) => {
             winston.profile('FeedstuffRepository.loadSupplementFeedstuffsForFormulation');
-            let connection = this.getConnection();
+            this.getConnection().then((connection: any) => {
+                let supplementElements: Element[] = formulation.composition.filter((x) => x.value < x.minimum);
+                formulation.supplementComposition = [];
 
-            let supplementElements: Element[] = formulation.composition.filter((x) => x.value < x.minimum);
-            formulation.supplementComposition = [];
+                let listOfPromise = [];
 
-            let listOfPromise = [];
+                for (let i = 0; i < supplementElements.length; i++) {
+                    listOfPromise.push(parent.loadSupplementFeedstuffForElement(supplementElements[i]));
+                }
 
-            for (let i = 0; i < supplementElements.length; i++) {
-                listOfPromise.push(parent.loadSupplementFeedstuffForElement(supplementElements[i]));
-            }
-
-            Promise.all(listOfPromise).then((elementsResult: Element[]) => {
-                formulation.supplementComposition = elementsResult;
-                resolve(formulation);
-                winston.profile('FeedstuffRepository.loadSupplementFeedstuffsForFormulation');
+                Promise.all(listOfPromise).then((elementsResult: Element[]) => {
+                    formulation.supplementComposition = elementsResult;
+                    resolve(formulation);
+                    winston.profile('FeedstuffRepository.loadSupplementFeedstuffsForFormulation');
+                }).catch((err: Error) => {
+                    reject(err);
+                    winston.profile('FeedstuffRepository.loadSupplementFeedstuffsForFormulation');
+                });
             }).catch((err: Error) => {
                 reject(err);
-                winston.profile('FeedstuffRepository.loadSupplementFeedstuffsForFormulation');
             });
-
         });
     }
 

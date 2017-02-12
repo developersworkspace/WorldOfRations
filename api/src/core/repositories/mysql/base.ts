@@ -2,42 +2,55 @@
 import * as mysql from 'mysql';
 import { winston } from './../../logger';
 
+let pool = null;
+
 export class Base {
 
     constructor(private config: any) {
-
+        if (pool == null) {
+            pool = mysql.createPool({
+                connectionLimit: 10,
+                host: this.config.server,
+                user: this.config.user,
+                password: this.config.password,
+                database: this.config.database
+            });
+        }
     }
 
     protected query(query: string) {
         return new Promise((resolve: Function, reject: Function) => {
             winston.profile('Base.query ' + query);
-            let connection = this.getConnection();
-
-            connection.query(query, (err: Error, results: any[], fields) => {
+            pool.getConnection((err: Error, connection: any) => {
                 if (err) {
                     reject(err);
-                    winston.profile('Base.query ' + query);
                 } else {
-                    resolve(results[0]);
-                    winston.debug(results[0].length + ' results returned');
-                    winston.profile('Base.query ' + query);
+                    connection.query(query, (err: Error, results: any[], fields) => {
+                        connection.release();
+                        if (err) {
+                            reject(err);
+                            winston.profile('Base.query ' + query);
+                        } else {
+                            resolve(results[0]);
+                            winston.debug(results[0].length + ' results returned');
+                            winston.profile('Base.query ' + query);
+                        }
+                    });
                 }
-
-                connection.end();
             });
         });
     }
 
     protected getConnection() {
-        let connection = mysql.createConnection({
-            host: this.config.server,
-            user: this.config.user,
-            password: this.config.password,
-            database: this.config.database
+        return new Promise((resolve: Function, reject: Function) => {
+            pool.getConnection((err: Error, connection: any) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(connection);
+                }
+            });
         });
-        connection.connect();
-
-        return connection;
     }
 
     protected escapeAndFormat(str: string) {
