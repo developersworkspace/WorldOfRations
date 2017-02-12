@@ -1,7 +1,4 @@
-// Imports models
-import { SupplementFeedstuff } from './supplement-feedstuff';
-
-export class Element {
+export class ElementMeasurement {
     id: string;
     name: string;
     minimum: number;
@@ -9,9 +6,6 @@ export class Element {
     value: number;
     unit: string;
     sortOrder: number;
-
-    selectedSupplementFeedstuff: SupplementFeedstuff[];
-    supplementFeedstuffs: SupplementFeedstuff[];
 
     constructor(id: string, name: string, minimum: number, maximum: number, value: number, unit: string, sortOrder: number) {
         this.id = id;

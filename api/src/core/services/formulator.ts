@@ -8,7 +8,7 @@ import { Formulation } from './../models/formulation';
 import { Feedstuff } from './../models/feedstuff';
 import { Formula } from './../models/formula';
 import { Element } from './../models/element';
-import { SupplementFeedstuff } from './../models/supplementFeedstuff';
+import { SupplementFeedstuff } from './../models/supplement-feedstuff';
 
 // Imports repositories
 import { FormulaRepository } from './../repositories/mysql/formula'

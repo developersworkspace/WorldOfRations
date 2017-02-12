@@ -4,11 +4,23 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "gulp --cwd ./../api ts & gulp ts & mocha --timeout=5000 ./core/**/*.js",
+    "cover": "gulp --cwd ./../api ts & gulp ts & istanbul cover node_modules/mocha/bin/_mocha --root ./../api/src/core ./core/**/*.js",
+    "clean": "gulp --cwd ./../api clean & gulp clean "
   },
   "author": "Barend Erasmus",
   "license": "MIT",
   "dependencies": {
-    "siege": "^0.2.0"
+    "@types/chai": "^3.4.34",
+    "@types/es6-promise": "0.0.32",
+    "@types/mocha": "^2.2.38",
+    "chai": "^3.5.0",
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-typescript": "^3.1.4",
+    "mocha": "^3.2.0",
+    "proxyquire": "^1.7.11",
+    "ts-node": "^2.1.0",
+    "typescript": "^2.1.5"
   }
 }

@@ -1,5 +1,5 @@
 // Imports models
-import { SupplementFeedstuff } from './supplement-feedstuff';
+import { SupplementFeedstuff } from './supplementFeedstuff';
 
 export class Element {
     id: string;
