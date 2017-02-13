@@ -3,11 +3,15 @@ import { Base } from './base';
 import * as util from 'util';
 import { winston } from './../../logger';
 
-// Import models
-import { Formulation } from './../../models/formulation';
-import { Feedstuff } from './../../models/feedstuff';
-import { Formula } from './../../models/formula';
-import { Element } from './../../models/element';
+// Imports data models
+import { FormulaMeasurement as DataFormulaMeasurement } from './../../data-models/formula-measurement';
+import { Formula as DataFormula } from './../../data-models/formula';
+
+// Imports domain models
+import { Formula as DomainFormula } from './../../models/formula';
+import { FormulaMeasurement as DomainFormulaMeasurement } from './../../models/formula-measurement';
+import { CompositionElement as DomainCompositionElement } from './../../models/composition-element';
+import { Formulation as DomainFormulation } from './../../models/formulation';
 
 export class FormulaRepository extends Base {
 
@@ -15,29 +19,29 @@ export class FormulaRepository extends Base {
         super(config);
     }
 
-    public listFormulas() {
-        return this.query('CALL listFormulas()');
+    public listFormulas(): Promise<DomainFormula[]> {
+        return this.query('CALL listFormulas()').then((result: DataFormula[]) => {
+            return result.map(x => new DomainFormula(x.id, x.name));
+        });
     }
 
 
-    public loadElementsForFormula(formula: Formula) {
+    public loadElementsForFormula(formula: DomainFormula): Promise<DomainFormula> {
         return this.query(util.format('CALL listElementsForFormula(%s)', this.escapeAndFormat(formula.id)))
-            .then((listElementsForFormulaRecordSet: Element[]) => {
+            .then((listElementsForFormulaRecordSet: DataFormulaMeasurement[]) => {
                 formula.elements = listElementsForFormulaRecordSet;
                 return this.query(util.format('CALL getFormula(%s)', this.escapeAndFormat(formula.id)))
-                    .then((getFormulaRecordSet: any[]) => {
+                    .then((getFormulaRecordSet: DataFormula[]) => {
                         formula.name = getFormulaRecordSet[0].name;
                         return formula;
                     });
             });
     }
 
-    public loadCompositionForFormulation(formulation: Formulation) {
+    public loadCompositionForFormulation(formulation: DomainFormulation): Promise<DomainFormulation> {
         return this.query(util.format('CALL getComparisonFormula(%s)', this.escapeAndFormat(formulation.formula.id))).then((getComparisonFormulaRecordSet: any[]) => {
             let comparisonFormulaId = getComparisonFormulaRecordSet[0].formulaId;
-            return this.query(util.format('CALL listElementsForFormula(%s)', this.escapeAndFormat(comparisonFormulaId))).then((listElementsForFormulaRecordSet: any[]) => {
-                let comparisonFormulaElements: Element[] = listElementsForFormulaRecordSet;
-
+            return this.query(util.format('CALL listElementsForFormula(%s)', this.escapeAndFormat(comparisonFormulaId))).then((comparisonFormulaElements: DataFormulaMeasurement[]) => {
                 for (let i = 0; i < comparisonFormulaElements.length; i++) {
                     let elementId = comparisonFormulaElements[i].id;
                     let elementName = comparisonFormulaElements[i].name;
@@ -56,7 +60,7 @@ export class FormulaRepository extends Base {
                     elementMinimum = comparisonFormulaElements[i].minimum == null ? 0 : comparisonFormulaElements[i].minimum;
                     elementMaximum = comparisonFormulaElements[i].maximum == null ? 1000000 : comparisonFormulaElements[i].maximum;
 
-                    formulation.composition.push(new Element(elementId, elementName, this.roundToTwoDecimal(elementMinimum), this.roundToTwoDecimal(elementMaximum), this.roundToTwoDecimal(sum / 1000), elementUnit, elementSortOrder));
+                    formulation.composition.push(new DomainCompositionElement(elementId, elementName, this.roundToTwoDecimal(elementMinimum), this.roundToTwoDecimal(elementMaximum), this.roundToTwoDecimal(sum / 1000), elementUnit, elementSortOrder));
                 }
                 return formulation;
             });
