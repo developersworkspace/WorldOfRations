@@ -1,13 +1,13 @@
 // Imports models
-import { Element } from './element';
+import { FormulaMeasurement as DomainFormulaMeasurement } from './formula-measurement';
 
 export class Formula {
 
     id: string;
     name: string;
-    elements: Element[] = [];
+    elements: DomainFormulaMeasurement[] = [];
 
-    constructor(id: string) {
+    constructor(id: string, name: string) {
         this.id = id;
     }
 }

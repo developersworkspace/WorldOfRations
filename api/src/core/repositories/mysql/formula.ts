@@ -63,9 +63,4 @@ export class FormulaRepository extends Base {
         });
     }
 
-
-    private roundToTwoDecimal(value: number) {
-        return Math.round(value * 100) / 100;
-    }
-
 }

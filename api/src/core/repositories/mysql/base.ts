@@ -42,6 +42,11 @@ export class Base {
         });
     }
 
+    protected roundToTwoDecimal(value: number) {
+        return Math.round(value * 100) / 100;
+    }
+
+
     protected escapeAndFormat(str: string) {
 
         if (str == null || str == 'null') {

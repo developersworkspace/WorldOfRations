@@ -40,7 +40,7 @@ export class FormulatorService {
 
     public createFormulation(feedstuffs: Feedstuff[], formulaId: string) {
         return this.feedstuffService.loadElementsForFeedstuffs(feedstuffs).then((feedstuffsResult: Feedstuff[]) => {
-            let formula = new Formula(formulaId);
+            let formula = new Formula(formulaId, 'Unknown');
             return this.formulaRepository.loadElementsForFormula(formula).then((formulaResult: Formula) => {
                 let formulation = new Formulation();
                 formulation.feedstuffs = feedstuffsResult;

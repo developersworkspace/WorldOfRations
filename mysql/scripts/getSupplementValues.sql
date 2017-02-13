@@ -13,7 +13,7 @@ WHERE `id` = p_elementId;
 
 SELECT 
 `feedstuff`.`id` AS `id`,
-`feedstuff`.`name` AS `text`,
+`feedstuff`.`name` AS `name`,
 p_supplementValueRequired / `measurement`.`value` AS `weight`
   FROM worldofrations.feedstuffMeasurements AS `measurement`
   INNER JOIN worldofrations.feedstuffs AS `feedstuff`

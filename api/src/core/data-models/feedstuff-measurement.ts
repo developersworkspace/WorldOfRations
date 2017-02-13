@@ -17,13 +17,4 @@ export class FeedstuffMeasurement extends DataElement {
         this.value = value;
     }
 
-    toModel() {
-        return new Element(this.id, this.name, null, null, this.value, this.unit, this.sortOrder);
-    }
-
-    toDomainModel() {
-        return new DomainFeedstuffMeasurement(this.id, this.name, this.value, this.unit, this.sortOrder);
-    }
-
-
 } 
