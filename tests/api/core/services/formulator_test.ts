@@ -33,8 +33,14 @@ describe('FeedstuffService', () => {
             database: 'worldofrations'
         };
 
+        let mongoDbConfig = {
+            server: 'mongo',
+            database: 'worldofrations'
+        };
+
         formulatorService = new FormulatorService({
-            db: dbConfig
+            db: dbConfig,
+            mongodb: mongoDbConfig
         });
 
         feedstuffRepository = new FeedstuffRepository(dbConfig);
@@ -47,8 +53,6 @@ describe('FeedstuffService', () => {
     });
 
     describe('createFormulation', () => {
-
-
         it('should return formulation with feedstuff elements populated', (done) => {
             formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: Formulation) => {
                 for (let i = 0; i < formulation.feedstuffs.length; i++) {
@@ -59,7 +63,6 @@ describe('FeedstuffService', () => {
                 done(err);
             });
         });
-
         it('should return formulation with formula elements populated', (done) => {
             formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: Formulation) => {
                 expect(formulation.formula.elements.length).to.be.greaterThan(0);
@@ -68,27 +71,50 @@ describe('FeedstuffService', () => {
                 done(err);
             });
         });
-
-
     });
 
 
     describe('formulate', () => {
-
-
         it('should return result that is feasible given formulation', (done) => {
             formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: Formulation) => {
-
                 let result = formulatorService.formulate(formulation)
                 expect(result.feasible).to.be.true;
-                
                 done();
-
             }).catch((err: Error) => {
                 done(err);
             });
         });
+    });
 
+    describe('getFormulation', () => {
+        it('should return formulation with composition populated', (done) => {
+            formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: Formulation) => {
+                let formulationResult = formulatorService.formulate(formulation);
+                formulatorService.getFormulation(formulationResult.id).then((formulation: Formulation) => {
+                    expect(formulation.composition).to.be.not.null;
+                    expect(formulation.composition.length).to.be.greaterThan(0);
+                    done();
+                }).catch((err: Error) => {
+                    done(err);
+                });
+            }).catch((err: Error) => {
+                done(err);
+            });
+        });
+        it('should return formulation with supplement composition populated', (done) => {
+            formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: Formulation) => {
+                let formulationResult = formulatorService.formulate(formulation);
+                formulatorService.getFormulation(formulationResult.id).then((formulation: Formulation) => {
+                    expect(formulation.supplementComposition).to.be.not.null;
+                    expect(formulation.supplementComposition.length).to.be.greaterThan(0);
+                    done();
+                }).catch((err: Error) => {
+                    done(err);
+                });
+            }).catch((err: Error) => {
+                done(err);
+            });
+        });
     });
 
 
