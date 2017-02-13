@@ -80,10 +80,29 @@ export class FormulatorService {
     public getFormulation(formulationId: string) {
         return this.formulationRepository.getFormulationById(formulationId).then((formulationResult1: Formulation) => {
             return this.formulaRepository.loadCompositionForFormulation(formulationResult1).then((formulationResult2: Formulation) => {
-                return this.feedstuffRepository.loadSupplementFeedstuffsForFormulation(formulationResult2).then((formulationResult3: Formulation) => {
+                return this.loadSupplementFeedstuffsForFormulation(formulationResult2).then((formulationResult3: Formulation) => {
                     let formulationResult = this.cleanFormulation(formulationResult3);
                     return formulationResult;
                 });
+            });
+        });
+    }
+
+    public loadSupplementFeedstuffsForFormulation(formulation: Formulation) {
+        let parent = this;
+        return new Promise((resolve: Function, reject: Function) => {
+            let supplementElements: Element[] = formulation.composition.filter((x) => x.value < x.minimum);
+            formulation.supplementComposition = [];
+
+            let listOfPromise = [];
+
+            for (let i = 0; i < supplementElements.length; i++) {
+                listOfPromise.push(this.feedstuffRepository.listSupplementFeedstuffForElement(supplementElements[i]));
+            }
+
+            Promise.all(listOfPromise).then((elementsResult: Element[]) => {
+                formulation.supplementComposition = elementsResult;
+                resolve(formulation);
             });
         });
     }

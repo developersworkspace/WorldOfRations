@@ -30,26 +30,6 @@ export class FeedstuffRepository extends Base {
         return this.query(util.format('CALL getSuggestedValues(%s, %s);', this.escapeAndFormat(formulaId), this.escapeAndFormat(feedstuffId)));
     }
 
-
-    public loadSupplementFeedstuffsForFormulation(formulation: Formulation) {
-        let parent = this;
-        return new Promise((resolve: Function, reject: Function) => {
-            let supplementElements: Element[] = formulation.composition.filter((x) => x.value < x.minimum);
-            formulation.supplementComposition = [];
-
-            let listOfPromise = [];
-
-            for (let i = 0; i < supplementElements.length; i++) {
-                listOfPromise.push(parent.loadSupplementFeedstuffForElement(supplementElements[i]));
-            }
-
-            Promise.all(listOfPromise).then((elementsResult: Element[]) => {
-                formulation.supplementComposition = elementsResult;
-                resolve(formulation);
-            });
-        });
-    }
-
     public listElementsForFeedstuff(feedstuffId: string): Promise<Element[]> {
         return this.query(util.format('CALL listElementsForFeedstuff(%s)', this.escapeAndFormat(feedstuffId)))
             .then((listElementsForFeedstuffRecordSet: DataFeedstuffMeasurement[]) => {
@@ -57,14 +37,12 @@ export class FeedstuffRepository extends Base {
             });
     }
 
-    private loadSupplementFeedstuffForElement(element: Element) {
+    public listSupplementFeedstuffForElement(element: Element) {
         return this.query(util.format('CALL getSupplementValues(%s, %s);', this.escapeAndFormat(element.id), (element.minimum * 1000) - (element.value * 1000)))
             .then((getSupplementValuesRecordSet: any[]) => {
                 element.supplementFeedstuffs = getSupplementValuesRecordSet.length == 0 ? [] : getSupplementValuesRecordSet;
                 element.selectedSupplementFeedstuff = element.supplementFeedstuffs.length == 0 ? [] : [element.supplementFeedstuffs[0]];
                 return element;
             });
-    }
-
-    
+    }    
 }
