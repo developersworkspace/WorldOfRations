@@ -7,9 +7,6 @@
       <p class="text-danger">{{errorMessage}}</p>
       <div class="form-group">
         <label>Formula</label>
-        <!--<typeahead [(ngModel)]="selectedFormula" [list]="formulaList" [searchProperty]="'searchText'" [displayProperty]="'name'"
-          [maxSuggestions]="30" (suggestionSelected)="onSelect_Formula($event)" placeholder="Begin typing a formula">
-        </typeahead>-->
          <input [(ngModel)]="selectedFormulaName"
        [typeahead]="formulaList"
         (typeaheadOnSelect)="onSelect_Formula($event)"
@@ -44,9 +41,6 @@
       <div class="row" *ngFor="let item of feedstufffs;">
         <div class="form-group">
           <div class="col-md-4">
-            <!--<typeahead [(ngModel)]="item.selectedFeedstuff" [list]="feedstuffList" [searchProperty]="'searchText'" [displayProperty]="'name'"
-              [maxSuggestions]="10" (suggestionSelected)="onUpdate_SuggestedValues($event, item)" placeholder="Begin typing a feedstuff">
-            </typeahead>-->
             <input [(ngModel)]="item.selectedFeedstuffName"
              (typeaheadOnSelect)="onUpdate_SuggestedValues($event, item)"
        [typeahead]="feedstuffList"

@@ -10,6 +10,10 @@ import { Formula } from './../models/formula';
 import { Element } from './../models/element';
 import { SupplementFeedstuff } from './../models/supplement-feedstuff';
 
+// Imports domain models
+import { CompositionElement as DomainCompositionElement } from './../models/composition-element';
+import { SupplementElement as DomainSupplementElement} from './../models/supplement-element';
+
 // Imports repositories
 import { FormulaRepository } from './../repositories/mysql/formula';
 import { FeedstuffRepository } from './../repositories/mysql/feedstuff';
@@ -91,7 +95,7 @@ export class FormulatorService {
     public loadSupplementFeedstuffsForFormulation(formulation: Formulation) {
         let parent = this;
         return new Promise((resolve: Function, reject: Function) => {
-            let supplementElements: Element[] = formulation.composition.filter((x) => x.value < x.minimum);
+            let supplementElements: DomainCompositionElement[] = formulation.composition.filter((x) => x.value < x.minimum);
             formulation.supplementComposition = [];
 
             let listOfPromise = [];
@@ -100,7 +104,7 @@ export class FormulatorService {
                 listOfPromise.push(this.feedstuffRepository.listSupplementFeedstuffForElement(supplementElements[i]));
             }
 
-            Promise.all(listOfPromise).then((elementsResult: Element[]) => {
+            Promise.all(listOfPromise).then((elementsResult: DomainSupplementElement[]) => {
                 formulation.supplementComposition = elementsResult;
                 resolve(formulation);
             });

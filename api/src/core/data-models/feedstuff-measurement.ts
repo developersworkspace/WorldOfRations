@@ -2,7 +2,10 @@
 import { Element as DataElement } from './element';
 
 // Imports models
-import { Element as DomainElement } from './../models/element';
+import { Element as Element } from './../models/element';
+
+// Imports domain models
+import { FeedstuffMeasurement as DomainFeedstuffMeasurement } from './../models/feedstuff-measurement';
 
 export class FeedstuffMeasurement extends DataElement {
     
@@ -14,8 +17,12 @@ export class FeedstuffMeasurement extends DataElement {
         this.value = value;
     }
 
+    toModel() {
+        return new Element(this.id, this.name, null, null, this.value, this.unit, this.sortOrder);
+    }
+
     toDomainModel() {
-        return new DomainElement(this.id, this.name, null, null, this.value, this.unit, this.sortOrder);
+        return new DomainFeedstuffMeasurement(this.id, this.name, this.value, this.unit, this.sortOrder);
     }
 
 
