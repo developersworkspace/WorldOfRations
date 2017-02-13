@@ -49,7 +49,7 @@ export class FeedstuffRepository extends Base {
 
                 supplementElement.supplementFeedstuffs = getSupplementValuesRecordSet.length == 0 ? [] : getSupplementValuesRecordSet;
                 supplementElement.selectedSupplementFeedstuff = supplementElement.supplementFeedstuffs.length == 0 ? [] : [supplementElement.supplementFeedstuffs[0]];
-                return element;
+                return supplementElement;
             });
     }    
 }
