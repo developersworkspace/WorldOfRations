@@ -9,7 +9,7 @@ export class Base {
     constructor(private config: any) {
         if (pool == null) {
             pool = mysql.createPool({
-                connectionLimit: 10,
+                connectionLimit: 50,
                 host: this.config.server,
                 user: this.config.user,
                 password: this.config.password,
@@ -27,6 +27,7 @@ export class Base {
                 } else {
                     connection.query(query, (err: Error, results: any[], fields) => {
                         connection.release();
+                        connection.destroy();
                         if (err) {
                             reject(err);
                             winston.profile('Base.query ' + query);
@@ -36,18 +37,6 @@ export class Base {
                             winston.profile('Base.query ' + query);
                         }
                     });
-                }
-            });
-        });
-    }
-
-    protected getConnection() {
-        return new Promise((resolve: Function, reject: Function) => {
-            pool.getConnection((err: Error, connection: any) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(connection);
                 }
             });
         });
