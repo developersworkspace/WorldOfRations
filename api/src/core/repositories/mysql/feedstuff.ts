@@ -3,11 +3,14 @@ import { Base } from './base';
 import * as util from 'util';
 import { winston } from './../../logger';
 
-// Import models
+// Imports domain models
 import { Formulation } from './../../models/formulation';
 import { Feedstuff } from './../../models/feedstuff';
 import { Formula } from './../../models/formula';
 import { Element } from './../../models/element';
+
+// Imports data models
+import { FeedstuffMeasurement as DataFeedstuffMeasurement } from './../../data-models/feedstuff-measurement';
 
 export class FeedstuffRepository extends Base {
 
@@ -15,11 +18,11 @@ export class FeedstuffRepository extends Base {
         super(config);
     }
 
-    public listFeedstuffs() {
+    public listFeedstuffs(): Promise<Feedstuff[]> {
         return this.query('CALL listFeedstuffs();');
     }
 
-    public listExampleFeedstuffs() {
+    public listExampleFeedstuffs(): Promise<Feedstuff[]> {
         return this.query('CALL listExampleFeedstuffs();');
     }
 
@@ -27,18 +30,6 @@ export class FeedstuffRepository extends Base {
         return this.query(util.format('CALL getSuggestedValues(%s, %s);', this.escapeAndFormat(formulaId), this.escapeAndFormat(feedstuffId)));
     }
 
-    public loadElementsForFeedstuffs(feedstuffs: Feedstuff[]) {
-        let parent = this;
-        return new Promise((resolve: Function, reject: Function) => {
-            let listOfPromise = [];
-            for (let i = 0; i < feedstuffs.length; i++) {
-                listOfPromise.push(parent.loadElementsForFeedstuff(feedstuffs[i]));
-            }
-            Promise.all(listOfPromise).then((feedstuffsResult: Feedstuff[]) => {
-                resolve(feedstuffsResult);
-            });
-        });
-    }
 
     public loadSupplementFeedstuffsForFormulation(formulation: Formulation) {
         let parent = this;
@@ -59,6 +50,13 @@ export class FeedstuffRepository extends Base {
         });
     }
 
+    public listElementsForFeedstuff(feedstuffId: string): Promise<Element[]> {
+        return this.query(util.format('CALL listElementsForFeedstuff(%s)', this.escapeAndFormat(feedstuffId)))
+            .then((listElementsForFeedstuffRecordSet: DataFeedstuffMeasurement[]) => {
+                return listElementsForFeedstuffRecordSet.map(x => new DataFeedstuffMeasurement(x.id, x.name, x.unit, x.sortOrder, x.value).toDomainModel());
+            });
+    }
+
     private loadSupplementFeedstuffForElement(element: Element) {
         return this.query(util.format('CALL getSupplementValues(%s, %s);', this.escapeAndFormat(element.id), (element.minimum * 1000) - (element.value * 1000)))
             .then((getSupplementValuesRecordSet: any[]) => {
@@ -68,22 +66,5 @@ export class FeedstuffRepository extends Base {
             });
     }
 
-    private loadElementsForFeedstuff(feedstuff: Feedstuff) {
-        return this.query(util.format('CALL listElementsForFeedstuff(%s)', this.escapeAndFormat(feedstuff.id)))
-            .then((listElementsForFeedstuffRecordSet: any[]) => {
-                feedstuff.elements = listElementsForFeedstuffRecordSet;
-                return this.query(util.format('CALL getFeedstuff(%s)', this.escapeAndFormat(feedstuff.id)))
-                    .then((getFeedstuffRecordSet: any[]) => {
-                        feedstuff.name = getFeedstuffRecordSet[0].name;
-                        return feedstuff;
-                    });
-            });
-    }
-
-    public listElementsForFeedstuff(feedstuffId: string) {
-        return this.query(util.format('CALL listElementsForFeedstuff(%s)', this.escapeAndFormat(feedstuffId)))
-            .then((listElementsForFeedstuffRecordSet: any[]) => {
-                return listElementsForFeedstuffRecordSet;
-            });
-    }
+    
 }
