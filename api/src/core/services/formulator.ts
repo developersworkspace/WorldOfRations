@@ -30,34 +30,24 @@ export class FormulatorService {
         this.formulaRepository = new FormulaRepository(this.config.db);
         this.feedstuffRepository = new FeedstuffRepository(this.config.db);
         this.formulationRepository = new FormulationRepository(this.config.mongodb);
-        
+
         this.feedstuffService = new FeedstuffService(this.config.db);
     }
 
     public createFormulation(feedstuffs: Feedstuff[], formulaId: string) {
-        return new Promise((resolve: Function, reject: Function) => {
-            winston.profile('FormulatorService.createFormulation');
-            this.feedstuffService.loadElementsForFeedstuffs(feedstuffs).then((feedstuffsResult: Feedstuff[]) => {
-                let formula = new Formula(formulaId);
-                this.formulaRepository.loadElementsForFormula(formula).then((formulaResult: Formula) => {
-                    let formulation = new Formulation();
-                    formulation.feedstuffs = feedstuffsResult;
-                    formulation.formula = formulaResult;
-                    resolve(formulation);
-                    winston.profile('FormulatorService.createFormulation');
-                }).catch((err: Error) => {
-                    reject(err);
-                    winston.profile('FormulatorService.createFormulation');
-                });
-            }).catch((err: Error) => {
-                reject(err);
-                winston.profile('FormulatorService.createFormulation');
+        return this.feedstuffService.loadElementsForFeedstuffs(feedstuffs).then((feedstuffsResult: Feedstuff[]) => {
+            let formula = new Formula(formulaId);
+            return this.formulaRepository.loadElementsForFormula(formula).then((formulaResult: Formula) => {
+                let formulation = new Formulation();
+                formulation.feedstuffs = feedstuffsResult;
+                formulation.formula = formulaResult;
+                return formulation;
             });
         });
     }
 
     public formulate(formulation: Formulation) {
-        winston.profile('FormulatorService.formulate');
+
         let results: any;
         let model = {
             optimize: "cost",
@@ -80,7 +70,6 @@ export class FormulatorService {
 
         });
 
-        winston.profile('FormulatorService.formulate');
         return {
             cost: formulation.cost,
             feasible: formulation.feasible,
@@ -89,25 +78,12 @@ export class FormulatorService {
     }
 
     public getFormulation(formulationId: string) {
-        return new Promise((resolve: Function, reject: Function) => {
-            winston.profile('FormulatorService.getFormulation');
-            this.formulationRepository.getFormulationById(formulationId).then((formulationResult1: Formulation) => {
-                this.formulaRepository.loadCompositionForFormulation(formulationResult1).then((formulationResult2: Formulation) => {
-                    this.feedstuffRepository.loadSupplementFeedstuffsForFormulation(formulationResult2).then((formulationResult3: Formulation) => {
-                        let formulationResult = this.cleanFormulation(formulationResult3);
-                        resolve(formulationResult);
-                        winston.profile('FormulatorService.getFormulation');
-                    }).catch((err: Error) => {
-                        reject(err);
-                        winston.profile('FormulatorService.getFormulation');
-                    });
-                }).catch((err: Error) => {
-                    reject(err);
-                    winston.profile('FormulatorService.getFormulation');
+        return this.formulationRepository.getFormulationById(formulationId).then((formulationResult1: Formulation) => {
+            return this.formulaRepository.loadCompositionForFormulation(formulationResult1).then((formulationResult2: Formulation) => {
+                return this.feedstuffRepository.loadSupplementFeedstuffsForFormulation(formulationResult2).then((formulationResult3: Formulation) => {
+                    let formulationResult = this.cleanFormulation(formulationResult3);
+                    return formulationResult;
                 });
-            }).catch((err: Error) => {
-                reject(err);
-                winston.profile('FormulatorService.getFormulation');
             });
         });
     }

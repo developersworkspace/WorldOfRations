@@ -30,23 +30,19 @@ export class FeedstuffRepository extends Base {
     public loadElementsForFeedstuffs(feedstuffs: Feedstuff[]) {
         let parent = this;
         return new Promise((resolve: Function, reject: Function) => {
-            winston.profile('FeedstuffRepository.loadElementsForFeedstuffs');
             let listOfPromise = [];
             for (let i = 0; i < feedstuffs.length; i++) {
                 listOfPromise.push(parent.loadElementsForFeedstuff(feedstuffs[i]));
             }
             Promise.all(listOfPromise).then((feedstuffsResult: Feedstuff[]) => {
                 resolve(feedstuffsResult);
-                winston.profile('FeedstuffRepository.loadElementsForFeedstuffs');
             });
-
         });
     }
 
     public loadSupplementFeedstuffsForFormulation(formulation: Formulation) {
         let parent = this;
         return new Promise((resolve: Function, reject: Function) => {
-            winston.profile('FeedstuffRepository.loadSupplementFeedstuffsForFormulation');
             let supplementElements: Element[] = formulation.composition.filter((x) => x.value < x.minimum);
             formulation.supplementComposition = [];
 
@@ -59,67 +55,35 @@ export class FeedstuffRepository extends Base {
             Promise.all(listOfPromise).then((elementsResult: Element[]) => {
                 formulation.supplementComposition = elementsResult;
                 resolve(formulation);
-                winston.profile('FeedstuffRepository.loadSupplementFeedstuffsForFormulation');
-            }).catch((err: Error) => {
-                reject(err);
-                winston.profile('FeedstuffRepository.loadSupplementFeedstuffsForFormulation');
             });
         });
     }
 
     private loadSupplementFeedstuffForElement(element: Element) {
-        return new Promise((resolve: Function, reject: Function) => {
-            winston.profile('FeedstuffRepository.loadSupplementFeedstuffForElement');
-            this.query(util.format('CALL getSupplementValues(%s, %s);', this.escapeAndFormat(element.id), (element.minimum * 1000) - (element.value * 1000)))
-                .then((getSupplementValuesRecordSet: any[]) => {
-                    element.supplementFeedstuffs = getSupplementValuesRecordSet.length == 0 ? [] : getSupplementValuesRecordSet;
-                    element.selectedSupplementFeedstuff = element.supplementFeedstuffs.length == 0 ? [] : [element.supplementFeedstuffs[0]];
-                    resolve(element);
-                    winston.profile('FeedstuffRepository.loadSupplementFeedstuffForElement');
-                }).catch((err: Error) => {
-                    reject(err);
-                    winston.profile('FeedstuffRepository.loadSupplementFeedstuffForElement');
-                });
-        });
+        return this.query(util.format('CALL getSupplementValues(%s, %s);', this.escapeAndFormat(element.id), (element.minimum * 1000) - (element.value * 1000)))
+            .then((getSupplementValuesRecordSet: any[]) => {
+                element.supplementFeedstuffs = getSupplementValuesRecordSet.length == 0 ? [] : getSupplementValuesRecordSet;
+                element.selectedSupplementFeedstuff = element.supplementFeedstuffs.length == 0 ? [] : [element.supplementFeedstuffs[0]];
+                return element;
+            });
     }
-
 
     private loadElementsForFeedstuff(feedstuff: Feedstuff) {
-        return new Promise((resolve: Function, reject: Function) => {
-            winston.profile('FeedstuffRepository.loadElementsForFeedstuff');
-            this.query(util.format('CALL listElementsForFeedstuff(%s)', this.escapeAndFormat(feedstuff.id)))
-                .then((listElementsForFeedstuffRecordSet: any[]) => {
-                    feedstuff.elements = listElementsForFeedstuffRecordSet;
-                    this.query(util.format('CALL getFeedstuff(%s)', this.escapeAndFormat(feedstuff.id)))
-                        .then((getFeedstuffRecordSet: any[]) => {
-                            feedstuff.name = getFeedstuffRecordSet[0].name;
-                            resolve(feedstuff);
-                            winston.profile('FeedstuffRepository.loadElementsForFeedstuff');
-                        }).catch((err: Error) => {
-                            reject(err);
-                            winston.profile('FeedstuffRepository.loadElementsForFeedstuff');
-                        });
-
-                }).catch((err: Error) => {
-                    reject(err);
-                    winston.profile('FeedstuffRepository.loadElementsForFeedstuff');
-                });
-        });
+        return this.query(util.format('CALL listElementsForFeedstuff(%s)', this.escapeAndFormat(feedstuff.id)))
+            .then((listElementsForFeedstuffRecordSet: any[]) => {
+                feedstuff.elements = listElementsForFeedstuffRecordSet;
+                return this.query(util.format('CALL getFeedstuff(%s)', this.escapeAndFormat(feedstuff.id)))
+                    .then((getFeedstuffRecordSet: any[]) => {
+                        feedstuff.name = getFeedstuffRecordSet[0].name;
+                        return feedstuff;
+                    });
+            });
     }
 
-    ///////////////////////
-
-
     public listElementsForFeedstuff(feedstuffId: string) {
-        return new Promise((resolve: Function, reject: Function) => {
-            winston.profile('FeedstuffRepository.listElementsForFeedstuff');
-            this.query(util.format('CALL listElementsForFeedstuff(%s)', this.escapeAndFormat(feedstuffId)))
-                .then((listElementsForFeedstuffRecordSet: any[]) => {
-                    resolve(listElementsForFeedstuffRecordSet);
-                }).catch((err: Error) => {
-                    reject(err);
-                    winston.profile('FeedstuffRepository.listElementsForFeedstuff');
-                });
-        });
+        return this.query(util.format('CALL listElementsForFeedstuff(%s)', this.escapeAndFormat(feedstuffId)))
+            .then((listElementsForFeedstuffRecordSet: any[]) => {
+                return listElementsForFeedstuffRecordSet;
+            });
     }
 }

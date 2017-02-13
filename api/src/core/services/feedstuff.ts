@@ -2,8 +2,8 @@
 import { FeedstuffRepository } from './../repositories/mysql/feedstuff';
 
 // Imports models
-import { Feedstuff } from './../domain-models/feedstuff';
-import { FeedstuffElement } from './../domain-models/feedstuff-element';
+import { Feedstuff } from './../models/feedstuff';
+import { Element } from './../models/element';
 
 export class FeedstuffService {
 
@@ -26,11 +26,10 @@ export class FeedstuffService {
     }
 
     public loadElementsForFeedstuffs(feedstuffs: Feedstuff[]) {
-        let parent = this;
         return new Promise((resolve: Function, reject: Function) => {
             let listOfPromise = [];
             for (let i = 0; i < feedstuffs.length; i++) {
-                listOfPromise.push(parent.loadElementsForFeedstuff(feedstuffs[i]));
+                listOfPromise.push(this.loadElementsForFeedstuff(feedstuffs[i]));
             }
             Promise.all(listOfPromise).then((feedstuffsResult: Feedstuff[]) => {
                 resolve(feedstuffsResult);
@@ -39,13 +38,9 @@ export class FeedstuffService {
     }
 
     private loadElementsForFeedstuff(feedstuff: Feedstuff) {
-        return new Promise((resolve: Function, reject: Function) => {
-            this.feedstuffRepository.listElementsForFeedstuff(feedstuff.id).then((elements: FeedstuffElement[]) => {
-                feedstuff.elements = elements;
-                resolve(feedstuff);
-            }).catch((err: Error) => {
-                reject(err);
-            });
+        return this.feedstuffRepository.listElementsForFeedstuff(feedstuff.id).then((elements: Element[]) => {
+            feedstuff.elements = elements;
+            return feedstuff;
         });
     }
 }
