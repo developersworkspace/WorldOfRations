@@ -36,6 +36,12 @@ export class FeedstuffRepository extends Base {
         });
     }
 
+    public getFeedstuff(feedstuffId: string): Promise<DomainFeedstuff> {
+        return this.query(util.format('CALL getFeedstuff(%s);', this.escapeAndFormat(feedstuffId))).then((result: DataFeedstuff[]) => {
+            return result.map(x => new DomainFeedstuff(x.id, x.name, null, null, null))[0];
+        });
+    }
+
     public getSuggestedValues(formulaId: string, feedstuffId: string): Promise<DomainSuggestedValue[]> {
         return this.query(util.format('CALL getSuggestedValues(%s, %s);', this.escapeAndFormat(formulaId), this.escapeAndFormat(feedstuffId))).then((result: DataSuggestedValue[]) => {
             return result.map(x => new DomainSuggestedValue(x.minimum, x.maximum));

@@ -12,7 +12,7 @@ import { SupplementFeedstuff } from './../models/supplement-feedstuff';
 
 // Imports domain models
 import { CompositionElement as DomainCompositionElement } from './../models/composition-element';
-import { SupplementElement as DomainSupplementElement} from './../models/supplement-element';
+import { SupplementElement as DomainSupplementElement } from './../models/supplement-element';
 
 // Imports repositories
 import { FormulaRepository } from './../repositories/mysql/formula';
@@ -39,14 +39,21 @@ export class FormulatorService {
     }
 
     public createFormulation(feedstuffs: Feedstuff[], formulaId: string) {
-        return this.feedstuffService.loadElementsForFeedstuffs(feedstuffs).then((feedstuffsResult: Feedstuff[]) => {
-            let formula = new Formula(formulaId, 'Unknown');
-            return this.formulaRepository.loadElementsForFormula(formula).then((formulaResult: Formula) => {
-                let formulation = new Formulation();
-                formulation.feedstuffs = feedstuffsResult;
-                formulation.formula = formulaResult;
-                return formulation;
-            });
+
+        let formula = new Formula(formulaId, 'Unknown');
+        let formulation = new Formulation();
+
+        return this.feedstuffService.loadNamesForFeedstuffs(feedstuffs).then((loadNamesForFeedstuffsResult: Feedstuff[]) => {
+            return Promise.all(
+                [
+                    this.feedstuffService.loadElementsForFeedstuffs(loadNamesForFeedstuffsResult),
+                    this.formulaRepository.loadElementsForFormula(formula)
+                ]).then((results: any[]) => {
+
+                    formulation.feedstuffs = results[0];
+                    formulation.formula = results[1];
+                    return formulation;
+                });
         });
     }
 
@@ -82,32 +89,30 @@ export class FormulatorService {
     }
 
     public getFormulation(formulationId: string) {
-        return this.formulationRepository.getFormulationById(formulationId).then((formulationResult1: Formulation) => {
-            return this.formulaRepository.loadCompositionForFormulation(formulationResult1).then((formulationResult2: Formulation) => {
-                return this.loadSupplementFeedstuffsForFormulation(formulationResult2).then((formulationResult3: Formulation) => {
-                    let formulationResult = this.cleanFormulation(formulationResult3);
-                    return formulationResult;
-                });
-            });
+        return this.formulationRepository.getFormulationById(formulationId).then((formulation: Formulation) => {
+            return this.formulaRepository.loadCompositionForFormulation(formulation);
+        }).then((formulation: Formulation) => {
+            return this.loadSupplementFeedstuffsForFormulation(formulation);
+        }).then((formulation: Formulation) => {
+            let formulationResult = this.cleanFormulation(formulation);
+            return formulationResult;
         });
     }
 
     public loadSupplementFeedstuffsForFormulation(formulation: Formulation) {
         let parent = this;
-        return new Promise((resolve: Function, reject: Function) => {
-            let supplementElements: DomainCompositionElement[] = formulation.composition.filter((x) => x.value < x.minimum);
-            formulation.supplementComposition = [];
+        let supplementElements: DomainCompositionElement[] = formulation.composition.filter((x) => x.value < x.minimum);
+        formulation.supplementComposition = [];
 
-            let listOfPromise = [];
+        let listOfPromise = [];
 
-            for (let i = 0; i < supplementElements.length; i++) {
-                listOfPromise.push(this.feedstuffRepository.listSupplementFeedstuffForElement(supplementElements[i]));
-            }
+        for (let i = 0; i < supplementElements.length; i++) {
+            listOfPromise.push(this.feedstuffRepository.listSupplementFeedstuffForElement(supplementElements[i]));
+        }
 
-            Promise.all(listOfPromise).then((elementsResult: DomainSupplementElement[]) => {
-                formulation.supplementComposition = elementsResult;
-                resolve(formulation);
-            });
+        return Promise.all(listOfPromise).then((elementsResult: DomainSupplementElement[]) => {
+            formulation.supplementComposition = elementsResult;
+            return formulation;
         });
     }
 

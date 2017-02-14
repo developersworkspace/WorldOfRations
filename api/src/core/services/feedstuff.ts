@@ -26,20 +26,37 @@ export class FeedstuffService {
     }
 
     public loadElementsForFeedstuffs(feedstuffs: Feedstuff[]) {
-        return new Promise((resolve: Function, reject: Function) => {
-            let listOfPromise = [];
-            for (let i = 0; i < feedstuffs.length; i++) {
-                listOfPromise.push(this.loadElementsForFeedstuff(feedstuffs[i]));
-            }
-            Promise.all(listOfPromise).then((feedstuffsResult: Feedstuff[]) => {
-                resolve(feedstuffsResult);
-            });
+
+        let listOfPromise = [];
+        for (let i = 0; i < feedstuffs.length; i++) {
+            listOfPromise.push(this.loadElementsForFeedstuff(feedstuffs[i]));
+        }
+        return Promise.all(listOfPromise).then((feedstuffsResult: Feedstuff[]) => {
+            return feedstuffsResult;
+        });
+    }
+
+    public loadNamesForFeedstuffs(feedstuffs: Feedstuff[]) {
+
+        let listOfPromise = [];
+        for (let i = 0; i < feedstuffs.length; i++) {
+            listOfPromise.push(this.loadNameForFeedstuff(feedstuffs[i]));
+        }
+        return Promise.all(listOfPromise).then((feedstuffsResult: Feedstuff[]) => {
+            return feedstuffsResult;
         });
     }
 
     private loadElementsForFeedstuff(feedstuff: Feedstuff) {
         return this.feedstuffRepository.listElementsForFeedstuff(feedstuff.id).then((elements: Element[]) => {
             feedstuff.elements = elements;
+            return feedstuff;
+        });
+    }
+
+    private loadNameForFeedstuff(feedstuff: Feedstuff) {
+        return this.feedstuffRepository.getFeedstuff(feedstuff.id).then((result: Feedstuff) => {
+            feedstuff.name = result.name;
             return feedstuff;
         });
     }
