@@ -4,6 +4,12 @@ World of Rations is an online cloud-based ration formulation program, structured
 
 ![Formulator](https://github.com/developersworkspace/WorldOfRations/blob/master/web/src/assets/img/screenshots/formulator.PNG?raw=true)
 
+## Installation
+
+### One-line Install
+
+`bash <(curl -s https://raw.githubusercontent.com/developersworkspace/WorldOfRations/master/build.sh)`
+
 ## Releases
 
 * **Verion 2.0** - Release with Twitter Bootstrap (14 December 2015) 
