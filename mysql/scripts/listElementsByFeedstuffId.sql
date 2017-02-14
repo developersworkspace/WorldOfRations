@@ -1,6 +1,6 @@
 DELIMITER //
 
-CREATE PROCEDURE listElementsForFeedstuff (
+CREATE PROCEDURE listElementsByFeedstuffId (
 p_feedstuffId CHAR(36))
 Begin
 SELECT 

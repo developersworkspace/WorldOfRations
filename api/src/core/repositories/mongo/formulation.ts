@@ -14,7 +14,7 @@ export class FormulationRepository {
 
     }
 
-    public saveFormulation(formulation: Formulation) {
+    public saveFormulation(formulation: Formulation): Promise<Boolean> {
         return new Promise((resolve: Function, reject: Function) => {
             winston.profile('FormulationRepository.saveFormulation');
             let mongoClient = new mongodb.MongoClient();
@@ -26,6 +26,7 @@ export class FormulationRepository {
                     var collection = db.collection('fomulations');
                     collection.insertOne(formulation, (err: Error, result: any) => {
                         db.close();
+                        resolve(true);
                         winston.profile('FormulationRepository.saveFormulation');
                     });
                 }
@@ -33,7 +34,7 @@ export class FormulationRepository {
         });
     }
 
-    public getFormulationById(formulationId: string) {
+    public getFormulationById(formulationId: string): Promise<Formulation> {
         return new Promise((resolve: Function, reject: Function) => {
             winston.profile('FormulationRepository.getFormulationById');
             let mongoClient = new mongodb.MongoClient();

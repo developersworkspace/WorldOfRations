@@ -1,6 +1,6 @@
 DELIMITER //
 
-CREATE PROCEDURE getSupplementValues (
+CREATE PROCEDURE listSupplementFeedstuffByElementId (
 p_elementId CHAR(36),
 p_supplementValueRequired DOUBLE)
 BEGIN

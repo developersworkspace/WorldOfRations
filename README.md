@@ -16,6 +16,9 @@ World of Rations is an online cloud-based ration formulation program, structured
 
 * **Verion 3.0** - First Release of Angular 2 Rewrite (10 February 2017) 
 
+    * **Verion 3.1** - [Release Notes](https://github.com/developersworkspace/WorldOfRations/milestone/1?closed=1) (14 February 2017)
+
+
 The MIT License (MIT)
 =====================
 

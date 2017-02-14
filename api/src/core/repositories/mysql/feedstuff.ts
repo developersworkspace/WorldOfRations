@@ -25,38 +25,39 @@ export class FeedstuffRepository extends Base {
     }
 
     public listFeedstuffs(): Promise<DomainFeedstuff[]> {
-        return this.query('CALL listFeedstuffs();').then((result: DataFeedstuff[]) => {
-            return result.map(x => new DomainFeedstuff(x.id, x.name, null, null, null));
+        return this.query('CALL listFeedstuffs();').then((listFeedstuffsResult: DataFeedstuff[]) => {
+            return listFeedstuffsResult.map(x => new DomainFeedstuff(x.id, x.name, null, null, null));
         });
     }
 
     public listExampleFeedstuffs(): Promise<DomainFeedstuff[]> {
-        return this.query('CALL listExampleFeedstuffs();').then((result: DataExampleFeedstuff[]) => {
-            return result.map(x => new DomainFeedstuff(x.id, x.name, x.minimum, x.maximum, x.cost));
+        return this.query('CALL listExampleFeedstuffs();').then((listExampleFeedstuffsResult: DataExampleFeedstuff[]) => {
+            return listExampleFeedstuffsResult.map(x => new DomainFeedstuff(x.id, x.name, x.minimum, x.maximum, x.cost));
         });
     }
 
-    public getFeedstuff(feedstuffId: string): Promise<DomainFeedstuff> {
-        return this.query(util.format('CALL getFeedstuff(%s);', this.escapeAndFormat(feedstuffId))).then((result: DataFeedstuff[]) => {
-            return result.map(x => new DomainFeedstuff(x.id, x.name, null, null, null))[0];
+    public getFeedstuffById(feedstuffId: string): Promise<DomainFeedstuff> {
+        return this.query(util.format('CALL getFeedstuffById(%s);', this.escapeAndFormat(feedstuffId))).then((getFeedstuffByIdResult: DataFeedstuff[]) => {
+            return getFeedstuffByIdResult.map(x => new DomainFeedstuff(x.id, x.name, null, null, null))[0];
         });
     }
 
-    public getSuggestedValues(formulaId: string, feedstuffId: string): Promise<DomainSuggestedValue[]> {
-        return this.query(util.format('CALL getSuggestedValues(%s, %s);', this.escapeAndFormat(formulaId), this.escapeAndFormat(feedstuffId))).then((result: DataSuggestedValue[]) => {
-            return result.map(x => new DomainSuggestedValue(x.minimum, x.maximum));
+    public getSuggestedValuesByFormulaIdAndFeedstuffId(formulaId: string, feedstuffId: string): Promise<DomainSuggestedValue[]> {
+        return this.query(util.format('CALL getSuggestedValuesByFormulaIdAndFeedstuffId(%s, %s);', this.escapeAndFormat(formulaId), this.escapeAndFormat(feedstuffId)))
+        .then((getSuggestedValuesByFormulaIdAndFeedstuffIdResult: DataSuggestedValue[]) => {
+            return getSuggestedValuesByFormulaIdAndFeedstuffIdResult.map(x => new DomainSuggestedValue(x.minimum, x.maximum));
         });
     }
 
-    public listElementsForFeedstuff(feedstuffId: string): Promise<DomainFeedstuffMeasurement[]> {
-        return this.query(util.format('CALL listElementsForFeedstuff(%s)', this.escapeAndFormat(feedstuffId)))
-            .then((listElementsForFeedstuffRecordSet: DataFeedstuffMeasurement[]) => {
-                return listElementsForFeedstuffRecordSet.map(x => new DomainFeedstuffMeasurement(x.id, x.name, x.value, x.unit, x.sortOrder));
+    public listElementsByFeedstuffId(feedstuffId: string): Promise<DomainFeedstuffMeasurement[]> {
+        return this.query(util.format('CALL listElementsByFeedstuffId(%s)', this.escapeAndFormat(feedstuffId)))
+            .then((listElementsByFeedstuffIdResult: DataFeedstuffMeasurement[]) => {
+                return listElementsByFeedstuffIdResult.map(x => new DomainFeedstuffMeasurement(x.id, x.name, x.value, x.unit, x.sortOrder));
             });
     }
 
-    public listSupplementFeedstuffForElement(element: DomainCompositionElement): Promise<DomainSupplementElement[]> {
-        return this.query(util.format('CALL getSupplementValues(%s, %s);', this.escapeAndFormat(element.id), (element.minimum * 1000) - (element.value * 1000)))
+    public listSupplementFeedstuffByElementId(element: DomainCompositionElement): Promise<DomainSupplementElement> {
+        return this.query(util.format('CALL listSupplementFeedstuffByElementId(%s, %s);', this.escapeAndFormat(element.id), (element.minimum * 1000) - (element.value * 1000)))
             .then((getSupplementValuesRecordSet: DataSupplementFeedstuff[]) => {
                 let supplementElement = new DomainSupplementElement(element.id, element.name, element.unit, element.sortOrder);
                 

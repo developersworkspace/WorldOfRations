@@ -38,7 +38,7 @@ export class FormulatorService {
         this.feedstuffService = new FeedstuffService(this.config.db);
     }
 
-    public createFormulation(feedstuffs: Feedstuff[], formulaId: string) {
+    public createFormulation(feedstuffs: Feedstuff[], formulaId: string): Promise<Formulation> {
 
         let formula = new Formula(formulaId, 'Unknown');
         let formulation = new Formulation();
@@ -57,7 +57,7 @@ export class FormulatorService {
         });
     }
 
-    public formulate(formulation: Formulation) {
+    public formulate(formulation: Formulation): any {
 
         let results: any;
         let model = {
@@ -88,7 +88,7 @@ export class FormulatorService {
         };
     }
 
-    public getFormulation(formulationId: string) {
+    public getFormulation(formulationId: string): Promise<Formulation> {
         return this.formulationRepository.getFormulationById(formulationId).then((formulation: Formulation) => {
             return this.formulaRepository.loadCompositionForFormulation(formulation);
         }).then((formulation: Formulation) => {
@@ -99,7 +99,7 @@ export class FormulatorService {
         });
     }
 
-    public loadSupplementFeedstuffsForFormulation(formulation: Formulation) {
+    public loadSupplementFeedstuffsForFormulation(formulation: Formulation): Promise<Formulation> {
         let parent = this;
         let supplementElements: DomainCompositionElement[] = formulation.composition.filter((x) => x.value < x.minimum);
         formulation.supplementComposition = [];
@@ -107,7 +107,7 @@ export class FormulatorService {
         let listOfPromise = [];
 
         for (let i = 0; i < supplementElements.length; i++) {
-            listOfPromise.push(this.feedstuffRepository.listSupplementFeedstuffForElement(supplementElements[i]));
+            listOfPromise.push(this.feedstuffRepository.listSupplementFeedstuffByElementId(supplementElements[i]));
         }
 
         return Promise.all(listOfPromise).then((elementsResult: DomainSupplementElement[]) => {

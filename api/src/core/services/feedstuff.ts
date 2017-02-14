@@ -22,7 +22,7 @@ export class FeedstuffService {
     }
 
     public getSuggestedValues(formulaId: string, feedstuffId: string) {
-        return this.feedstuffRepository.getSuggestedValues(formulaId, feedstuffId);
+        return this.feedstuffRepository.getSuggestedValuesByFormulaIdAndFeedstuffId(formulaId, feedstuffId);
     }
 
     public loadElementsForFeedstuffs(feedstuffs: Feedstuff[]) {
@@ -48,14 +48,14 @@ export class FeedstuffService {
     }
 
     private loadElementsForFeedstuff(feedstuff: Feedstuff) {
-        return this.feedstuffRepository.listElementsForFeedstuff(feedstuff.id).then((elements: Element[]) => {
+        return this.feedstuffRepository.listElementsByFeedstuffId(feedstuff.id).then((elements: Element[]) => {
             feedstuff.elements = elements;
             return feedstuff;
         });
     }
 
     private loadNameForFeedstuff(feedstuff: Feedstuff) {
-        return this.feedstuffRepository.getFeedstuff(feedstuff.id).then((result: Feedstuff) => {
+        return this.feedstuffRepository.getFeedstuffById(feedstuff.id).then((result: Feedstuff) => {
             feedstuff.name = result.name;
             return feedstuff;
         });

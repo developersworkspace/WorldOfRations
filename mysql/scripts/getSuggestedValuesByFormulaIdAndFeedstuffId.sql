@@ -1,6 +1,6 @@
 DELIMITER //
 
-CREATE PROCEDURE getSuggestedValues (
+CREATE PROCEDURE getSuggestedValuesByFormulaIdAndFeedstuffId (
 p_formulaId CHAR(36),
 p_feedstuffId CHAR(36))
 BEGIN 
