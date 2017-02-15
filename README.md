@@ -8,7 +8,7 @@ World of Rations is an online cloud-based ration formulation program, structured
 
 ### One-line Install
 
-`sudo bash <(curl -s https://raw.githubusercontent.com/developersworkspace/WorldOfRations/master/install.sh)`
+`bash <(curl -s https://raw.githubusercontent.com/developersworkspace/WorldOfRations/master/install.sh)`
 
 ## Releases
 
