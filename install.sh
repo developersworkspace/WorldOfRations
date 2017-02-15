@@ -1,13 +1,13 @@
 # -- BUILD AND INSTALL WORLD OF RATIONS --
 
 # Update machine package indexes
-sudo apt-get update
+apt-get update
 
 # Download and run script to install node 7
 curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
 
 # Install node 7
-sudo apt-get install -y nodejs
+apt-get install -y nodejs
 
 # Install 'typescript' node package
 npm install -g typescript
@@ -48,15 +48,16 @@ docker-compose up -d
 # -- INSTALL NGINX --
 
 # Update machine package indexes
-sudo apt-get update
+apt-get update
 
 # Install NGINX
-sudo apt-get install -y nginx
+apt-get install -y nginx
 
 # Add rule to firewall
-sudo ufw allow 'Nginx HTTP'
+ufw allow 'Nginx HTTP'
 
 # Download nginx.conf to NGINX directory
+curl -o /etc/nginx/nginx.conf https://raw.githubusercontent.com/developersworkspace/WorldOfRations/master/nginx.conf
 
 # Restart NGINX
-sudo systemctl restart nginx
+systemctl restart nginx
