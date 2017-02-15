@@ -20,5 +20,6 @@ export class Feedstuff {
         this.minimum = minimum;
         this.maximum = maximum;
         this.cost = cost;
+        this.weight = null;
     }
 }

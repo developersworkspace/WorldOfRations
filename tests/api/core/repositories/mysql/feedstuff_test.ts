@@ -38,7 +38,7 @@ describe('FeedstuffRepository', () => {
                 done(err);
             });
         });
-        it('should return list of feedstuffs with as correct object', (done) => {
+        it('should return list of feedstuffs as correct object', (done) => {
             feedstuffRepository.listFeedstuffs().then((result: DomainFeedstuff[]) => {
                 let item = result[0];
 
@@ -49,7 +49,9 @@ describe('FeedstuffRepository', () => {
                 expect(item.name).to.be.not.null;
                 expect(item.maximum).to.be.null;
                 expect(item.minimum).to.be.null;
-                expect(item.weight).to.be.undefined;
+                expect(item.weight).to.be.null;
+
+                expect(Object.keys(item).length).to.be.eq(7);
 
                 done();
             }).catch((err: Error) => {
@@ -69,7 +71,7 @@ describe('FeedstuffRepository', () => {
                 done(err);
             });
         });
-        it('should return list of feedstuffs with as correct object', (done) => {
+        it('should return list of feedstuffs as correct object', (done) => {
             feedstuffRepository.listExampleFeedstuffs().then((result: DomainFeedstuff[]) => {
                 let item = result[0];
 
@@ -80,7 +82,9 @@ describe('FeedstuffRepository', () => {
                 expect(item.name).to.be.not.null;
                 expect(item.maximum).to.be.not.null;
                 expect(item.minimum).to.be.not.null;
-                expect(item.weight).to.be.undefined;
+                expect(item.weight).to.be.null;
+
+                expect(Object.keys(item).length).to.be.eq(7);
 
                 done();
             }).catch((err: Error) => {
@@ -100,7 +104,10 @@ describe('FeedstuffRepository', () => {
                 expect(result.name).to.be.not.null;
                 expect(result.maximum).to.be.null;
                 expect(result.minimum).to.be.null;
-                expect(result.weight).to.be.undefined;
+                expect(result.weight).to.be.null;
+
+                expect(Object.keys(result).length).to.be.eq(7);
+
                 done();
             }).catch((err: Error) => {
                 done(err);
@@ -122,6 +129,24 @@ describe('FeedstuffRepository', () => {
             feedstuffRepository.listElementsByFeedstuffId(existingFeedstuffId).then((result: DomainFeedstuffMeasurement[]) => {
                 expect(result).to.be.not.null;
                 expect(result.length).to.be.eq(80);
+                done();
+            }).catch((err: Error) => {
+                done(err);
+            });
+        });
+
+        it('should return list of elements as correct objects given existing feedstuff id', (done) => {
+            feedstuffRepository.listElementsByFeedstuffId(existingFeedstuffId).then((result: DomainFeedstuffMeasurement[]) => {
+                let item = result[0];
+
+                expect(item.id).to.be.not.null;
+                expect(item.name).to.be.not.null;
+                expect(item.value).to.be.not.null;
+                expect(item.unit).to.be.not.null;
+                expect(item.sortOrder).to.be.not.null;
+
+                expect(Object.keys(item).length).to.be.eq(5);
+
                 done();
             }).catch((err: Error) => {
                 done(err);
