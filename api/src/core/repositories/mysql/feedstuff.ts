@@ -46,10 +46,14 @@ export class FeedstuffRepository extends Base {
         });
     }
 
-    public getSuggestedValuesByFormulaIdAndFeedstuffId(formulaId: string, feedstuffId: string): Promise<DomainSuggestedValue[]> {
+    public getSuggestedValuesByFormulaIdAndFeedstuffId(formulaId: string, feedstuffId: string): Promise<DomainSuggestedValue> {
         return this.query(util.format('CALL getSuggestedValuesByFormulaIdAndFeedstuffId(%s, %s);', this.escapeAndFormat(formulaId), this.escapeAndFormat(feedstuffId)))
             .then((getSuggestedValuesByFormulaIdAndFeedstuffIdResult: DataSuggestedValue[]) => {
-                return getSuggestedValuesByFormulaIdAndFeedstuffIdResult.map(x => new DomainSuggestedValue(x.minimum, x.maximum));
+                if (getSuggestedValuesByFormulaIdAndFeedstuffIdResult.length == 0) {
+                    return null;
+                } else {
+                    return getSuggestedValuesByFormulaIdAndFeedstuffIdResult.map(x => new DomainSuggestedValue(x.minimum, x.maximum))[0];
+                }
             });
     }
 

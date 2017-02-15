@@ -52,7 +52,6 @@ describe('FeedstuffService', () => {
         it('should return list of suggested values', (done) => {
             feedstuffService.getSuggestedValues('CB0360F3-4617-4922-B20D-C3F223BBBCEB', '0CA0953B-C75B-48A1-A31D-89FACC248E90').then((result: any) => {
                 expect(result).to.be.not.null;
-                expect(result.length).to.be.eq(1);
                 done();
             }).catch((err: Error) => {
                 done(err);
@@ -61,8 +60,7 @@ describe('FeedstuffService', () => {
 
         it('should return empty list given feedstuff id with no suggested values', (done) => {
             feedstuffService.getSuggestedValues('CB0360F3-4617-4922-B20D-C3F223BBBCEB', '6B5F4F25-6661-4D4B-ABC7-D44AEFCDE955').then((result: any) => {
-                expect(result).to.be.not.null;
-                expect(result.length).to.be.eq(0);
+                expect(result).to.be.null;
                 done();
             }).catch((err: Error) => {
                 done(err);

@@ -9,6 +9,7 @@ import { FeedstuffRepository } from './../../../../../api/src/core/repositories/
 // Imports domain models
 import { Feedstuff as DomainFeedstuff } from './../../../../../api/src/core/models/feedstuff';
 import { FeedstuffMeasurement as DomainFeedstuffMeasurement } from './../../../../../api/src/core/models/feedstuff-measurement';
+import { SuggestedValue as DomainSuggestedValue } from './../../../../../api/src/core/models/suggested-value';
 
 describe('FeedstuffRepository', () => {
 
@@ -16,6 +17,9 @@ describe('FeedstuffRepository', () => {
 
     let existingFeedstuffId = '36995DEF-9B6B-49CD-9AA6-0165478BA4CD';
     let nonExistingFeedstuffId = '078567E3-A67E-4737-B273-4AE381FDBACD';
+    let existingFormulaIdWithSuggestedValue = 'CB0360F3-4617-4922-B20D-C3F223BBBCEB';
+    let existingFeedstuffIdWithSuggestedValue = 'B3EDBFD3-CB3C-4427-A6FB-B20EBF4FC831';
+    let nonExistingFormulaId = '3DE8F48A-CC7A-4217-B317-979866B42BB6';
 
     beforeEach(function (done: Function) {
 
@@ -165,7 +169,25 @@ describe('FeedstuffRepository', () => {
     });
 
 
-
+    describe('getSuggestedValuesByFormulaIdAndFeedstuffId', () => {
+        it('should return suggested value given existing formula id and existing feedstuff id', (done) => {
+            feedstuffRepository.getSuggestedValuesByFormulaIdAndFeedstuffId(existingFormulaIdWithSuggestedValue, existingFeedstuffIdWithSuggestedValue).then((result: DomainSuggestedValue) => {
+                expect(result).to.be.not.null;
+                expect(Object.keys(result).length).to.be.eq(2);
+                done();
+            }).catch((err: Error) => {
+                done(err);
+            });
+        });
+        it('should return null given non-existing formula id and existing feedstuff id', (done) => {
+            feedstuffRepository.getSuggestedValuesByFormulaIdAndFeedstuffId(nonExistingFormulaId, nonExistingFeedstuffId).then((result: DomainSuggestedValue) => {
+                expect(result).to.be.null;
+                done();
+            }).catch((err: Error) => {
+                done(err);
+            });
+        });
+    });
 
 
 
