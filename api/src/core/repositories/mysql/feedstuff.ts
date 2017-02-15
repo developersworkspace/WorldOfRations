@@ -38,15 +38,19 @@ export class FeedstuffRepository extends Base {
 
     public getFeedstuffById(feedstuffId: string): Promise<DomainFeedstuff> {
         return this.query(util.format('CALL getFeedstuffById(%s);', this.escapeAndFormat(feedstuffId))).then((getFeedstuffByIdResult: DataFeedstuff[]) => {
-            return getFeedstuffByIdResult.map(x => new DomainFeedstuff(x.id, x.name, null, null, null))[0];
+            if (getFeedstuffByIdResult.length == 0) {
+                return null;
+            } else {
+                return getFeedstuffByIdResult.map(x => new DomainFeedstuff(x.id, x.name, null, null, null))[0];
+            }
         });
     }
 
     public getSuggestedValuesByFormulaIdAndFeedstuffId(formulaId: string, feedstuffId: string): Promise<DomainSuggestedValue[]> {
         return this.query(util.format('CALL getSuggestedValuesByFormulaIdAndFeedstuffId(%s, %s);', this.escapeAndFormat(formulaId), this.escapeAndFormat(feedstuffId)))
-        .then((getSuggestedValuesByFormulaIdAndFeedstuffIdResult: DataSuggestedValue[]) => {
-            return getSuggestedValuesByFormulaIdAndFeedstuffIdResult.map(x => new DomainSuggestedValue(x.minimum, x.maximum));
-        });
+            .then((getSuggestedValuesByFormulaIdAndFeedstuffIdResult: DataSuggestedValue[]) => {
+                return getSuggestedValuesByFormulaIdAndFeedstuffIdResult.map(x => new DomainSuggestedValue(x.minimum, x.maximum));
+            });
     }
 
     public listElementsByFeedstuffId(feedstuffId: string): Promise<DomainFeedstuffMeasurement[]> {
@@ -60,10 +64,10 @@ export class FeedstuffRepository extends Base {
         return this.query(util.format('CALL listSupplementFeedstuffByElementId(%s, %s);', this.escapeAndFormat(element.id), (element.minimum * 1000) - (element.value * 1000)))
             .then((getSupplementValuesRecordSet: DataSupplementFeedstuff[]) => {
                 let supplementElement = new DomainSupplementElement(element.id, element.name, element.unit, element.sortOrder);
-                
+
                 supplementElement.supplementFeedstuffs = getSupplementValuesRecordSet.map(x => new DomainSupplementFeedstuff(x.id, x.name, x.weight));
                 supplementElement.selectedSupplementFeedstuff = supplementElement.supplementFeedstuffs.length == 0 ? [] : [supplementElement.supplementFeedstuffs[0]];
                 return supplementElement;
             });
-    }    
+    }
 }
