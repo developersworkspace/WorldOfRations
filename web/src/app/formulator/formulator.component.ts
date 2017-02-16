@@ -54,10 +54,10 @@ export class FormulatorComponent implements OnInit {
 
     if (item.item != null && this.selectedFormula != null) {
       instance.isLoading = true;
-      this.feedstuffService.getSuggestedValues(this.selectedFormula.id, instance.selectedFeedstuff.id).subscribe((result: any[]) => {
-        if (result.length > 0) {
-          instance.minimum = result[0].minimum;
-          instance.maximum = result[0].maximum;
+      this.feedstuffService.getSuggestedValues(this.selectedFormula.id, instance.selectedFeedstuff.id).subscribe((result: any) => {
+        if (result != null) {
+          instance.minimum = result.minimum;
+          instance.maximum = result.maximum;
         }
         instance.isLoading = false;
       });

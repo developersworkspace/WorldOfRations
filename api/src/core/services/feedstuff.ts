@@ -1,9 +1,9 @@
 // Imports repositories
 import { FeedstuffRepository } from './../repositories/mysql/feedstuff';
 
-// Imports models
-import { Feedstuff } from './../models/feedstuff';
+// Imports domain models
 import { Element } from './../models/element';
+import { Feedstuff as DomainFeedstuff } from './../../../../api/src/core/models/feedstuff';
 
 export class FeedstuffService {
 
@@ -13,11 +13,11 @@ export class FeedstuffService {
         this.feedstuffRepository = new FeedstuffRepository(this.config.db);
     }
 
-    public listFeedstuffs() {
+    public listFeedstuffs(): Promise<DomainFeedstuff[]> {
         return this.feedstuffRepository.listFeedstuffs();
     }
 
-    public listExampleFeedstuffs() {
+    public listExampleFeedstuffs(): Promise<DomainFeedstuff[]> {
         return this.feedstuffRepository.listExampleFeedstuffs();
     }
 
@@ -25,37 +25,37 @@ export class FeedstuffService {
         return this.feedstuffRepository.getSuggestedValuesByFormulaIdAndFeedstuffId(formulaId, feedstuffId);
     }
 
-    public loadElementsForFeedstuffs(feedstuffs: Feedstuff[]) {
+    public loadElementsForFeedstuffs(feedstuffs: DomainFeedstuff[]) {
 
         let listOfPromise = [];
         for (let i = 0; i < feedstuffs.length; i++) {
             listOfPromise.push(this.loadElementsForFeedstuff(feedstuffs[i]));
         }
-        return Promise.all(listOfPromise).then((feedstuffsResult: Feedstuff[]) => {
+        return Promise.all(listOfPromise).then((feedstuffsResult: DomainFeedstuff[]) => {
             return feedstuffsResult;
         });
     }
 
-    public loadNamesForFeedstuffs(feedstuffs: Feedstuff[]) {
+    public loadNamesForFeedstuffs(feedstuffs: DomainFeedstuff[]) {
 
         let listOfPromise = [];
         for (let i = 0; i < feedstuffs.length; i++) {
             listOfPromise.push(this.loadNameForFeedstuff(feedstuffs[i]));
         }
-        return Promise.all(listOfPromise).then((feedstuffsResult: Feedstuff[]) => {
+        return Promise.all(listOfPromise).then((feedstuffsResult: DomainFeedstuff[]) => {
             return feedstuffsResult;
         });
     }
 
-    private loadElementsForFeedstuff(feedstuff: Feedstuff) {
+    private loadElementsForFeedstuff(feedstuff: DomainFeedstuff) {
         return this.feedstuffRepository.listElementsByFeedstuffId(feedstuff.id).then((elements: Element[]) => {
             feedstuff.elements = elements;
             return feedstuff;
         });
     }
 
-    private loadNameForFeedstuff(feedstuff: Feedstuff) {
-        return this.feedstuffRepository.getFeedstuffById(feedstuff.id).then((result: Feedstuff) => {
+    private loadNameForFeedstuff(feedstuff: DomainFeedstuff) {
+        return this.feedstuffRepository.getFeedstuffById(feedstuff.id).then((result: DomainFeedstuff) => {
             feedstuff.name = result.name;
             return feedstuff;
         });
