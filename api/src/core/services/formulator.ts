@@ -39,8 +39,7 @@ export class FormulatorService {
     }
 
     public createFormulation(feedstuffs: Feedstuff[], formulaId: string): Promise<Formulation> {
-
-        let formula = new Formula(formulaId, 'Unknown');
+        let formula = new Formula(formulaId, null);
         let formulation = new Formulation();
 
         return this.feedstuffService.loadNamesForFeedstuffs(feedstuffs).then((loadNamesForFeedstuffsResult: Feedstuff[]) => {

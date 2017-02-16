@@ -2,8 +2,8 @@
 import { FeedstuffRepository } from './../repositories/mysql/feedstuff';
 
 // Imports domain models
-import { Element } from './../models/element';
-import { Feedstuff as DomainFeedstuff } from './../../../../api/src/core/models/feedstuff';
+import { FeedstuffMeasurement as DomainFeedstuffMeasurement} from './../models/feedstuff-measurement';
+import { Feedstuff as DomainFeedstuff } from './../models/feedstuff';
 
 export class FeedstuffService {
 
@@ -47,8 +47,8 @@ export class FeedstuffService {
         });
     }
 
-    private loadElementsForFeedstuff(feedstuff: DomainFeedstuff) {
-        return this.feedstuffRepository.listElementsByFeedstuffId(feedstuff.id).then((elements: Element[]) => {
+    private loadElementsForFeedstuff(feedstuff: DomainFeedstuff): Promise<DomainFeedstuff> {
+        return this.feedstuffRepository.listElementsByFeedstuffId(feedstuff.id).then((elements: DomainFeedstuffMeasurement[]) => {
             feedstuff.elements = elements;
             return feedstuff;
         });

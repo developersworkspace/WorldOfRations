@@ -12,8 +12,8 @@ import { FormulaRepository } from './../../../../api/src/core/repositories/mysql
 
 
 // Imports models
-import { Formulation } from './../../../../api/src/core/models/formulation';
-import { Feedstuff } from './../../../../api/src/core/models/feedstuff';
+import { Formulation as DomainFormulation } from './../../../../api/src/core/models/formulation';
+import { Feedstuff as DomainFeedstuff } from './../../../../api/src/core/models/feedstuff';
 
 describe('FeedstuffService', () => {
 
@@ -21,7 +21,7 @@ describe('FeedstuffService', () => {
     let feedstuffRepository: FeedstuffRepository = null;
     let formulaRepository: FormulaRepository = null;
 
-    let feedstuffs: Feedstuff[] = null;
+    let feedstuffs: DomainFeedstuff[] = null;
     let formulaId: string = null;
 
     beforeEach(function (done: Function) {
@@ -45,76 +45,66 @@ describe('FeedstuffService', () => {
         feedstuffRepository = new FeedstuffRepository(dbConfig);
         formulaRepository = new FormulaRepository(dbConfig);
 
-        feedstuffRepository.listExampleFeedstuffs().then((exampleFeedstuff: Feedstuff[]) => {
-            feedstuffs = exampleFeedstuff;
+        feedstuffRepository.listExampleFeedstuffs().then((exampleFeedstuff: DomainFeedstuff[]) => {
+            feedstuffs = exampleFeedstuff.map(x => new DomainFeedstuff(x.id, null, x.minimum, x.maximum, x.cost));
             done();
         });
     });
 
     describe('createFormulation', () => {
-        it('should return formulation with feedstuff elements populated', (done) => {
-            formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: Formulation) => {
+        it('should return formulation with feedstuff elements populated', () => {
+            return formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: DomainFormulation) => {
                 for (let i = 0; i < formulation.feedstuffs.length; i++) {
                     expect(formulation.feedstuffs[i].elements.length).to.be.greaterThan(0);
                 }
-                done();
-            }).catch((err: Error) => {
-                done(err);
             });
         });
-        it('should return formulation with formula elements populated', (done) => {
-            formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: Formulation) => {
+        it('should return formulation with formula elements populated', () => {
+            return formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: DomainFormulation) => {
                 expect(formulation.formula.elements.length).to.be.greaterThan(0);
-                done();
-            }).catch((err: Error) => {
-                done(err);
+            });
+        });
+        it('should return formulation with formula name populated', () => {
+            return formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: DomainFormulation) => {
+                expect(formulation.formula.name).to.be.not.null;
+            });
+        });
+        it('should return formulation with feedstuff name populated', () => {
+            return formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: DomainFormulation) => {
+                for (let i = 0; i < formulation.feedstuffs.length; i++) {
+                    expect(formulation.feedstuffs[i].name).to.be.not.null;
+                }
             });
         });
     });
 
-
     describe('formulate', () => {
-        it('should return result that is feasible given formulation', (done) => {
-            formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: Formulation) => {
+        it('should return result that is feasible given formulation', () => {
+            return formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: DomainFormulation) => {
                 let result = formulatorService.formulate(formulation)
                 expect(result.feasible).to.be.true;
-                done();
-            }).catch((err: Error) => {
-                done(err);
             });
         });
     });
 
     describe('getFormulation', () => {
-        it('should return formulation with composition populated', (done) => {
-            formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: Formulation) => {
+        it('should return formulation with composition populated', () => {
+            return formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: DomainFormulation) => {
                 let formulationResult = formulatorService.formulate(formulation);
-                formulatorService.getFormulation(formulationResult.id).then((formulation: Formulation) => {
+                return formulatorService.getFormulation(formulationResult.id).then((formulation: DomainFormulation) => {
                     expect(formulation.composition).to.be.not.null;
                     expect(formulation.composition.length).to.be.greaterThan(0);
-                    done();
-                }).catch((err: Error) => {
-                    done(err);
-                });
-            }).catch((err: Error) => {
-                done(err);
-            });
+                })
+            })
         });
-        it('should return formulation with supplement composition populated', (done) => {
-            formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: Formulation) => {
+        it('should return formulation with supplement composition populated', () => {
+            return formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: DomainFormulation) => {
                 let formulationResult = formulatorService.formulate(formulation);
-                formulatorService.getFormulation(formulationResult.id).then((formulation: Formulation) => {
+                return formulatorService.getFormulation(formulationResult.id).then((formulation: DomainFormulation) => {
                     expect(formulation.supplementComposition).to.be.not.null;
                     expect(formulation.supplementComposition.length).to.be.greaterThan(0);
-                    done();
-                }).catch((err: Error) => {
-                    done(err);
                 });
-            }).catch((err: Error) => {
-                done(err);
             });
         });
     });
-
-
 });

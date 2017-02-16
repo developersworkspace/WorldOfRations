@@ -22,7 +22,6 @@ describe('FeedstuffService', () => {
     let existingFormulaIdWithSuggestedValue = 'CB0360F3-4617-4922-B20D-C3F223BBBCEB';
     let existingFeedstuffIdWithSuggestedValue = 'B3EDBFD3-CB3C-4427-A6FB-B20EBF4FC831';
     let nonExistingFormulaId = '3DE8F48A-CC7A-4217-B317-979866B42BB6';
-    let existingElementIdWithSupplementFeedstuff = '93E1BC7C-6D08-424E-9DB6-E4BA09E339C5';
 
     beforeEach(() => {
 
