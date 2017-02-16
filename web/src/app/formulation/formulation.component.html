@@ -27,13 +27,26 @@
             <td *ngIf="item.weight != null">{{item.cost | currency:'USD':true}} per tonne</td>
           </tr>
         </tbody>
+        <tfoot *ngIf="formulation != null">
+          <tr>
+            <th>
+              Totals
+            </th>
+            <th>
+              {{totalWeightOfFeedstuffInFormulation}} kg
+            </th>
+            <th>
+              {{totalCostOfFeedstuffInFormulation | currency:'USD':true}}
+            </th>
+          </tr>
+        </tfoot>
       </table>
       <h4>Nutrient Composition</h4>
       <table class="table table-striped">
         <thead>
           <tr>
             <th>
-              Name
+              Nutrient Name
             </th>
             <th>
               Value
@@ -59,10 +72,10 @@
         <thead>
           <tr>
             <th>
-              
+              Nutrient Name
             </th>
             <th>
-              Name
+              Supplement Feedstuff Name
             </th>
             <th>
               Weight
@@ -85,6 +98,19 @@
             </td>
           </tr>
         </tbody>
+        <tfoot *ngIf="formulation != null">
+          <tr>
+            <th>
+              Totals
+            </th>
+            <th>
+            </th>
+            <th>
+              <span *ngIf="totalWeightOfSupplementFeedstuffInFormulation > 5">{{totalWeightOfSupplementFeedstuffInFormulation | number:'1.2-2'}} kg</span>
+              <span *ngIf="totalWeightOfSupplementFeedstuffInFormulation <= 5">{{totalWeightOfSupplementFeedstuffInFormulation * 1000 | number:'1.2-2'}} g</span>
+            </th>
+          </tr>
+        </tfoot>
       </table>
     </div>
   </div>

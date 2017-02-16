@@ -76,8 +76,12 @@ export class FormulatorService {
         formulation.feasible = results.feasible;
         formulation.id = uuid.v4();
 
-        this.formulationRepository.saveFormulation(formulation).then((result) => {
-
+       this.formulaRepository.loadCompositionForFormulation(formulation).then((loadCompositionForFormulationResult: Formulation) => {
+            return this.loadSupplementFeedstuffsForFormulation(loadCompositionForFormulationResult);
+        }).then((loadSupplementFeedstuffsForFormulationResult: Formulation) => {
+            return this.formulationRepository.saveFormulation(loadSupplementFeedstuffsForFormulationResult);
+        }).then((result: any) => {
+            
         });
 
         return {
@@ -88,14 +92,7 @@ export class FormulatorService {
     }
 
     public getFormulation(formulationId: string): Promise<Formulation> {
-        return this.formulationRepository.getFormulationById(formulationId).then((formulation: Formulation) => {
-            return this.formulaRepository.loadCompositionForFormulation(formulation);
-        }).then((formulation: Formulation) => {
-            return this.loadSupplementFeedstuffsForFormulation(formulation);
-        }).then((formulation: Formulation) => {
-            let formulationResult = this.cleanFormulation(formulation);
-            return formulationResult;
-        });
+        return this.formulationRepository.getFormulationById(formulationId);
     }
 
     public loadSupplementFeedstuffsForFormulation(formulation: Formulation): Promise<Formulation> {

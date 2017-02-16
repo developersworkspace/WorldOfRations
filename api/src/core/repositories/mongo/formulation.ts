@@ -23,7 +23,7 @@ export class FormulationRepository {
                     reject(err);
                     winston.profile('FormulationRepository.saveFormulation');
                 } else {
-                    var collection = db.collection('fomulations');
+                    var collection = db.collection('formulations');
                     collection.insertOne(formulation, (err: Error, result: any) => {
                         db.close();
                         resolve(true);
@@ -42,7 +42,7 @@ export class FormulationRepository {
                 if (err) {
                     reject(err);
                 } else {
-                    var collection = db.collection('fomulations');
+                    var collection = db.collection('formulations');
                     collection.findOne({ id: formulationId }, (err: Error, formulation: Formulation) => {
                         if (err) {
                             reject(err);

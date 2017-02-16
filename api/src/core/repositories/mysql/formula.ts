@@ -52,14 +52,14 @@ export class FormulaRepository extends Base {
                     let sum = 0;
                     for (let j = 0; j < formulation.feedstuffs.length; j++) {
                         let feedstuffElements = formulation.feedstuffs[j].elements.filter((x) => x.id == elementId);
-                        if (feedstuffElements.length > 0) {
+                        if (feedstuffElements.length > 0 && formulation.feedstuffs[j].weight != undefined) {
                             sum += feedstuffElements[0].value * formulation.feedstuffs[j].weight;
                         }
                     }
-
+                    
                     elementMinimum = comparisonFormulaElements[i].minimum == null ? 0 : comparisonFormulaElements[i].minimum;
                     elementMaximum = comparisonFormulaElements[i].maximum == null ? 1000000 : comparisonFormulaElements[i].maximum;
-
+                    
                     formulation.composition.push(new DomainCompositionElement(elementId, elementName, this.roundToTwoDecimal(elementMinimum), this.roundToTwoDecimal(elementMaximum), this.roundToTwoDecimal(sum / 1000), elementUnit, elementSortOrder));
                 }
                 return formulation;
