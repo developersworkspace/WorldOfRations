@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 
 // Services
 import { FeedstuffService } from '../services/feedstuff.service';
@@ -28,6 +30,8 @@ export class FormulatorComponent implements OnInit {
 
   isFormulating: boolean = false;
 
+  formulaListDataSource: Observable<any> = null;
+
   constructor(private feedstuffService: FeedstuffService, private formulaService: FormulaService, private formulatorService: FormulatorService) { }
 
   ngOnInit() {
@@ -43,7 +47,39 @@ export class FormulatorComponent implements OnInit {
       this.errorMessage = 'An error has occurred while loading formulas';
     });
 
+    this.formulaListDataSource = Observable
+      .create((observer: any) => {
+        // Runs on every search
+        observer.next(this.selectedFormulaName);
+      })
+      .mergeMap((token: string) => this.getFormulaListAsDataSource(token));
+
     this.onClick_ResetToDefaults();
+  }
+
+  public getFormulaListAsDataSource(token: string): Observable<any> {
+
+
+    return Observable.of(
+      this.formulaList.filter((item: any) => {
+        let isValid = false;
+
+        let splittedName = item.name.split(' ');
+        let splittedToken = token.split(' ');
+
+        for (let i = 0; i < splittedToken.length; i++) {
+          if (splittedToken[i] == null || splittedToken[i] == '') {
+            return false;
+          }
+          let query = new RegExp(splittedToken[i], 'ig');
+          if (query.test(item.name)) {
+            return true;
+          }
+        }
+
+        return false;
+      })
+    );
   }
 
   onUpdate_SuggestedValues(item: any, instance: any) {
