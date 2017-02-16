@@ -8,3 +8,65 @@
     margin-left: 5px;
     margin-right: 5px;
 }
+
+.btn-primary {
+    background-color: #4EB0E3;
+    border-color: #239cdb;
+}
+
+.btn-primary:hover {
+    background-color: #239cdb;
+    border-color: #1c7daf;
+}
+
+
+.btn-primary.active.focus, .btn-primary.active:focus, .btn-primary.active:hover, .btn-primary:active.focus, .btn-primary:active:focus, .btn-primary:active:hover {
+    background-color: #239cdb;
+    border-color: #1c7daf;
+}
+
+.btn-primary.focus, .btn-primary:focus {
+    background-color: #239cdb;
+    border-color: #1c7daf;
+}
+
+
+.btn-danger {
+    background-color: #E86771;
+    border-color: #e13b48;
+}
+
+.btn-danger.active.focus, .btn-danger.active:focus, .btn-danger.active:hover, .btn-danger:active.focus, .btn-danger:active:focus, .btn-danger:active:hover {
+    background-color: #e13b48;
+    border-color: #ca1f2c;
+}
+
+.btn-danger.focus, .btn-danger:focus {
+    background-color: #e13b48;
+    border-color: #ca1f2c;
+}
+
+.btn-danger.hover, .btn-danger:hover {
+    background-color: #e13b48;
+    border-color: #ca1f2c;
+}
+
+.btn-success {
+    background-color: #10c09d;
+    border-color: #0c9177;
+}
+
+.btn-success.active.focus, .btn-success.active:focus, .btn-success.active:hover, .btn-success:active.focus, .btn-success:active:focus, .btn-success:active:hover {
+    background-color: #0c9177;
+    border-color: #086250;
+}
+
+.btn-success.focus, .btn-success:focus {
+    background-color: #0c9177;
+    border-color: #086250;
+}
+
+.btn-success.hover, .btn-success:hover {
+    background-color: #0c9177;
+    border-color: #086250;
+}
