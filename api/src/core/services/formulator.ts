@@ -3,16 +3,12 @@ import * as solver from 'javascript-lp-solver';
 import * as uuid from 'uuid';
 import { winston } from './../logger';
 
-// Import models
-import { Formulation } from './../models/formulation';
-import { Feedstuff } from './../models/feedstuff';
-import { Formula } from './../models/formula';
-import { Element } from './../models/element';
-import { SupplementFeedstuff } from './../models/supplement-feedstuff';
-
 // Imports domain models
 import { CompositionElement as DomainCompositionElement } from './../models/composition-element';
 import { SupplementElement as DomainSupplementElement } from './../models/supplement-element';
+import { Feedstuff as DomainFeedstuff } from './../models/feedstuff';
+import { Formulation as DomainFormulation } from './../models/formulation';
+import { Formula as DomainFormula } from './../models/formula';
 
 // Imports repositories
 import { FormulaRepository } from './../repositories/mysql/formula';
@@ -38,11 +34,13 @@ export class FormulatorService {
         this.feedstuffService = new FeedstuffService(this.config.db);
     }
 
-    public createFormulation(feedstuffs: Feedstuff[], formulaId: string): Promise<Formulation> {
-        let formula = new Formula(formulaId, null);
-        let formulation = new Formulation();
+    public createFormulation(feedstuffs: DomainFeedstuff[], formulaId: string, currencyCode: string): Promise<DomainFormulation> {
+        let formula = new DomainFormula(formulaId, null);
+        let formulation = new DomainFormulation();
+        
+        formulation.currencyCode = currencyCode;
 
-        return this.feedstuffService.loadNamesForFeedstuffs(feedstuffs).then((loadNamesForFeedstuffsResult: Feedstuff[]) => {
+        return this.feedstuffService.loadNamesForFeedstuffs(feedstuffs).then((loadNamesForFeedstuffsResult: DomainFeedstuff[]) => {
             return Promise.all(
                 [
                     this.feedstuffService.loadElementsForFeedstuffs(loadNamesForFeedstuffsResult),
@@ -56,7 +54,7 @@ export class FormulatorService {
         });
     }
 
-    public formulate(formulation: Formulation): any {
+    public formulate(formulation: DomainFormulation): any {
 
         let results: any;
         let model = {
@@ -76,26 +74,27 @@ export class FormulatorService {
         formulation.feasible = results.feasible;
         formulation.id = uuid.v4();
 
-       this.formulaRepository.loadCompositionForFormulation(formulation).then((loadCompositionForFormulationResult: Formulation) => {
+       this.formulaRepository.loadCompositionForFormulation(formulation).then((loadCompositionForFormulationResult: DomainFormulation) => {
             return this.loadSupplementFeedstuffsForFormulation(loadCompositionForFormulationResult);
-        }).then((loadSupplementFeedstuffsForFormulationResult: Formulation) => {
+        }).then((loadSupplementFeedstuffsForFormulationResult: DomainFormulation) => {
             return this.formulationRepository.saveFormulation(loadSupplementFeedstuffsForFormulationResult);
         }).then((result: any) => {
             
         });
 
         return {
+            currencyCode: formulation.currencyCode,
             cost: formulation.cost,
             feasible: formulation.feasible,
             id: formulation.id
         };
     }
 
-    public getFormulation(formulationId: string): Promise<Formulation> {
+    public getFormulation(formulationId: string): Promise<DomainFormulation> {
         return this.formulationRepository.getFormulationById(formulationId);
     }
 
-    public loadSupplementFeedstuffsForFormulation(formulation: Formulation): Promise<Formulation> {
+    public loadSupplementFeedstuffsForFormulation(formulation: DomainFormulation): Promise<DomainFormulation> {
         let parent = this;
         let supplementElements: DomainCompositionElement[] = formulation.composition.filter((x) => x.value < x.minimum);
         formulation.supplementComposition = [];
@@ -112,7 +111,7 @@ export class FormulatorService {
         });
     }
 
-    private cleanFormulation(formulation: Formulation) {
+    private cleanFormulation(formulation: DomainFormulation) {
 
         for (let i = 0; i < formulation.feedstuffs.length; i++) {
             formulation.feedstuffs[i].elements = null;
@@ -121,7 +120,7 @@ export class FormulatorService {
         return formulation;
     }
 
-    private buildConstraints(feedstuffs: Feedstuff[], formula: Formula) {
+    private buildConstraints(feedstuffs: DomainFeedstuff[], formula: DomainFormula) {
         let constraints = {};
 
         for (let i = 0; i < formula.elements.length; i++) {
@@ -146,7 +145,7 @@ export class FormulatorService {
         return constraints;
     }
 
-    private buildVariables(feedstuffs: Feedstuff[]) {
+    private buildVariables(feedstuffs: DomainFeedstuff[]) {
         let variables = {};
 
         for (let i = 0; i < feedstuffs.length; i++) {

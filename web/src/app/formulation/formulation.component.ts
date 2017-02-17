@@ -35,7 +35,7 @@ export class FormulationComponent implements OnInit {
     });
   }
 
-  selectedSupplementFeedstuff(supplementElement, selectedSupplementFeedstuff) {
+  onSelect_SupplementFeedstuff(supplementElement, selectedSupplementFeedstuff) {
     if (supplementElement == null || selectedSupplementFeedstuff == null || supplementElement.supplementFeedstuffs == null) {
       return;
     }
@@ -49,21 +49,21 @@ export class FormulationComponent implements OnInit {
     this.updateTotals();
   }
 
-  updateTotals() {
+  private updateTotals() {
     this.totalWeightOfFeedstuffInFormulation = this.getTotalWeightOfFeedstuffInFormulation();
     this.totalCostOfFeedstuffInFormulation = this.getTotalCostOfFeedstuffInFormulation();
     this.totalWeightOfSupplementFeedstuffInFormulation = this.getTotalWeightOfSupplementFeedstuffInFormulation();
   }
 
-  getTotalWeightOfFeedstuffInFormulation() {
+  private getTotalWeightOfFeedstuffInFormulation() {
     return this.formulation.feedstuffs.map(x => x.weight).reduce((a, b) => a + b, 0).toFixed(2);
   }
 
-  getTotalCostOfFeedstuffInFormulation() {
+  private getTotalCostOfFeedstuffInFormulation() {
     return this.formulation.feedstuffs.map(x => x.weight * (x.cost / 1000)).reduce((a, b) => a + b, 0).toFixed(2);
   }
 
-  getTotalWeightOfSupplementFeedstuffInFormulation() {
+  private getTotalWeightOfSupplementFeedstuffInFormulation() {
     return this.formulation.supplementComposition.map(x => x.selectedSupplementFeedstuff[0] == undefined? 0 : x.selectedSupplementFeedstuff[0].weight).reduce((a, b) => a + b, 0);
   }
 }

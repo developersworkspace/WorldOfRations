@@ -53,24 +53,24 @@ describe('FeedstuffService', () => {
 
     describe('createFormulation', () => {
         it('should return formulation with feedstuff elements populated', () => {
-            return formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: DomainFormulation) => {
+            return formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB', 'USD').then((formulation: DomainFormulation) => {
                 for (let i = 0; i < formulation.feedstuffs.length; i++) {
                     expect(formulation.feedstuffs[i].elements.length).to.be.greaterThan(0);
                 }
             });
         });
         it('should return formulation with formula elements populated', () => {
-            return formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: DomainFormulation) => {
+            return formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB', 'USD').then((formulation: DomainFormulation) => {
                 expect(formulation.formula.elements.length).to.be.greaterThan(0);
             });
         });
         it('should return formulation with formula name populated', () => {
-            return formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: DomainFormulation) => {
+            return formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB', 'USD').then((formulation: DomainFormulation) => {
                 expect(formulation.formula.name).to.be.not.null;
             });
         });
         it('should return formulation with feedstuff name populated', () => {
-            return formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: DomainFormulation) => {
+            return formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB', 'USD').then((formulation: DomainFormulation) => {
                 for (let i = 0; i < formulation.feedstuffs.length; i++) {
                     expect(formulation.feedstuffs[i].name).to.be.not.null;
                 }
@@ -80,7 +80,7 @@ describe('FeedstuffService', () => {
 
     describe('formulate', () => {
         it('should return result that is feasible given formulation', () => {
-            return formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: DomainFormulation) => {
+            return formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB', 'USD').then((formulation: DomainFormulation) => {
                 let result = formulatorService.formulate(formulation)
                 expect(result.feasible).to.be.true;
             });
@@ -89,7 +89,7 @@ describe('FeedstuffService', () => {
 
     describe('getFormulation', () => {
         it('should return formulation with composition populated', () => {
-            return formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: DomainFormulation) => {
+            return formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB', 'USD').then((formulation: DomainFormulation) => {
                 let formulationResult = formulatorService.formulate(formulation);
                 return formulatorService.getFormulation(formulationResult.id).then((formulation: DomainFormulation) => {
                     expect(formulation.composition).to.be.not.null;
@@ -98,7 +98,7 @@ describe('FeedstuffService', () => {
             })
         });
         it('should return formulation with supplement composition populated', () => {
-            return formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB').then((formulation: DomainFormulation) => {
+            return formulatorService.createFormulation(feedstuffs, 'CB0360F3-4617-4922-B20D-C3F223BBBCEB', 'USD').then((formulation: DomainFormulation) => {
                 let formulationResult = formulatorService.formulate(formulation);
                 return formulatorService.getFormulation(formulationResult.id).then((formulation: DomainFormulation) => {
                     expect(formulation.supplementComposition).to.be.not.null;

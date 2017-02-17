@@ -16,48 +16,34 @@ import { FormulatorService } from '../services/formulator.service';
 export class FormulatorComponent implements OnInit {
 
   formulaList: any[] = [];
-
-  feedstuffList: any[] = [];
-
-  feedstufffs: any[] = [];
-
+  formulaListDataSource: Observable<any> = null;
   selectedFormulaName: string;
   selectedFormula: any = null;
 
+  feedstuffList: any[] = [];
+
+  currencyList: string[] = [];
+  selectedCurrencyNames: string[];
+
   errorMessage: string = null;
-
-  formulatorResult: any = null;
-
   isFormulating: boolean = false;
 
-  formulaListDataSource: Observable<any> = null;
+  feedstufffs: any[] = [];
+  formulatorResult: any = null;
 
   constructor(private feedstuffService: FeedstuffService, private formulaService: FormulaService, private formulatorService: FormulatorService) { }
 
   ngOnInit() {
-    this.feedstuffService.listFeedstuffs().subscribe((result: any[]) => {
-      this.feedstuffList = result;
-    }, (error: Error) => {
-      this.errorMessage = 'An error has occurred while loading feedstuff';
-    });
 
-    this.formulaService.listFormulas().subscribe((result: any[]) => {
-      this.formulaList = result;
-    }, (error: Error) => {
-      this.errorMessage = 'An error has occurred while loading formulas';
-    });
 
-    this.formulaListDataSource = Observable
-      .create((observer: any) => {
-        // Runs on every search
-        observer.next(this.selectedFormulaName);
-      })
-      .mergeMap((token: string) => this.getFormulaListAsDataSource(token));
-
+    this.initializeCurrencyControl();
+    this.loadFeedstuffList();
+    this.loadFormulaList();
     this.onClick_ResetToDefaults();
   }
 
-  public getFormulaListAsDataSource(token: string): Observable<any> {
+
+  getFormulaListAsDataSource(token: string): Observable<any> {
 
 
     return Observable.of(
@@ -80,6 +66,10 @@ export class FormulatorComponent implements OnInit {
         return false;
       })
     );
+  }
+
+  onSelect_Currency(selectedCurrency) {
+    this.selectedCurrencyNames = [selectedCurrency.id];
   }
 
   onUpdate_SuggestedValues(item: any, instance: any) {
@@ -152,7 +142,8 @@ export class FormulatorComponent implements OnInit {
       }
       let obj = {
         formulaId: this.selectedFormula.id,
-        feedstuffs: feedstuffs
+        feedstuffs: feedstuffs,
+        currencyCode: this.selectedCurrencyNames[0]
       };
 
       this.formulatorService.formulate(obj).subscribe((result: any) => {
@@ -164,4 +155,37 @@ export class FormulatorComponent implements OnInit {
       });
     }
   }
+
+  private loadFormulaList() {
+    this.formulaService.listFormulas().subscribe((result: any[]) => {
+      this.formulaList = result;
+    }, (error: Error) => {
+      this.errorMessage = 'An error has occurred while loading formulas';
+    });
+
+    this.formulaListDataSource = Observable
+      .create((observer: any) => {
+        // Runs on every search
+        observer.next(this.selectedFormulaName);
+      })
+      .mergeMap((token: string) => this.getFormulaListAsDataSource(token));
+  }
+
+  private loadFeedstuffList() {
+    this.feedstuffService.listFeedstuffs().subscribe((result: any[]) => {
+      this.feedstuffList = result;
+    }, (error: Error) => {
+      this.errorMessage = 'An error has occurred while loading feedstuff';
+    });
+  }
+
+  private initializeCurrencyControl() {
+    this.currencyList = [
+      'USD',
+      'ZAR'
+    ];
+
+    this.selectedCurrencyNames = ['USD'];
+  }
+
 }

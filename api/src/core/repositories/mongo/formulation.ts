@@ -2,11 +2,8 @@
 import * as mongodb from 'mongodb';
 import { winston } from './../../logger';
 
-// Import models
-import { Formulation } from './../../models/formulation';
-import { Feedstuff } from './../../models/feedstuff';
-import { Formula } from './../../models/formula';
-import { Element } from './../../models/element';
+// Imports domain models
+import { Formulation as DomainFormulation } from './../../models/formulation';
 
 export class FormulationRepository {
 
@@ -14,7 +11,7 @@ export class FormulationRepository {
 
     }
 
-    public saveFormulation(formulation: Formulation): Promise<Boolean> {
+    public saveFormulation(formulation: DomainFormulation): Promise<Boolean> {
         return new Promise((resolve: Function, reject: Function) => {
             winston.profile('FormulationRepository.saveFormulation');
             let mongoClient = new mongodb.MongoClient();
@@ -34,7 +31,7 @@ export class FormulationRepository {
         });
     }
 
-    public getFormulationById(formulationId: string): Promise<Formulation> {
+    public getFormulationById(formulationId: string): Promise<DomainFormulation> {
         return new Promise((resolve: Function, reject: Function) => {
             winston.profile('FormulationRepository.getFormulationById');
             let mongoClient = new mongodb.MongoClient();
@@ -43,7 +40,7 @@ export class FormulationRepository {
                     reject(err);
                 } else {
                     var collection = db.collection('formulations');
-                    collection.findOne({ id: formulationId }, (err: Error, formulation: Formulation) => {
+                    collection.findOne({ id: formulationId }, (err: Error, formulation: DomainFormulation) => {
                         if (err) {
                             reject(err);
                             winston.profile('FormulationRepository.getFormulationById');

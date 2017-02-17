@@ -3,8 +3,8 @@ import { Express, Request, Response } from "express";
 import * as express from 'express';
 import { config } from './../config';
 
-// Import models
-import { Formulation } from './../core/models/formulation';
+// Imports domain models
+import { Formulation as DomainFormulation } from './../core/models/formulation';
 
 // Imports services
 import { FormulatorService } from './../core/services/formulator';
@@ -19,6 +19,7 @@ let router = express.Router();
  * 
  * @apiParam {Object[]} feedstuffs Empty.
  * @apiParam {String} formulaId Empty.
+ * @apiParam {String} currencyCode Empty.
  * 
  * @apiSuccess {Number} cost Empty.
  * @apiSuccess {Boolean} feasible Empty.
@@ -27,7 +28,7 @@ let router = express.Router();
  */
 router.post('/formulate', function (req: Request, res: Response, next: Function) {
     let formulatorService = new FormulatorService(config);
-    formulatorService.createFormulation(req.body.feedstuffs, req.body.formulaId).then((formulation: Formulation) => {
+    formulatorService.createFormulation(req.body.feedstuffs, req.body.formulaId, req.body.currencyCode).then((formulation: DomainFormulation) => {
         let result = formulatorService.formulate(formulation);
         res.json(result);
     }).catch((err: Error) => {
@@ -52,7 +53,7 @@ router.post('/formulate', function (req: Request, res: Response, next: Function)
  */
 router.get('/formulation', function (req: Request, res: Response, next: Function) {
     let formulatorService = new FormulatorService(config);
-    formulatorService.getFormulation(req.query.formulationId).then((formulation: Formulation) => {
+    formulatorService.getFormulation(req.query.formulationId).then((formulation: DomainFormulation) => {
         res.json(formulation);
     }).catch((err: Error) => {
         console.log(err.message);

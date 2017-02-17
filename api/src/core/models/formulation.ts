@@ -14,5 +14,6 @@ export class Formulation {
     formula: Formula;
     feasible: boolean;
     cost: number;
+    currencyCode: string;
     supplementComposition: DomainSupplementElement[];
 }

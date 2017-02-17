@@ -6,12 +6,14 @@
     <div class="row feature_wrapper">
       <p class="text-danger">{{errorMessage}}</p>
       <div class="form-group">
+        <label>Currency</label>
+        <ng-select [items]="currencyList" [active]="selectedCurrencyNames" (selected)="onSelect_Currency($event)">
+        </ng-select>
+      </div>
+      <div class="form-group">
         <label>Formula</label>
-         <input [(ngModel)]="selectedFormulaName"
-       [typeahead]="formulaList"
-        (typeaheadOnSelect)="onSelect_Formula($event)"
-       typeaheadOptionField="name"
-       class="form-control"/>
+        <input [(ngModel)]="selectedFormulaName" [typeahead]="formulaList" (typeaheadOnSelect)="onSelect_Formula($event)" typeaheadOptionField="name"
+          class="form-control" />
         <small class="form-text text-muted">search over 900 formulas</small>
       </div>
       <div class="form-group">
@@ -31,7 +33,7 @@
             Maximum (kg)
           </div>
           <div class="col-md-2 text-center">
-            Cost ($ per tonne)
+            Cost ({{selectedCurrencyNames.length == 0? 'USD' : selectedCurrencyNames[0]}} per tonne)
           </div>
           <div class="col-md-2 text-center">
             Actions
@@ -41,11 +43,8 @@
       <div class="row" *ngFor="let item of feedstufffs;">
         <div class="form-group">
           <div class="col-md-4">
-            <input [(ngModel)]="item.selectedFeedstuffName"
-             (typeaheadOnSelect)="onUpdate_SuggestedValues($event, item)"
-       [typeahead]="feedstuffList"
-       typeaheadOptionField="name"
-       class="form-control"/>
+            <input [(ngModel)]="item.selectedFeedstuffName" (typeaheadOnSelect)="onUpdate_SuggestedValues($event, item)" [typeahead]="feedstuffList"
+              typeaheadOptionField="name" class="form-control" />
           </div>
           <div class="col-md-2">
             <input class="form-control" [(ngModel)]="item.minimum" type="text" />
@@ -75,7 +74,7 @@
         <div class="col-md-12">
           <div class="alert alert-success">
             <p>
-              We have successfully formulated a ration with a total cost of <b>{{formulatorResult.cost | currency:'USD':true}}</b>.
+              We have successfully formulated a ration with a total cost of <b>{{formulatorResult.cost | currency: formulatorResult.currencyCode :true}}</b>.
               <br />
               <br /> Click <a href="/formulation?formulationId={{formulatorResult.id}}">here</a> to view the details of this
               formulation.

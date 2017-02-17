@@ -1,5 +1,8 @@
 // Imports repositories
-import { FormulaRepository } from './../repositories/mysql/formula';
+import { FormulaRepository } from './../repositories/mysql/formula'
+
+// Imports domain models
+import { Formula as DomainFormula } from './../models/formula';
 
 export class FormulaService {
 
@@ -9,7 +12,7 @@ export class FormulaService {
         this.formulaRepository = new FormulaRepository(this.config.db);
      }
 
-    public listFormula() {
+    public listFormula(): Promise<DomainFormula[]> {
       return this.formulaRepository.listFormulas();
     }
 }
