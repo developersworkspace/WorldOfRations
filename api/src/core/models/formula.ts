@@ -1,4 +1,4 @@
-// Imports models
+// Imports domain models
 import { FormulaMeasurement as DomainFormulaMeasurement } from './formula-measurement';
 
 export class Formula {

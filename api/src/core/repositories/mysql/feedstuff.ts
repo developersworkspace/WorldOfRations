@@ -70,7 +70,7 @@ export class FeedstuffRepository extends Base {
                 let supplementElement = new DomainSupplementElement(element.id, element.name, element.unit, element.sortOrder);
 
                 supplementElement.supplementFeedstuffs = getSupplementValuesRecordSet.map(x => new DomainSupplementFeedstuff(x.id, x.name, x.weight));
-                supplementElement.selectedSupplementFeedstuff = supplementElement.supplementFeedstuffs.length == 0 ? [] : [supplementElement.supplementFeedstuffs[0]];
+                supplementElement.selectedSupplementFeedstuffs = supplementElement.supplementFeedstuffs.length == 0 ? [] : [supplementElement.supplementFeedstuffs[0]];
                 return supplementElement;
             });
     }

@@ -27,7 +27,6 @@ export class Base {
                 } else {
                     connection.query(query, (err: Error, results: any[], fields) => {
                         connection.release();
-                        connection.destroy();
                         if (err) {
                             reject(err);
                             winston.profile('Base.query ' + query);

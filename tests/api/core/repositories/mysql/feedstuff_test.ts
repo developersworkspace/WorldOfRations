@@ -160,7 +160,7 @@ describe('FeedstuffRepository', () => {
                 expect(result.sortOrder).to.be.eq(1);
                 expect(result.unit).to.be.eq('mg/kg');
                 expect(result.supplementFeedstuffs.length).to.be.eq(6);
-                expect(result.selectedSupplementFeedstuff).to.be.not.null;
+                expect(result.selectedSupplementFeedstuffs).to.be.not.null;
             });
         });
     });

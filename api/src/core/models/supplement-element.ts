@@ -7,7 +7,7 @@ export class SupplementElement {
     unit: string;
     sortOrder: number;
 
-    selectedSupplementFeedstuff: DomainSupplementFeedstuff[];
+    selectedSupplementFeedstuffs: DomainSupplementFeedstuff[];
     supplementFeedstuffs: DomainSupplementFeedstuff[];
 
     constructor(id: string, name: string, unit: string, sortOrder: number) {

@@ -42,7 +42,7 @@ export class FormulationComponent implements OnInit {
 
     for (let i = 0; i < supplementElement.supplementFeedstuffs.length; i++) {
       if (supplementElement.supplementFeedstuffs[i].id == selectedSupplementFeedstuff.id) {
-        supplementElement.selectedSupplementFeedstuff = [supplementElement.supplementFeedstuffs[i]];
+        supplementElement.selectedSupplementFeedstuffs = [supplementElement.supplementFeedstuffs[i]];
       }
     }
 
@@ -64,6 +64,6 @@ export class FormulationComponent implements OnInit {
   }
 
   private getTotalWeightOfSupplementFeedstuffInFormulation() {
-    return this.formulation.supplementComposition.map(x => x.selectedSupplementFeedstuff[0] == undefined? 0 : x.selectedSupplementFeedstuff[0].weight).reduce((a, b) => a + b, 0);
+    return this.formulation.supplementComposition.map(x => x.selectedSupplementFeedstuffs[0] == undefined? 0 : x.selectedSupplementFeedstuffs[0].weight).reduce((a, b) => a + b, 0);
   }
 }

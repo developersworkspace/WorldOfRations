@@ -2,7 +2,14 @@
   <div class="container">
     <div class="section_header">
       <h3>Least Cost Ration Formulator - Results</h3>
-      <h5 *ngIf="formulation != null">{{formulation.formula.name}}</h5>
+
+      <br />
+      <br />
+      <p>The following results are computed by using the data supplied to the formulator.</p>
+      <p *ngIf="formulation != null">
+        The {{formulation.feedstuffs.length}} feedstuff(s) supplied to the formulator was used in conjunction with the 
+        nutrient values for <b>{{formulation.formula.name}}</b> to compute a least-cost ration.
+      </p>
     </div>
     <div class="row feature_wrapper">
       <h4>Feedstuffs Composition</h4>
@@ -10,7 +17,7 @@
         <thead>
           <tr>
             <th>
-              Name
+              Feedstuff Name
             </th>
             <th>
               Weight (kg)
@@ -88,13 +95,13 @@
               {{item.name}}
             </td>
             <td>
-              <ng-select [allowClear]="true" [items]="item.supplementFeedstuffs" [active]="item.selectedSupplementFeedstuff" (selected)="onSelect_SupplementFeedstuff(item, $event)"
+              <ng-select [allowClear]="true" [items]="item.supplementFeedstuffs" [active]="item.selectedSupplementFeedstuffs" (selected)="onSelect_SupplementFeedstuff(item, $event)"
                 placeholder="No feedstuff selected">
-              </ng-select>
+                </ng-select>
             </td>
-            <td *ngIf="item.selectedSupplementFeedstuff != null && item.selectedSupplementFeedstuff.length > 0">
-              <span *ngIf="item.selectedSupplementFeedstuff[0].weight > 5">{{item.selectedSupplementFeedstuff[0].weight | number:'1.2-2'}} kg</span>
-              <span *ngIf="item.selectedSupplementFeedstuff[0].weight <= 5">{{item.selectedSupplementFeedstuff[0].weight * 1000 | number:'1.2-2'}} g</span>
+            <td *ngIf="item.selectedSupplementFeedstuffs != null && item.selectedSupplementFeedstuffs.length > 0">
+              <span *ngIf="item.selectedSupplementFeedstuffs[0].weight > 5">{{item.selectedSupplementFeedstuffs[0].weight | number:'1.2-2'}} kg</span>
+              <span *ngIf="item.selectedSupplementFeedstuffs[0].weight <= 5">{{item.selectedSupplementFeedstuffs[0].weight * 1000 | number:'1.2-2'}} g</span>
             </td>
           </tr>
         </tbody>

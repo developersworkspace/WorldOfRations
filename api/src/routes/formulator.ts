@@ -29,8 +29,9 @@ let router = express.Router();
 router.post('/formulate', function (req: Request, res: Response, next: Function) {
     let formulatorService = new FormulatorService(config);
     formulatorService.createFormulation(req.body.feedstuffs, req.body.formulaId, req.body.currencyCode).then((formulation: DomainFormulation) => {
-        let result = formulatorService.formulate(formulation);
-        res.json(result);
+        formulatorService.formulate(formulation).then((result: any) => {
+            res.json(result);
+        });
     }).catch((err: Error) => {
         console.log(err.message);
     });

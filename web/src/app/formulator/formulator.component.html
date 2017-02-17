@@ -2,6 +2,13 @@
   <div class="container">
     <div class="section_header">
       <h3>Least Cost Ration Formulator</h3>
+      <br />
+      <br />
+      <p>
+        With our database of 264 feedstuffs we allow you to select the feedstuffs available to you along with the price at which
+        you acquire it. These feedstuffs and formula, chosen from our selection of 900 formulas, will be used to compute
+        a balanced least-cost ration.
+      </p>
     </div>
     <div class="row feature_wrapper">
       <p class="text-danger">{{errorMessage}}</p>
@@ -9,15 +16,18 @@
         <label>Currency</label>
         <ng-select [items]="currencyList" [active]="selectedCurrencyNames" (selected)="onSelect_Currency($event)">
         </ng-select>
+        <small class="form-text text-muted">select your preferred currency.</small>
       </div>
       <div class="form-group">
         <label>Formula</label>
         <input [(ngModel)]="selectedFormulaName" [typeahead]="formulaList" (typeaheadOnSelect)="onSelect_Formula($event)" typeaheadOptionField="name"
           class="form-control" />
-        <small class="form-text text-muted">search over 900 formulas</small>
+        <small class="form-text text-muted">search our selection of 900 formulas by typing a keyword or two.</small>
       </div>
       <div class="form-group">
         <label>Feedstuffs</label>
+        <br />
+        <small>Add/Remove to this list to reflect the feedstuffs available to you.</small>
         <button class="btn btn-primary pull-right padded" (click)="onClick_AddFeedstuff()"><i class="fa fa-plus"></i>&nbsp;Add Feedstuff</button>
         <button class="btn btn-default pull-right padded" (click)="onClick_ResetToDefaults()"><i class="fa fa-undo"></i>&nbsp;Reset to Defaults</button>
       </div>
@@ -74,10 +84,12 @@
         <div class="col-md-12">
           <div class="alert alert-success">
             <p>
-              We have successfully formulated a ration with a total cost of <b>{{formulatorResult.cost | currency: formulatorResult.currencyCode :true}}</b>.
-              <br />
-              <br /> Click <a href="/formulation?formulationId={{formulatorResult.id}}">here</a> to view the details of this
-              formulation.
+              We have successfully formulated a least-cost ration with a total cost of <b>{{formulatorResult.cost | currency: formulatorResult.currencyCode :true}} per tonne</b>.
+            </p>
+            <br />
+            <p>
+              To view the composition of this formulation, click <a href="/formulation?formulationId={{formulatorResult.id}}">here</a>,
+              or adjust your feedstuffs and formulate again.
             </p>
           </div>
         </div>
@@ -86,7 +98,11 @@
         <div class="col-md-12">
           <div class="alert alert-danger">
             <p>
-              We could not formulate a feasible ration. Please change your selection of feedstuff and retry.
+              We could not formulate a feasible ration. Please change your selection of feedstuffs and formulate again.
+            </p>
+            <br />
+            <p>
+              If this problem persists, please contact World of Rations by sending an email to info@worldofrations.com
             </p>
           </div>
         </div>

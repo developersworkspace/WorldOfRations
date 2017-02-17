@@ -174,6 +174,7 @@ export class FormulatorComponent implements OnInit {
   private loadFeedstuffList() {
     this.feedstuffService.listFeedstuffs().subscribe((result: any[]) => {
       this.feedstuffList = result;
+      console.log(result.length);
     }, (error: Error) => {
       this.errorMessage = 'An error has occurred while loading feedstuff';
     });

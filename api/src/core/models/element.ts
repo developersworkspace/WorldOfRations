@@ -1,5 +1,5 @@
-// Imports models
-import { SupplementFeedstuff } from './supplement-feedstuff';
+// Imports domain models
+import { SupplementFeedstuff as DomainSupplementFeedstuff } from './supplement-feedstuff';
 
 export class Element {
     id: string;
@@ -10,8 +10,8 @@ export class Element {
     unit: string;
     sortOrder: number;
 
-    selectedSupplementFeedstuff: SupplementFeedstuff[];
-    supplementFeedstuffs: SupplementFeedstuff[];
+    selectedSupplementFeedstuffs: DomainSupplementFeedstuff[];
+    supplementFeedstuffs: DomainSupplementFeedstuff[];
 
     constructor(id: string, name: string, minimum: number, maximum: number, value: number, unit: string, sortOrder: number) {
         this.id = id;

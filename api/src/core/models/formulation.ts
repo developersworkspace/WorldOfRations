@@ -1,17 +1,14 @@
-// Imports models
-import { Feedstuff } from './feedstuff';
-import { Element } from './element';
-import { Formula } from './formula';
-
 // Imports domain models
 import { CompositionElement as DomainCompositionElement } from './composition-element';
 import { SupplementElement as DomainSupplementElement } from './supplement-element';
+import { Feedstuff as DomainFeedstuff } from './feedstuff';
+import { Formula as DomainFormula } from './formula';
 
 export class Formulation {
     id: string;
-    feedstuffs: Feedstuff[] = [];
+    feedstuffs: DomainFeedstuff[] = [];
     composition: DomainCompositionElement[] = [];
-    formula: Formula;
+    formula: DomainFormula;
     feasible: boolean;
     cost: number;
     currencyCode: string;

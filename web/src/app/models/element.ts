@@ -10,7 +10,7 @@ export class Element {
     unit: string;
     sortOrder: number;
 
-    selectedSupplementFeedstuff: SupplementFeedstuff[];
+    selectedSupplementFeedstuffs: SupplementFeedstuff[];
     supplementFeedstuffs: SupplementFeedstuff[];
 
     constructor(id: string, name: string, minimum: number, maximum: number, value: number, unit: string, sortOrder: number) {

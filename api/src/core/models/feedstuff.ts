@@ -1,6 +1,3 @@
-// Imports models
-import { Element } from './element';
-
 // Imports domain models
 import { FeedstuffMeasurement as DomainFeedstuffMeasurement } from './feedstuff-measurement';
 

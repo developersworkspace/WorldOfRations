@@ -37,7 +37,7 @@ export class FormulatorService {
     public createFormulation(feedstuffs: DomainFeedstuff[], formulaId: string, currencyCode: string): Promise<DomainFormulation> {
         let formula = new DomainFormula(formulaId, null);
         let formulation = new DomainFormulation();
-        
+
         formulation.currencyCode = currencyCode;
 
         return this.feedstuffService.loadNamesForFeedstuffs(feedstuffs).then((loadNamesForFeedstuffsResult: DomainFeedstuff[]) => {
@@ -54,7 +54,7 @@ export class FormulatorService {
         });
     }
 
-    public formulate(formulation: DomainFormulation): any {
+    public formulate(formulation: DomainFormulation): Promise<any> {
 
         let results: any;
         let model = {
@@ -74,20 +74,18 @@ export class FormulatorService {
         formulation.feasible = results.feasible;
         formulation.id = uuid.v4();
 
-       this.formulaRepository.loadCompositionForFormulation(formulation).then((loadCompositionForFormulationResult: DomainFormulation) => {
+        return this.formulaRepository.loadCompositionForFormulation(formulation).then((loadCompositionForFormulationResult: DomainFormulation) => {
             return this.loadSupplementFeedstuffsForFormulation(loadCompositionForFormulationResult);
         }).then((loadSupplementFeedstuffsForFormulationResult: DomainFormulation) => {
             return this.formulationRepository.saveFormulation(loadSupplementFeedstuffsForFormulationResult);
         }).then((result: any) => {
-            
+            return {
+                currencyCode: formulation.currencyCode,
+                cost: formulation.cost,
+                feasible: formulation.feasible,
+                id: formulation.id
+            };
         });
-
-        return {
-            currencyCode: formulation.currencyCode,
-            cost: formulation.cost,
-            feasible: formulation.feasible,
-            id: formulation.id
-        };
     }
 
     public getFormulation(formulationId: string): Promise<DomainFormulation> {
