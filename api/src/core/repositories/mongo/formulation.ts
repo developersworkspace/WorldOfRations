@@ -21,6 +21,7 @@ export class FormulationRepository {
                     winston.profile('FormulationRepository.saveFormulation');
                 } else {
                     var collection = db.collection('formulations');
+                    formulation.clean();
                     collection.insertOne(formulation, (err: Error, result: any) => {
                         db.close();
                         resolve(true);

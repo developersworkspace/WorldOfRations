@@ -13,4 +13,14 @@ export class Formulation {
     cost: number;
     currencyCode: string;
     supplementComposition: DomainSupplementElement[];
+
+    clean() {
+        this.feedstuffs = this.feedstuffs.map(x => {
+            x.elements = null;
+            return x;
+        });
+
+        this.formula.elements = null;
+        
+    }
 }
