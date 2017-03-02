@@ -1,7 +1,7 @@
 // Imports
 import express = require("express");
 import bodyParser = require('body-parser');
-import { winston } from './core/logger';
+import expressWinston = require('express-winston');
 import * as cluster from 'cluster';
 
 // Imports middleware
@@ -11,6 +11,9 @@ import { CORS } from './middleware/common';
 import feedstuffRoute = require('./routes/feedstuff');
 import formulaRoute = require('./routes/formula');
 import formulatorRoute = require('./routes/formulator');
+
+// Imports logger
+import { logger } from './logger';
 
 export class WebApi {
 
@@ -23,6 +26,11 @@ export class WebApi {
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({ extended: false }));
         app.use(CORS);
+        app.use(expressWinston.logger({
+            winstonInstance: logger,
+            meta: false,
+            msg: 'HTTP Request: {{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}'
+        }));
     }
 
     private configureRoutes(app: express.Express) {
@@ -40,15 +48,7 @@ export class WebApi {
     }
 }
 
-// if (cluster.isMaster) {
-//     var cpuCount = require('os').cpus().length;
-//     for (var i = 0; i < cpuCount; i += 1) {
-//         cluster.fork();
-//     }
-// } else {
-
-    let port = 8083;
-    let api = new WebApi(express(), port);
-    api.run();
-    console.info(`listening on ${port}`);
-//}
+let port = 8083;
+let api = new WebApi(express(), port);
+api.run();
+logger.info(`Listening on ${port}`);
