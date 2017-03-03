@@ -5,14 +5,14 @@ import { Feedstuff as DomainFeedstuff } from './feedstuff';
 import { Formula as DomainFormula } from './formula';
 
 export class Formulation {
-    id: string;
-    feedstuffs: DomainFeedstuff[] = [];
-    composition: DomainCompositionElement[] = [];
-    formula: DomainFormula;
-    feasible: boolean;
-    cost: number;
-    currencyCode: string;
-    supplementComposition: DomainSupplementElement[];
+    public id: string;
+    public feedstuffs: DomainFeedstuff[] = [];
+    public composition: DomainCompositionElement[] = [];
+    public formula: DomainFormula;
+    public feasible: boolean;
+    public cost: number;
+    public currencyCode: string;
+    public supplementComposition: DomainSupplementElement[];
 
     clean() {
         this.feedstuffs = this.feedstuffs.map(x => {

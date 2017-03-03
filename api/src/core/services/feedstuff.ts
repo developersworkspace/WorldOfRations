@@ -7,7 +7,7 @@ import { Feedstuff as DomainFeedstuff } from './../models/feedstuff';
 
 export class FeedstuffService {
 
-    feedstuffRepository: FeedstuffRepository;
+    public feedstuffRepository: FeedstuffRepository;
 
     constructor(private config: any) {
         this.feedstuffRepository = new FeedstuffRepository(this.config.db);

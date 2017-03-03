@@ -1,6 +1,5 @@
 // Imports
 import * as mysql from 'mysql';
-import { winston } from './../../logger';
 
 let pool = null;
 
@@ -20,7 +19,6 @@ export class Base {
 
     protected query(query: string) {
         return new Promise((resolve: Function, reject: Function) => {
-            winston.profile('Base.query ' + query);
             pool.getConnection((err: Error, connection: any) => {
                 if (err) {
                     reject(err);
@@ -29,11 +27,8 @@ export class Base {
                         connection.release();
                         if (err) {
                             reject(err);
-                            winston.profile('Base.query ' + query);
                         } else {
                             resolve(results[0]);
-                            winston.debug(results[0].length + ' results returned');
-                            winston.profile('Base.query ' + query);
                         }
                     });
                 }

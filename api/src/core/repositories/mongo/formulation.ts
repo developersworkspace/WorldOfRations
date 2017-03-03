@@ -1,6 +1,5 @@
 //Imports
 import * as mongodb from 'mongodb';
-import { winston } from './../../logger';
 
 // Imports domain models
 import { Formulation as DomainFormulation } from './../../models/formulation';

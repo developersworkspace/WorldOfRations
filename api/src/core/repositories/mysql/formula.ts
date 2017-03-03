@@ -1,7 +1,6 @@
 // Imports
 import { Base } from './base';
 import * as util from 'util';
-import { winston } from './../../logger';
 
 // Imports data models
 import { FormulaMeasurement as DataFormulaMeasurement } from './../../data-models/formula-measurement';

@@ -1,4 +1,4 @@
-export var config = {
+export let config = {
     db: {
         server: 'mysql',
         user: 'worldofrations_user',

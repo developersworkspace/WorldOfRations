@@ -1,7 +1,6 @@
 // Imports
 import { Base } from './base';
 import * as util from 'util';
-import { winston } from './../../logger';
 
 // Imports domain models
 import { FeedstuffMeasurement as DomainFeedstuffMeasurement } from './../../models/feedstuff-measurement';

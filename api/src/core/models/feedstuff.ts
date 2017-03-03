@@ -2,21 +2,15 @@
 import { FeedstuffMeasurement as DomainFeedstuffMeasurement } from './feedstuff-measurement';
 
 export class Feedstuff {
+    public weight: number = null;
+    public elements: DomainFeedstuffMeasurement[] = [];
 
-    id: string;
-    name: string;
-    minimum: number;
-    maximum: number;
-    cost: number;
-    weight: number;
-    elements: DomainFeedstuffMeasurement[] = [];
-
-    constructor(id: string, name: string, minimum: number, maximum: number, cost: number) {
-        this.id = id;
-        this.name = name;
-        this.minimum = minimum;
-        this.maximum = maximum;
-        this.cost = cost;
-        this.weight = null;
+    constructor(
+        public id: string,
+        public name: string,
+        public minimum: number,
+        public maximum: number,
+        public cost: number
+    ) {
     }
 }

@@ -2,13 +2,8 @@
 import { FormulaMeasurement as DomainFormulaMeasurement } from './formula-measurement';
 
 export class Formula {
+    public elements: DomainFormulaMeasurement[] = [];
 
-    id: string;
-    name: string;
-    elements: DomainFormulaMeasurement[] = [];
-
-    constructor(id: string, name: string) {
-        this.id = id;
-        this.name = name;
+    constructor(public id: string, public name: string) {
     }
 }

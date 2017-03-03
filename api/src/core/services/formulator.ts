@@ -1,7 +1,6 @@
 // Imports
 import * as solver from 'javascript-lp-solver';
 import * as uuid from 'uuid';
-import { winston } from './../logger';
 
 // Imports domain models
 import { CompositionElement as DomainCompositionElement } from './../models/composition-element';
@@ -20,9 +19,9 @@ import { FeedstuffService } from './../services/feedstuff';
 
 export class FormulatorService {
 
-    formulaRepository: FormulaRepository;
-    feedstuffRepository: FeedstuffRepository;
-    formulationRepository: FormulationRepository;
+    public formulaRepository: FormulaRepository;
+    public feedstuffRepository: FeedstuffRepository;
+    public formulationRepository: FormulationRepository;
 
     feedstuffService: FeedstuffService;
 

@@ -6,7 +6,7 @@ import { Formula as DomainFormula } from './../models/formula';
 
 export class FormulaService {
 
-    formulaRepository: FormulaRepository;
+    public formulaRepository: FormulaRepository;
 
     constructor(private config: any) {
         this.formulaRepository = new FormulaRepository(this.config.db);
