@@ -7,12 +7,16 @@ services:
         links: 
         - mongo
         - mysql
+        volumes:
+        - /logs:/logs
     web:
         build: web
         ports:
         - "8084:8084"
     mongo:
         image: "mongo"
+        volumes:
+        - /docker/mongodb:/var/lib/mongodb
     mysql:
         build: mysql
         environment:
@@ -20,4 +24,7 @@ services:
         - MYSQL_DATABASE=worldofrations
         - MYSQL_USER=worldofrations_user
         - MYSQL_PASSWORD=worldofrations_password
+        volumes:
+        - /docker/mysql:/var/lib/mysql
+        
         

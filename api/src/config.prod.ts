@@ -10,7 +10,7 @@ export let config = {
         database: 'worldofrations'
     },
     logging: {
-        path: './'
+        path: '/logs/'
     }
 }
 

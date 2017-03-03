@@ -20,6 +20,7 @@
     "express-winston": "^2.3.0",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
+    "gulp-rename": "^1.2.2",
     "gulp-typescript": "^3.1.4",
     "javascript-lp-solver": "^0.4.3",
     "mongodb": "^2.2.22",
