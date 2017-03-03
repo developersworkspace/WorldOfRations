@@ -5,7 +5,7 @@ import expressWinston = require('express-winston');
 import * as cluster from 'cluster';
 
 // Imports middleware
-import { CORS } from './middleware/common';
+import * as cors from 'cors';
 
 // Imports routes
 import feedstuffRoute = require('./routes/feedstuff');
@@ -25,7 +25,7 @@ export class WebApi {
     private configureMiddleware(app: express.Express) {
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({ extended: false }));
-        app.use(CORS);
+        app.use(cors());
         app.use(expressWinston.logger({
             winstonInstance: logger,
             meta: false,

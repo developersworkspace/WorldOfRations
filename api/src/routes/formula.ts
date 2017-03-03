@@ -4,7 +4,7 @@ import * as express from 'express';
 import { config } from './../config';
 
 // Imports services
-import { FormulaService } from './../core/services/formula';
+import { FormulaService } from './../services/formula';
 
 let router = express.Router();
 

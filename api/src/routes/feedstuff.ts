@@ -4,7 +4,7 @@ import * as express from 'express';
 import { config } from './../config';
 
 // Imports services
-import { FeedstuffService } from './../core/services/feedstuff';
+import { FeedstuffService } from './../services/feedstuff';
 
 let router = express.Router();
 

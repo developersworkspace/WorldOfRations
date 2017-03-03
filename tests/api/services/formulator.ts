@@ -4,16 +4,16 @@ import 'mocha';
 import { expect } from 'chai';
 
 // Imports services
-import { FormulatorService } from './../../../../api/src/core/services/formulator';
+import { FormulatorService } from './../../../api/src/services/formulator';
 
 // Imports repositories
-import { FeedstuffRepository } from './../../../../api/src/core/repositories/mysql/feedstuff';
-import { FormulaRepository } from './../../../../api/src/core/repositories/mysql/formula'
+import { FeedstuffRepository } from './../../../api/src/repositories/mysql/feedstuff';
+import { FormulaRepository } from './../../../api/src/repositories/mysql/formula'
 
 
 // Imports models
-import { Formulation as DomainFormulation } from './../../../../api/src/core/models/formulation';
-import { Feedstuff as DomainFeedstuff } from './../../../../api/src/core/models/feedstuff';
+import { Formulation as DomainFormulation } from './../../../api/src/models/formulation';
+import { Feedstuff as DomainFeedstuff } from './../../../api/src/models/feedstuff';
 
 describe('FormulatorService', () => {
 

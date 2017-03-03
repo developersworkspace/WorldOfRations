@@ -4,14 +4,14 @@ import 'mocha';
 import { expect } from 'chai';
 
 // Imports services
-import { FeedstuffRepository } from './../../../../../api/src/core/repositories/mysql/feedstuff';
+import { FeedstuffRepository } from './../../../../api/src/repositories/mysql/feedstuff';
 
 // Imports domain models
-import { Feedstuff as DomainFeedstuff } from './../../../../../api/src/core/models/feedstuff';
-import { FeedstuffMeasurement as DomainFeedstuffMeasurement } from './../../../../../api/src/core/models/feedstuff-measurement';
-import { SuggestedValue as DomainSuggestedValue } from './../../../../../api/src/core/models/suggested-value';
-import { CompositionElement as DomainCompositionElement } from './../../../../../api/src/core/models/composition-element';
-import { SupplementElement as DomainSupplementElement } from './../../../../../api/src/core/models/supplement-element';
+import { Feedstuff as DomainFeedstuff } from './../../../../api/src/models/feedstuff';
+import { FeedstuffMeasurement as DomainFeedstuffMeasurement } from './../../../../api/src/models/feedstuff-measurement';
+import { SuggestedValue as DomainSuggestedValue } from './../../../../api/src/models/suggested-value';
+import { CompositionElement as DomainCompositionElement } from './../../../../api/src/models/composition-element';
+import { SupplementElement as DomainSupplementElement } from './../../../../api/src/models/supplement-element';
 
 describe('FeedstuffRepository', () => {
 

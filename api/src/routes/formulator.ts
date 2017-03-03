@@ -4,10 +4,10 @@ import * as express from 'express';
 import { config } from './../config';
 
 // Imports domain models
-import { Formulation as DomainFormulation } from './../core/models/formulation';
+import { Formulation as DomainFormulation } from './../models/formulation';
 
 // Imports services
-import { FormulatorService } from './../core/services/formulator';
+import { FormulatorService } from './../services/formulator';
 
 let router = express.Router();
 
