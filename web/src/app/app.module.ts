@@ -24,6 +24,7 @@ import { FormulationComponent } from './formulation/formulation.component';
 import { FeedstuffService } from './services/feedstuff.service';
 import { FormulaService } from './services/formula.service';
 import { FormulatorService } from './services/formulator.service';
+import { TipsComponent } from './tips/tips.component';
 
 
 var router = RouterModule.forRoot([
@@ -47,6 +48,10 @@ var router = RouterModule.forRoot([
     path: 'formulation',
     component: FormulationComponent
   },
+  {
+    path: 'tips',
+    component: TipsComponent
+  },
 ]);
 
 
@@ -58,7 +63,8 @@ var router = RouterModule.forRoot([
     AboutComponent,
     LoginComponent,
     NavbarComponent,
-    FormulationComponent
+    FormulationComponent,
+    TipsComponent
   ],
   imports: [
     BrowserModule,
