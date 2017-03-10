@@ -841,7 +841,7 @@ VALUES
 '%',
 'S',
 'S',
-'Sulfur',
+'Sulphur',
 56
 ); 
 INSERT INTO worldofrations.elements
