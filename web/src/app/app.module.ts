@@ -18,13 +18,15 @@ import { AboutComponent } from './about/about.component';
 import { LoginComponent } from './login/login.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { FormulationComponent } from './formulation/formulation.component';
+import { TipsComponent } from './tips/tips.component';
+import { TermsComponent } from './terms/terms.component';
 
 
 // Services
 import { FeedstuffService } from './services/feedstuff.service';
 import { FormulaService } from './services/formula.service';
 import { FormulatorService } from './services/formulator.service';
-import { TipsComponent } from './tips/tips.component';
+
 
 
 var router = RouterModule.forRoot([
@@ -52,6 +54,10 @@ var router = RouterModule.forRoot([
     path: 'tips',
     component: TipsComponent
   },
+  {
+    path: 'terms',
+    component: TermsComponent
+  },
 ]);
 
 
@@ -64,7 +70,8 @@ var router = RouterModule.forRoot([
     LoginComponent,
     NavbarComponent,
     FormulationComponent,
-    TipsComponent
+    TipsComponent,
+    TermsComponent
   ],
   imports: [
     BrowserModule,
