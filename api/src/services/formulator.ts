@@ -91,6 +91,10 @@ export class FormulatorService {
         return this.formulationRepository.getFormulationById(formulationId);
     }
 
+    public getFormulations(): Promise<DomainFormulation[]> {
+        return null;
+    }
+
     public loadSupplementFeedstuffsForFormulation(formulation: DomainFormulation): Promise<DomainFormulation> {
         let parent = this;
         let supplementElements: DomainCompositionElement[] = formulation.composition.filter((x) => x.value < x.minimum);

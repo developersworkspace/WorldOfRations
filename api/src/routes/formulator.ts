@@ -61,4 +61,22 @@ router.get('/formulation', function (req: Request, res: Response, next: Function
     });
 });
 
+
+/**
+ * @api {get} /formulator/formulations RETRIEVE LIST OF FORMULATIONS
+ * @apiName FormulatorFormulations
+ * @apiGroup Formulator
+ * 
+ * @apiSuccess {Object[]} response Empty.
+ * 
+ */
+router.get('/formulations', function (req: Request, res: Response, next: Function) {
+    let formulatorService = new FormulatorService(config);
+    formulatorService.getFormulations().then((formulations: DomainFormulation[]) => {
+        res.json(formulations);
+    }).catch((err: Error) => {
+        console.log(err.message);
+    });
+});
+
 export = router;
