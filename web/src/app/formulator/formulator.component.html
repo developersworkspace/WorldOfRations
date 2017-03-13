@@ -28,6 +28,7 @@
         <label>Feedstuffs</label>
         <br />
         <small>Add/Remove to this list to reflect the feedstuffs available to you.</small>
+        <button class="btn btn-success pull-right" (click)="onClick_Formulate()" [disabled]="isFormulating"><i class="fa fa-calculator" *ngIf="!isFormulating"></i><i class="fa fa-refresh fa-spin" *ngIf="isFormulating"></i>&nbsp;Formulate</button>
         <button class="btn btn-primary pull-right padded" (click)="onClick_AddFeedstuff()"><i class="fa fa-plus"></i>&nbsp;Add Feedstuff</button>
         <button class="btn btn-default pull-right padded" (click)="onClick_ResetToDefaults()"><i class="fa fa-undo"></i>&nbsp;Reset to Defaults</button>
       </div>
@@ -76,6 +77,7 @@
       <div class="row">
         <div class="col-md-12">
           <button class="btn btn-success pull-right" (click)="onClick_Formulate()" [disabled]="isFormulating"><i class="fa fa-calculator" *ngIf="!isFormulating"></i><i class="fa fa-refresh fa-spin" *ngIf="isFormulating"></i>&nbsp;Formulate</button>
+          <button class="btn btn-primary pull-right padded" (click)="onClick_AddFeedstuff()"><i class="fa fa-plus"></i>&nbsp;Add Feedstuff</button>
         </div>
       </div>
       <br/>
