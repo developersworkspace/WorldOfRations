@@ -125,8 +125,17 @@ export class FormulatorComponent implements OnInit {
   onClick_Formulate() {
     this.formulatorResult = null;
     if (this.selectedFormula == null) {
-      this.errorMessage = 'Please select a formula'
+      this.errorMessage = 'Please select a formula';
     } else {
+
+
+      for (let i = 0; i < this.feedstufffs.length; i ++) {
+        if (this.feedstufffs.filter(x => x.selectedFeedstuff.id == this.feedstufffs[i].selectedFeedstuff.id).length > 1) {
+          this.errorMessage = 'Cannot have duplicate feedstuffs';
+          return;
+        }
+      }
+
       this.isFormulating = true;
       this.errorMessage = null;
       let feedstuffs: any[] = [];
