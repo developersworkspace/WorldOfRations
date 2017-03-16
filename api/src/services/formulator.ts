@@ -92,7 +92,7 @@ export class FormulatorService {
     }
 
     public getFormulations(): Promise<DomainFormulation[]> {
-        return null;
+        return this.formulationRepository.getFormulations();
     }
 
     public loadSupplementFeedstuffsForFormulation(formulation: DomainFormulation): Promise<DomainFormulation> {

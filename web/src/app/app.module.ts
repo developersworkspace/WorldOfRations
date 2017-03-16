@@ -26,6 +26,7 @@ import { TermsComponent } from './terms/terms.component';
 import { FeedstuffService } from './services/feedstuff.service';
 import { FormulaService } from './services/formula.service';
 import { FormulatorService } from './services/formulator.service';
+import { FooterComponent } from './footer/footer.component';
 
 
 
@@ -71,7 +72,8 @@ var router = RouterModule.forRoot([
     NavbarComponent,
     FormulationComponent,
     TipsComponent,
-    TermsComponent
+    TermsComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

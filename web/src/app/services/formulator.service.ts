@@ -26,4 +26,9 @@ export class FormulatorService extends BaseService {
     .map((res: Response) => res.json());
   }
 
+  public getFormulations() {
+    return this.get(environment.api.uri + '/api/formulator/formulations')
+    .map((res: Response) => res.json());
+  }
+
 }

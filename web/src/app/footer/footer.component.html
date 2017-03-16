@@ -1,0 +1,62 @@
+<footer id="footer">
+    <div class="container">
+      <div class="row sections">
+        <div class="col-sm-4 recent_posts">
+          <h3 class="footer_header">
+            Previous Formulations
+          </h3>
+          <ul *ngIf="formulations != null">
+            <li *ngFor="let item of formulations"><a href="#">{{item.formula.name}}</a></li>
+          </ul>
+        </div>
+        <div class="col-sm-4">
+          <h3 class="footer_header">
+            Links
+          </h3>
+          <div class="wrapper">
+            <ul>
+              <li><a href="/about">About</a></li>
+              <li><a href="/tips">Tips</a></li>
+              <li><a href="/terms">Terms and Conditions</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-sm-4 contact">
+          <h3 class="footer_header">
+            Contact
+          </h3>
+          <form action="#" method="post">
+            <input type="text" placeholder="Your name" />
+            <input type="text" placeholder="Your email" />
+            <textarea rows="3" placeholder="Message"></textarea>
+            <input type="submit" value="Send" />
+          </form>
+        </div>
+      </div>
+      <div class="row credits">
+        <div class="col-md-12">
+          <div class="row social">
+            <div class="col-md-12">
+              <a href="https://www.facebook.com/WorldOfRations" class="facebook">
+                <span class="socialicons ico1"></span>
+                <span class="socialicons_h ico1h"></span>
+              </a>
+              <a href="https://twitter.com/WorldOfRations" class="twitter">
+                <span class="socialicons ico2"></span>
+                <span class="socialicons_h ico2h"></span>
+              </a>
+              <a href="https://plus.google.com/u/1/112257070107465504071" class="gplus">
+                <span class="socialicons ico3"></span>
+                <span class="socialicons_h ico3h"></span>
+              </a>
+            </div>
+          </div>
+          <div class="row copyright">
+            <div class="col-md-12">
+              © 2017 World of Rations Pty Ltd. All rights reserved. By <a href="https://developersworkspace.co.za">Developer's Workspace Pty Ltd</a>.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>

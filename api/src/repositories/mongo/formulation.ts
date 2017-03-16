@@ -32,4 +32,24 @@ export class FormulationRepository {
             });
         });
     }
+
+    public getFormulations(): Promise<any> {
+        let mongoClient = new mongodb.MongoClient();
+        return mongoClient.connect('mongodb://' + this.config.server + ':27017/' + this.config.database).then((db: mongodb.Db) => {
+            var collection = db.collection('formulations');
+            return collection.find({
+                feasible: true
+            }).toArray().then((formulations: DomainFormulation[]) => {
+                db.close();
+                formulations.forEach(x => {
+                    x.composition = null;
+                    x.feedstuffs = null;
+                    x.formula.elements = null;
+                    x.supplementComposition = null;
+                });
+                
+                return formulations;
+            });
+        });
+    }
 }
