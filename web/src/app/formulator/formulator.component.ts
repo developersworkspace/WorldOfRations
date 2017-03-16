@@ -130,6 +130,10 @@ export class FormulatorComponent implements OnInit {
 
 
       for (let i = 0; i < this.feedstufffs.length; i ++) {
+        if (this.feedstufffs[i].selectedFeedstuff == null) {
+          continue;
+        }
+        
         if (this.feedstufffs.filter(x => x.selectedFeedstuff.id == this.feedstufffs[i].selectedFeedstuff.id).length > 1) {
           this.errorMessage = 'Cannot have duplicate feedstuffs';
           return;
