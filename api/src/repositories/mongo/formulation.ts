@@ -39,7 +39,7 @@ export class FormulationRepository {
             var collection = db.collection('formulations');
             return collection.find({
                 feasible: true
-            }).toArray().then((formulations: DomainFormulation[]) => {
+            }).limit(3).toArray().then((formulations: DomainFormulation[]) => {
                 db.close();
                 formulations.forEach(x => {
                     x.composition = null;

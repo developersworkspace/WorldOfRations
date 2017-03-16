@@ -6,7 +6,7 @@
             Previous Formulations
           </h3>
           <ul *ngIf="formulations != null">
-            <li *ngFor="let item of formulations"><a href="#">{{item.formula.name}}</a></li>
+            <li *ngFor="let item of formulations"><a href="/formulation?formulationId={{item.id}}">{{item.formula.name}}</a></li>
           </ul>
         </div>
         <div class="col-sm-4">
