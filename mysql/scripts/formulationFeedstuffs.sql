@@ -1,4 +1,4 @@
-CREATE TABLE worldofrations.formulations(
+CREATE TABLE worldofrations.formulationFeedstuffs(
     `formulationId` CHAR(36)        NOT NULL,
     `feedstuffId`   CHAR(36)        NOT NULL,
     `minimum`       NUMERIC(10,3)   NULL,
