@@ -15,9 +15,13 @@ export class FormulationRepository extends Base {
         super(config);
     }
 
-    // public saveFormulation(formulation: DomainFormulation): Promise<any> {
+     public saveFormulation(formulation: DomainFormulation): Promise<any> {
 
-    // }
+        let dataFormulation = formulation.getDataFormalation();
+        let dataFormulationFeedstuffs = formulation.getDataFormulationFeedstuffs();
+
+        return null;
+     }
 
     public getFormulationById(formulationId: string): Promise<DomainFormulation> {
         return this.query(util.format('CALL getFormulationById(%s);', this.escapeAndFormat(formulationId))).then((result: DataFormulation[]) => {
@@ -34,7 +38,7 @@ export class FormulationRepository extends Base {
     }
 
     public getFormulations(): Promise<any> {
-        return this.query('CALL listFormualtions();').then((result: DataFormulation[]) => {
+        return this.query('CALL listFormulations();').then((result: DataFormulation[]) => {
 
             return result.map(x => {
                 let formulation = new DomainFormulation();

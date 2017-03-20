@@ -36,8 +36,4 @@ export class Formulation {
     getDataFormulationFeedstuffs() {
         return this.feedstuffs.map(x => new DataFormulationFeedstuff(this.id, x.id, x.minimum, x.maximum, x.cost));
     }
-
-    getDataFormulationResultFeedstuffs() {
-        return this.feedstuffs.map(x => new DataFormulationResultFeedstuffs(this.id, x.id, x.weight, x.cost));
-    }
 }
