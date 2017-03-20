@@ -4,6 +4,7 @@ import { FeedstuffRepository } from './../repositories/mysql/feedstuff';
 // Imports domain models
 import { FeedstuffMeasurement as DomainFeedstuffMeasurement} from './../models/feedstuff-measurement';
 import { Feedstuff as DomainFeedstuff } from './../models/feedstuff';
+import { SuggestedValue as DomainSuggestedValue } from './../models/suggested-value';
 
 export class FeedstuffService {
 
@@ -21,11 +22,11 @@ export class FeedstuffService {
         return this.feedstuffRepository.listExampleFeedstuffs();
     }
 
-    public getSuggestedValues(formulaId: string, feedstuffId: string) {
+    public getSuggestedValues(formulaId: string, feedstuffId: string): Promise<DomainSuggestedValue> {
         return this.feedstuffRepository.getSuggestedValuesByFormulaIdAndFeedstuffId(formulaId, feedstuffId);
     }
 
-    public loadElementsForFeedstuffs(feedstuffs: DomainFeedstuff[]) {
+    public loadElementsForFeedstuffs(feedstuffs: DomainFeedstuff[]): Promise<DomainFeedstuff[]>{
 
         let listOfPromise = [];
         for (let i = 0; i < feedstuffs.length; i++) {
@@ -36,7 +37,7 @@ export class FeedstuffService {
         });
     }
 
-    public loadNamesForFeedstuffs(feedstuffs: DomainFeedstuff[]) {
+    public loadNamesForFeedstuffs(feedstuffs: DomainFeedstuff[]): Promise<DomainFeedstuff[]> {
 
         let listOfPromise = [];
         for (let i = 0; i < feedstuffs.length; i++) {
@@ -54,7 +55,7 @@ export class FeedstuffService {
         });
     }
 
-    private loadNameForFeedstuff(feedstuff: DomainFeedstuff) {
+    private loadNameForFeedstuff(feedstuff: DomainFeedstuff): Promise<DomainFeedstuff> {
         return this.feedstuffRepository.getFeedstuffById(feedstuff.id).then((result: DomainFeedstuff) => {
             feedstuff.name = result.name;
             return feedstuff;

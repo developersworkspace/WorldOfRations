@@ -4,6 +4,10 @@ import * as util from 'util';
 
 // Imports domain models
 import { Formulation as DomainFormulation } from './../../models/formulation';
+import { Formula as DomainFormula } from './../../models/formula';
+
+// Imports data models
+import { Formulation as DataFormulation } from './../../data-models/formulation';
 
 export class FormulationRepository extends Base {
 
@@ -12,37 +16,37 @@ export class FormulationRepository extends Base {
     }
 
     // public saveFormulation(formulation: DomainFormulation): Promise<any> {
-        
+
     // }
 
-    // public getFormulationById(formulationId: string): Promise<any> {
-    //     let mongoClient = new mongodb.MongoClient();
-    //     return mongoClient.connect('mongodb://' + this.config.server + ':27017/' + this.config.database).then((db: mongodb.Db) => {
-    //         var collection = db.collection('formulations');
-    //         return collection.findOne({ id: formulationId }).then((formulation: DomainFormulation) => {
-    //             db.close();
-    //             return formulation;
-    //         });
-    //     });
-    // }
+    public getFormulationById(formulationId: string): Promise<DomainFormulation> {
+        return this.query(util.format('CALL getFormulationById(%s);', this.escapeAndFormat(formulationId))).then((result: DataFormulation[]) => {
 
-    // public getFormulations(): Promise<any> {
-    //     let mongoClient = new mongodb.MongoClient();
-    //     return mongoClient.connect('mongodb://' + this.config.server + ':27017/' + this.config.database).then((db: mongodb.Db) => {
-    //         var collection = db.collection('formulations');
-    //         return collection.find({
-    //             feasible: true
-    //         }).limit(3).toArray().then((formulations: DomainFormulation[]) => {
-    //             db.close();
-    //             formulations.forEach(x => {
-    //                 x.composition = null;
-    //                 x.feedstuffs = null;
-    //                 x.formula.elements = null;
-    //                 x.supplementComposition = null;
-    //             });
-                
-    //             return formulations;
-    //         });
-    //     });
-    // }
+            let formulation = new DomainFormulation();
+            formulation.id = result[0].id;
+            formulation.formula = new DomainFormula(result[0].formulaId, null);
+            formulation.cost = result[0].cost;
+            formulation.feasible = result[0].feasible;
+            formulation.currencyCode = result[0].currencyCode;
+
+            return formulation;
+        });
+    }
+
+    public getFormulations(): Promise<any> {
+        return this.query('CALL listFormualtions();').then((result: DataFormulation[]) => {
+
+            return result.map(x => {
+                let formulation = new DomainFormulation();
+                formulation.id = result[0].id;
+                formulation.formula = new DomainFormula(result[0].formulaId, null);
+                formulation.cost = result[0].cost;
+                formulation.feasible = result[0].feasible;
+                formulation.currencyCode = result[0].currencyCode;
+
+                return formulation;
+            });
+
+        });
+    }
 }

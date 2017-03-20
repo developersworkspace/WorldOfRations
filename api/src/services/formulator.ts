@@ -8,6 +8,7 @@ import { SupplementElement as DomainSupplementElement } from './../models/supple
 import { Feedstuff as DomainFeedstuff } from './../models/feedstuff';
 import { Formulation as DomainFormulation } from './../models/formulation';
 import { Formula as DomainFormula } from './../models/formula';
+import { FormulaMeasurement as DomainFormulaMeasurement } from './../models/formula-measurement';
 
 // Imports repositories
 import { FormulaRepository } from './../repositories/mysql/formula';
@@ -36,20 +37,24 @@ export class FormulatorService {
     public createFormulation(feedstuffs: DomainFeedstuff[], formulaId: string, currencyCode: string): Promise<DomainFormulation> {
         let formula = new DomainFormula(formulaId, null);
         let formulation = new DomainFormulation();
-
         formulation.currencyCode = currencyCode;
 
-        return this.feedstuffService.loadNamesForFeedstuffs(feedstuffs).then((loadNamesForFeedstuffsResult: DomainFeedstuff[]) => {
-            return Promise.all(
-                [
-                    this.feedstuffService.loadElementsForFeedstuffs(loadNamesForFeedstuffsResult),
-                    this.formulaRepository.loadElementsForFormula(formula)
-                ]).then((results: any[]) => {
+        return Promise.all([
+            this.feedstuffService.loadElementsForFeedstuffs(feedstuffs),
+            this.feedstuffService.loadNamesForFeedstuffs(feedstuffs),
+            this.formulaRepository.getFormula(formula.id),
+            this.formulaRepository.listElementsForFormula(formula.id)
+        ]).then((results: any[]) => {
 
-                    formulation.feedstuffs = results[0];
-                    formulation.formula = results[1];
-                    return formulation;
-                });
+            formulation.feedstuffs = results[0];
+
+            formulation.feedstuffs.forEach((x, i) => {
+                x.name = results[1][i].name;
+            });
+
+            formulation.formula = results[2];
+            formulation.formula.elements = results[3];
+            return formulation;
         });
     }
 
@@ -73,7 +78,7 @@ export class FormulatorService {
         formulation.feasible = results.feasible;
         formulation.id = uuid.v4();
 
-        return this.formulaRepository.loadCompositionForFormulation(formulation).then((loadCompositionForFormulationResult: DomainFormulation) => {
+        return this.loadCompositionForFormulation(formulation).then((loadCompositionForFormulationResult: DomainFormulation) => {
             return this.loadSupplementFeedstuffsForFormulation(loadCompositionForFormulationResult);
         }).then((loadSupplementFeedstuffsForFormulationResult: DomainFormulation) => {
             return this.formulationRepository.saveFormulation(loadSupplementFeedstuffsForFormulationResult);
@@ -84,6 +89,34 @@ export class FormulatorService {
                 feasible: formulation.feasible,
                 id: formulation.id
             };
+        });
+    }
+
+    private loadCompositionForFormulation(formulation: DomainFormulation): Promise<DomainFormulation> {
+        return this.formulaRepository.getComparisonFormula(formulation.formula.id).then((getComparisonFormulaResult: DomainFormula) => {
+            return this.formulaRepository.listElementsForFormula(getComparisonFormulaResult.id).then((listElementsForFormulaResult: DomainFormulaMeasurement[]) => {
+                for (let i = 0; i < listElementsForFormulaResult.length; i++) {
+                    let elementId = listElementsForFormulaResult[i].id;
+                    let elementName = listElementsForFormulaResult[i].name;
+                    let elementMinimum = listElementsForFormulaResult[i].minimum == null ? 0 : listElementsForFormulaResult[i].minimum;
+                    let elementMaximum = listElementsForFormulaResult[i].maximum == null ? 1000000 : listElementsForFormulaResult[i].maximum;
+                    let elementUnit = listElementsForFormulaResult[i].unit;
+                    let elementSortOrder = listElementsForFormulaResult[i].sortOrder;
+                    let sum = 0;
+                    for (let j = 0; j < formulation.feedstuffs.length; j++) {
+                        let feedstuffElements = formulation.feedstuffs[j].elements.filter((x) => x.id == elementId);
+                        if (feedstuffElements.length > 0 && formulation.feedstuffs[j].weight != undefined) {
+                            sum += feedstuffElements[0].value * formulation.feedstuffs[j].weight;
+                        }
+                    }
+
+                    elementMinimum = listElementsForFormulaResult[i].minimum == null ? 0 : listElementsForFormulaResult[i].minimum;
+                    elementMaximum = listElementsForFormulaResult[i].maximum == null ? 1000000 : listElementsForFormulaResult[i].maximum;
+
+                    formulation.composition.push(new DomainCompositionElement(elementId, elementName, this.roundToTwoDecimal(elementMinimum), this.roundToTwoDecimal(elementMaximum), this.roundToTwoDecimal(sum / 1000), elementUnit, elementSortOrder));
+                }
+                return formulation;
+            });
         });
     }
 
@@ -165,5 +198,9 @@ export class FormulatorService {
         }
 
         return variables;
+    }
+
+    private roundToTwoDecimal(value: number) {
+        return Math.round(value * 100) / 100;
     }
 }

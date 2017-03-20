@@ -24,46 +24,23 @@ export class FormulaRepository extends Base {
         });
     }
 
-
-    public loadElementsForFormula(formula: DomainFormula): Promise<DomainFormula> {
-        return this.query(util.format('CALL listElementsForFormula(%s)', this.escapeAndFormat(formula.id)))
+    public listElementsForFormula(formulaId: string): Promise<DomainFormulaMeasurement[]> {
+        return this.query(util.format('CALL listElementsForFormula(%s)', this.escapeAndFormat(formulaId)))
             .then((listElementsForFormulaRecordSet: DataFormulaMeasurement[]) => {
-                formula.elements = listElementsForFormulaRecordSet;
-                return this.query(util.format('CALL getFormula(%s)', this.escapeAndFormat(formula.id)))
-                    .then((getFormulaRecordSet: DataFormula[]) => {
-                        formula.name = getFormulaRecordSet[0].name;
-                        return formula;
-                    });
+                return listElementsForFormulaRecordSet.map(x => new DomainFormulaMeasurement(x.id, x.name, x.minimum, x.maximum, x.unit, x.sortOrder));
             });
     }
 
-    public loadCompositionForFormulation(formulation: DomainFormulation): Promise<DomainFormulation> {
-        return this.query(util.format('CALL getComparisonFormula(%s)', this.escapeAndFormat(formulation.formula.id))).then((getComparisonFormulaRecordSet: any[]) => {
-            let comparisonFormulaId = getComparisonFormulaRecordSet[0].formulaId;
-            return this.query(util.format('CALL listElementsForFormula(%s)', this.escapeAndFormat(comparisonFormulaId))).then((comparisonFormulaElements: DataFormulaMeasurement[]) => {
-                for (let i = 0; i < comparisonFormulaElements.length; i++) {
-                    let elementId = comparisonFormulaElements[i].id;
-                    let elementName = comparisonFormulaElements[i].name;
-                    let elementMinimum = comparisonFormulaElements[i].minimum == null ? 0 : comparisonFormulaElements[i].minimum;
-                    let elementMaximum = comparisonFormulaElements[i].maximum == null ? 1000000 : comparisonFormulaElements[i].maximum;
-                    let elementUnit = comparisonFormulaElements[i].unit;
-                    let elementSortOrder = comparisonFormulaElements[i].sortOrder;
-                    let sum = 0;
-                    for (let j = 0; j < formulation.feedstuffs.length; j++) {
-                        let feedstuffElements = formulation.feedstuffs[j].elements.filter((x) => x.id == elementId);
-                        if (feedstuffElements.length > 0 && formulation.feedstuffs[j].weight != undefined) {
-                            sum += feedstuffElements[0].value * formulation.feedstuffs[j].weight;
-                        }
-                    }
-                    
-                    elementMinimum = comparisonFormulaElements[i].minimum == null ? 0 : comparisonFormulaElements[i].minimum;
-                    elementMaximum = comparisonFormulaElements[i].maximum == null ? 1000000 : comparisonFormulaElements[i].maximum;
-                    
-                    formulation.composition.push(new DomainCompositionElement(elementId, elementName, this.roundToTwoDecimal(elementMinimum), this.roundToTwoDecimal(elementMaximum), this.roundToTwoDecimal(sum / 1000), elementUnit, elementSortOrder));
-                }
-                return formulation;
+    public getFormula(formulaId: string) {
+        return this.query(util.format('CALL getFormula(%s)', this.escapeAndFormat(formulaId)))
+            .then((getFormulaRecordSet: DataFormula[]) => {
+                return new DomainFormula(getFormulaRecordSet[0].id, getFormulaRecordSet[0].name);
             });
+    }
+
+    public getComparisonFormula(formulaId: string) : Promise<DomainFormula> {
+        return this.query(util.format('CALL getComparisonFormula(%s)', this.escapeAndFormat(formulaId))).then((getComparisonFormulaRecordSet: any[]) => {
+            return new DomainFormula(getComparisonFormulaRecordSet[0].formulaId, null);
         });
     }
-
 }
