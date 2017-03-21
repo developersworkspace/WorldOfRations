@@ -15,13 +15,33 @@ export class FormulationRepository extends Base {
         super(config);
     }
 
-     public saveFormulation(formulation: DomainFormulation): Promise<any> {
+    public saveFormulation(formulation: DomainFormulation): Promise<any> {
 
         let dataFormulation = formulation.getDataFormalation();
         let dataFormulationFeedstuffs = formulation.getDataFormulationFeedstuffs();
 
-        return null;
-     }
+        let formulationP = this.query(util.format('CALL insertFormulation(%s, %s, %s, %s, %s, %s);',
+            this.escapeAndFormat(formulation.id),
+            this.escapeAndFormat(formulation.formula.id),
+            formulation.feasible, formulation.cost,
+            this.escapeAndFormat(formulation.currencyCode),
+            new Date().getTime()));
+
+
+        let formulationFeedstuffsP = dataFormulationFeedstuffs.map(x => {
+            return this.query(util.format('CALL insertFormulationFeedstuff(%s, %s, %s, %s, %s, %s);',
+                this.escapeAndFormat(x.formulationId),
+                this.escapeAndFormat(x.feedstuffId),
+                x.minimum,
+                x.maximum,
+                x.cost,
+                x.weight));
+        });
+
+        let p = formulationFeedstuffsP.concat([formulationP]);
+
+        return Promise.all(p);
+    }
 
     public getFormulationById(formulationId: string): Promise<DomainFormulation> {
         return this.query(util.format('CALL getFormulationById(%s);', this.escapeAndFormat(formulationId))).then((result: DataFormulation[]) => {

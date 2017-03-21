@@ -36,6 +36,7 @@ export class Base {
         });
     }
 
+
     protected roundToTwoDecimal(value: number) {
         return Math.round(value * 100) / 100;
     }

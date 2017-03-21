@@ -3,6 +3,7 @@ export class FormulationFeedstuff {
     public feedstuffId: string, 
     public minimum: number, 
     public maximum: number, 
-    public cost: number) {
+    public cost: number,
+    public weight: number) {
     }
 }

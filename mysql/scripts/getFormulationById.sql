@@ -9,7 +9,7 @@ SELECT
 `feasible` AS `feasible`,
 `cost` AS `cost`,
 `currencyCode` AS `currencyCode`,
-`timestamp` AS `timestamp`,
+`timestamp` AS `timestamp`
 FROM worldofrations.formulations
 WHERE `id` = p_formulationId;
 END;

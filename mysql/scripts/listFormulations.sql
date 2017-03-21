@@ -8,10 +8,10 @@ SELECT
 `feasible` AS `feasible`,
 `cost` AS `cost`,
 `currencyCode` AS `currencyCode`,
-`timestamp` AS `timestamp`,
+`timestamp` AS `timestamp`
 FROM worldofrations.formulations
 ORDER BY `timestamp` DESC
-LIMIT 5
+LIMIT 5;
 END;
 //
 
