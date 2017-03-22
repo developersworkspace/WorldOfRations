@@ -27,7 +27,7 @@ export class FormulationRepository extends Base {
             this.escapeAndFormat(formulation.formula.id),
             formulation.feasible, formulation.cost,
             this.escapeAndFormat(formulation.currencyCode),
-            new Date().getTime()));
+            new Date().getTime() / 1000));
 
 
         let formulationFeedstuffsP = dataFormulationFeedstuffs.map(x => {
@@ -74,7 +74,7 @@ export class FormulationRepository extends Base {
             return result.map(x => {
                 let formulation = new DomainFormulation(result[0].id);
                 formulation.id = result[0].id;
-                formulation.formula = new DomainFormula(result[0].formulaId, null);
+                formulation.formula = new DomainFormula(result[0].formulaId, result[0].name);
                 formulation.cost = result[0].cost;
                 formulation.feasible = result[0].feasible;
                 formulation.currencyCode = result[0].currencyCode;

@@ -4,5 +4,5 @@ CREATE TABLE worldofrations.formulations(
     `feasible`      BOOLEAN         NOT NULL,
     `cost`          NUMERIC(10,3)   NULL,
     `currencyCode`  CHAR(6)         NOT NULL,
-    `timestamp`     INT             NOT NULL
+    `timestamp`     BIGINT             NOT NULL
 );

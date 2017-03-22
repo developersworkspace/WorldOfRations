@@ -58,7 +58,7 @@ export class FormulatorService {
         results = solver.Solve(model);
 
         for (let i = 0; i < formulation.feedstuffs.length; i++) {
-            formulation.feedstuffs[i].weight = results[formulation.feedstuffs[i].id];
+            formulation.feedstuffs[i].weight = results[formulation.feedstuffs[i].id] == undefined? 0 : results[formulation.feedstuffs[i].id];
         }
 
         formulation.cost = results.result / 1000;
@@ -78,6 +78,17 @@ export class FormulatorService {
         return this.formulationRepository.findFormulationById(formulationId).then((result: DomainFormulation) => {
             return this.populateFormulationFeedstuffOfFormulation(result);
         }).then((result: DomainFormulation) => {
+            return Promise.all([
+                result, 
+                this.feedstuffService.populateElementsOfFeedstuffs(result.feedstuffs)
+            ])
+        }).then((results: any[]) => {
+            let formulation: DomainFormulation = results[0];
+
+            formulation.feedstuffs = results[1];
+            return formulation;
+        })
+        .then((result: DomainFormulation) => {
             return this.populateCompositionOfFormulation(result);
         }).then((result: DomainFormulation) => {
             return this.populateSupplementFeedstuffsOfFormulation(result)

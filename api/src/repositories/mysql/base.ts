@@ -1,6 +1,9 @@
 // Imports
 import * as mysql from 'mysql';
 
+// Imports logger
+import { logger } from './../../logger';
+
 let pool = null;
 
 export class Base {
@@ -18,6 +21,7 @@ export class Base {
     }
 
     protected query(query: string) {
+        logger.debug(query);
         return new Promise((resolve: Function, reject: Function) => {
             pool.getConnection((err: Error, connection: any) => {
                 if (err) {

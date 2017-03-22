@@ -32,7 +32,7 @@ export class Formulation {
     }
 
     getDataFormalation() {
-        return new DataFormulation(this.id, this.formula.id, this.feasible, this.cost, this.currencyCode, new Date().getTime());
+        return new DataFormulation(this.id, this.formula.id, null, this.feasible, this.cost, this.currencyCode, new Date().getTime());
     }
 
     getDataFormulationFeedstuffs() {
