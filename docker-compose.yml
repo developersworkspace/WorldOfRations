@@ -13,10 +13,6 @@ services:
         build: web
         ports:
         - "8084:8084"
-    mongo:
-        image: "mongo"
-        volumes:
-        - /docker/mongodb:/data/db
     mysql:
         build: mysql
         environment:
