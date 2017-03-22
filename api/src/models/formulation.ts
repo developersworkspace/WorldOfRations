@@ -9,15 +9,18 @@ import { Formulation as DataFormulation } from './../data-models/formulation';
 import { FormulationFeedstuff as DataFormulationFeedstuff } from './../data-models/formulationFeedstuff';
 
 export class Formulation {
-    public id: string;
-    public feedstuffs: DomainFeedstuff[] = [];
-    public composition: DomainCompositionElement[] = [];
-    public formula: DomainFormula;
-    public feasible: boolean;
-    public cost: number;
-    public currencyCode: string;
-    public supplementComposition: DomainSupplementElement[];
+    public feedstuffs: DomainFeedstuff[] = null;
+    public composition: DomainCompositionElement[] = null;
+    public formula: DomainFormula = null;
+    public feasible: boolean = null;
+    public cost: number = null;
+    public currencyCode: string = null;
+    public supplementComposition: DomainSupplementElement[] = null;
 
+    constructor(public id: string) {
+
+    }
+    
     clean() {
         this.feedstuffs = this.feedstuffs.map(x => {
             x.elements = null;

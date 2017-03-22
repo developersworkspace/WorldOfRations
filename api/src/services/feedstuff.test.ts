@@ -22,12 +22,12 @@ describe('FeedstuffService', () => {
         
         feedstuffRepository.listElementsByFeedstuffId = () => {
             return Promise.resolve([
-                new DomainFeedstuffMeasurement('', 'Magnesium', randomNumber(30, 400), '%', randomNumber(1,100))
+                new DomainFeedstuffMeasurement('', 'Element1', randomNumber(30, 400), '%', randomNumber(1,100))
             ]);
         };
 
         feedstuffRepository.getFeedstuffById = () => {
-            return Promise.resolve(new DomainFeedstuff('baada53b-3a22-43ac-9ae9-2853eb136ce2', 'Fish meal', null, null, null));
+            return Promise.resolve(new DomainFeedstuff('baada53b-3a22-43ac-9ae9-2853eb136ce2', 'Feedstuff1', null, null, null));
         };
 
         feedstuffService = new FeedstuffService(feedstuffRepository);

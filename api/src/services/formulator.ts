@@ -28,12 +28,11 @@ export class FormulatorService {
 
     public createFormulation(feedstuffs: DomainFeedstuff[], formulaId: string, currencyCode: string): Promise<DomainFormulation> {
         let formula = new DomainFormula(formulaId, null);
-        let formulation = new DomainFormulation();
+        let formulation = new DomainFormulation(uuid.v4());
         formulation.currencyCode = currencyCode;
 
         return Promise.all([
             this.feedstuffService.loadElementsForFeedstuffs(feedstuffs),
-            this.feedstuffService.loadNamesForFeedstuffs(feedstuffs),
             this.formulaRepository.getFormula(formula.id),
             this.formulaRepository.listElementsForFormula(formula.id)
         ]).then((results: any[]) => {
@@ -70,11 +69,8 @@ export class FormulatorService {
         formulation.feasible = results.feasible;
         formulation.id = uuid.v4();
 
-        return this.loadCompositionForFormulation(formulation).then((loadCompositionForFormulationResult: DomainFormulation) => {
-            return this.loadSupplementFeedstuffsForFormulation(loadCompositionForFormulationResult);
-        }).then((loadSupplementFeedstuffsForFormulationResult: DomainFormulation) => {
-            return this.formulationRepository.saveFormulation(loadSupplementFeedstuffsForFormulationResult);
-        }).then((result: any) => {
+
+        return this.formulationRepository.saveFormulation(formulation).then((result: any) => {
             return {
                 currencyCode: formulation.currencyCode,
                 cost: formulation.cost,

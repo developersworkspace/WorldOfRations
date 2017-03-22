@@ -46,8 +46,7 @@ export class FormulationRepository extends Base {
     public getFormulationById(formulationId: string): Promise<DomainFormulation> {
         return this.query(util.format('CALL getFormulationById(%s);', this.escapeAndFormat(formulationId))).then((result: DataFormulation[]) => {
 
-            let formulation = new DomainFormulation();
-            formulation.id = result[0].id;
+            let formulation = new DomainFormulation(result[0].id);
             formulation.formula = new DomainFormula(result[0].formulaId, null);
             formulation.cost = result[0].cost;
             formulation.feasible = result[0].feasible;
@@ -61,7 +60,7 @@ export class FormulationRepository extends Base {
         return this.query('CALL listFormulations();').then((result: DataFormulation[]) => {
 
             return result.map(x => {
-                let formulation = new DomainFormulation();
+                let formulation = new DomainFormulation(result[0].id);
                 formulation.id = result[0].id;
                 formulation.formula = new DomainFormula(result[0].formulaId, null);
                 formulation.cost = result[0].cost;
