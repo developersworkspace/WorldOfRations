@@ -6,32 +6,37 @@
   "scripts": {
     "docs": "apidoc -i ./src/ -o docs/",
     "build": "gulp build:prod",
-    "start": "gulp build:dev & node ./src/app.js"
+    "start": "gulp build:dev & node ./src/app.js",
+    "test": "gulp build:dev & mocha --timeout=5000 ./src/**/*.test.js & gulp clean:js"
   },
   "author": "Barend Erasmus",
   "license": "MIT",
   "dependencies": {
-    "@types/mongodb": "^2.1.37",
-    "@types/node": "^7.0.1",
-    "@types/winston": "^2.2.0",
     "body-parser": "^1.16.0",
     "cors": "^2.8.1",
     "express": "^4.14.0",
     "express-winston": "^2.3.0",
-    "gulp": "^3.9.1",
-    "gulp-clean": "^0.3.2",
-    "gulp-rename": "^1.2.2",
-    "gulp-typescript": "^3.1.4",
     "javascript-lp-solver": "^0.4.3",
     "mongodb": "^2.2.22",
     "mssql": "^3.3.0",
     "mysql": "^2.13.0",
-    "run-sequence": "^1.2.2",
     "tedious": "^1.14.0",
-    "typescript": "^2.1.5",
     "uuid": "^3.0.1",
-    "winston": "^2.3.1",
+    "winston": "^2.3.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
     "@types/chai": "^3.4.34",
-    "@types/mocha": "^2.2.38"
+    "@types/mocha": "^2.2.38",
+    "typescript": "^2.1.5",
+    "run-sequence": "^1.2.2",
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-rename": "^1.2.2",
+    "gulp-typescript": "^3.1.4",
+    "@types/mongodb": "^2.1.37",
+    "@types/node": "^7.0.1",
+    "@types/winston": "^2.2.0"
   }
 }

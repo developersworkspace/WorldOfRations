@@ -4,6 +4,9 @@ import { expect } from 'chai';
 // Imports services
 import { FeedstuffService } from './feedstuff';
 
+// Imports repositories
+import { FeedstuffRepository } from './../repositories/mysql/feedstuff';
+
 // Imports domain models
 import { Feedstuff as DomainFeedstuff } from './../models/feedstuff';
 import { FeedstuffMeasurement as DomainFeedstuffMeasurement } from './../models/feedstuff-measurement';
@@ -12,73 +15,64 @@ import { SuggestedValue as DomainSuggestedValue } from './../models/suggested-va
 describe('FeedstuffService', () => {
 
     let feedstuffService: FeedstuffService = null;
-
-    let existingFeedstuffId = '36995DEF-9B6B-49CD-9AA6-0165478BA4CD';
-    let nonExistingFeedstuffId = '078567E3-A67E-4737-B273-4AE381FDBACD';
-    let existingFormulaIdWithSuggestedValue = 'CB0360F3-4617-4922-B20D-C3F223BBBCEB';
-    let existingFeedstuffIdWithSuggestedValue = 'B3EDBFD3-CB3C-4427-A6FB-B20EBF4FC831';
-    let nonExistingFormulaId = '3DE8F48A-CC7A-4217-B317-979866B42BB6';
+    
 
     beforeEach(() => {
+        let feedstuffRepository = new FeedstuffRepository(null);
+        
+        feedstuffRepository.listElementsByFeedstuffId = () => {
+            return Promise.resolve([
+                new DomainFeedstuffMeasurement('', 'Magnesium', randomNumber(30, 400), '%', randomNumber(1,100))
+            ]);
+        };
 
-        feedstuffService = new FeedstuffService({
-            db: {
-                server: '127.0.0.1',
-                user: 'worldofrations_user',
-                password: 'worldofrations_password',
-                database: 'worldofrations'
-            }
-        });
-    });
+        feedstuffRepository.getFeedstuffById = () => {
+            return Promise.resolve(new DomainFeedstuff('baada53b-3a22-43ac-9ae9-2853eb136ce2', 'Fish meal', null, null, null));
+        };
 
-    describe('listFeedstuffs', () => {
-        it('should return list of 264 feedstuffs', () => {
-            return feedstuffService.listFeedstuffs().then((result: DomainFeedstuff[]) => {
-                expect(result).to.be.not.null;
-                expect(result.length).to.be.eq(264);
-            });
-        });
-    });
-
-    describe('listExampleFeedstuffs', () => {
-        it('should return list of feedstuffs', () => {
-            return feedstuffService.listExampleFeedstuffs().then((result: DomainFeedstuff[]) => {
-                expect(result).to.be.not.null;
-                expect(result.length).to.be.eq(13);
-            });
-        });
-    });
-
-    describe('getSuggestedValues', () => {
-        it('should return suggested value given existing formula id and existing feedstuff id', () => {
-            return feedstuffService.getSuggestedValues(existingFormulaIdWithSuggestedValue, existingFeedstuffIdWithSuggestedValue).then((result: DomainSuggestedValue) => {
-                expect(result).to.be.not.null;
-            });
-        });
-        it('should return null given non-existing formula id and existing feedstuff id', () => {
-            return feedstuffService.getSuggestedValues(nonExistingFormulaId, nonExistingFeedstuffId).then((result: DomainSuggestedValue) => {
-                expect(result).to.be.null;
-            });
-        });
+        feedstuffService = new FeedstuffService(feedstuffRepository);
     });
 
     describe('loadElementsForFeedstuffs', () => {
-        it('hould return list of feedstuffs with elements populated', () => {
-            return feedstuffService.loadElementsForFeedstuffs([new DomainFeedstuff(existingFeedstuffId, null, 0, 1000, 2000)]).then((result: DomainFeedstuff[]) => {
+        it('should return list of feedstuffs where elements are populated', () => {
+            return feedstuffService.loadElementsForFeedstuffs(
+                [
+                    new DomainFeedstuff('baada53b-3a22-43ac-9ae9-2853eb136ce2', null, 10, 100, 5000),
+                    new DomainFeedstuff('6d54758c-47d1-445e-b40d-4aba7d193b39', null, 10, 100, 5000)
+                ]
+            ).then((result: DomainFeedstuff[]) => {
                 expect(result).to.be.not.null;
-                expect(result[0].elements.length).to.be.greaterThan(0);
+                expect(result.length).to.be.eq(2);
+
+                expect(result[0].elements).to.be.not.null;
+                expect(result[1].elements).to.be.not.null;
+
+                expect(result[0].elements.length).to.be.eq(1);
+                expect(result[1].elements.length).to.be.eq(1);
             });
         });
     });
 
-
     describe('loadNamesForFeedstuffs', () => {
-        it('hould return list of feedstuffs with names populated', () => {
-            return feedstuffService.loadNamesForFeedstuffs([new DomainFeedstuff(existingFeedstuffId, null, 0, 1000, 2000)]).then((result: DomainFeedstuff[]) => {
+        it('should return list of feedstuffs where names are populated', () => {
+            return feedstuffService.loadNamesForFeedstuffs(
+                [
+                    new DomainFeedstuff('baada53b-3a22-43ac-9ae9-2853eb136ce2', null, 10, 100, 5000),
+                    new DomainFeedstuff('6d54758c-47d1-445e-b40d-4aba7d193b39', null, 10, 100, 5000)
+                ]
+            ).then((result: DomainFeedstuff[]) => {
                 expect(result).to.be.not.null;
+                expect(result.length).to.be.eq(2);
+
                 expect(result[0].name).to.be.not.null;
+                expect(result[1].name).to.be.not.null;
             });
         });
     });
 
 });
+
+
+function randomNumber(low: number, high: number) {
+    return Math.random() * (high - low) + low;
+}

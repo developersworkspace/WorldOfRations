@@ -8,10 +8,7 @@ import { SuggestedValue as DomainSuggestedValue } from './../models/suggested-va
 
 export class FeedstuffService {
 
-    public feedstuffRepository: FeedstuffRepository;
-
-    constructor(private config: any) {
-        this.feedstuffRepository = new FeedstuffRepository(this.config.db);
+    constructor(private feedstuffRepository: FeedstuffRepository) {
     }
 
     public listFeedstuffs(): Promise<DomainFeedstuff[]> {

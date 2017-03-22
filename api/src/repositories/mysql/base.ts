@@ -6,7 +6,7 @@ let pool = null;
 export class Base {
 
     constructor(private config: any) {
-        if (pool == null) {
+        if (pool == null && config != null) {
             pool = mysql.createPool({
                 connectionLimit: 50,
                 host: this.config.server,

@@ -6,6 +6,9 @@ import { config } from './../config';
 // Imports services
 import { FeedstuffService } from './../services/feedstuff';
 
+// Imports repositories
+import { FeedstuffRepository } from './../repositories/mysql/feedstuff';
+
 let router = express.Router();
 
 /**
@@ -17,7 +20,8 @@ let router = express.Router();
  * 
  */
 router.get('/list', function (req: Request, res: Response, next: Function) {
-    let feedstuffService = new FeedstuffService(config);
+    let feedstuffRepository = new FeedstuffRepository(config.db);
+    let feedstuffService = new FeedstuffService(feedstuffRepository);
     feedstuffService.listFeedstuffs().then((result: any[]) => {
         res.json(result);
     }).catch((err: Error) => {
@@ -38,7 +42,8 @@ router.get('/list', function (req: Request, res: Response, next: Function) {
  * 
  */
 router.get('/suggestedValues', function (req: Request, res: Response, next: Function) {
-    let feedstuffService = new FeedstuffService(config);
+    let feedstuffRepository = new FeedstuffRepository(config.db);
+    let feedstuffService = new FeedstuffService(feedstuffRepository);
     feedstuffService.getSuggestedValues(req.query.formulaId, req.query.feedstuffId).then((result: any) => {
         res.json(result);
     }).catch((err: Error) => {
@@ -56,7 +61,8 @@ router.get('/suggestedValues', function (req: Request, res: Response, next: Func
  * 
  */
 router.get('/listExample', function (req: Request, res: Response, next: Function) {
-    let feedstuffService = new FeedstuffService(config);
+    let feedstuffRepository = new FeedstuffRepository(config.db);
+    let feedstuffService = new FeedstuffService(feedstuffRepository);
     feedstuffService.listExampleFeedstuffs().then((result: any[]) => {
         res.json(result);
     }).catch((err: Error) => {
