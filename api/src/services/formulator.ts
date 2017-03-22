@@ -13,25 +13,17 @@ import { FormulaMeasurement as DomainFormulaMeasurement } from './../models/form
 // Imports repositories
 import { FormulaRepository } from './../repositories/mysql/formula';
 import { FeedstuffRepository } from './../repositories/mysql/feedstuff';
-import { FormulationRepository } from './../repositories/mongo/formulation';
+import { FormulationRepository } from './../repositories/mysql/formulation';
 
 // Imports services
 import { FeedstuffService } from './../services/feedstuff';
 
 export class FormulatorService {
 
-    public formulaRepository: FormulaRepository;
-    public feedstuffRepository: FeedstuffRepository;
-    public formulationRepository: FormulationRepository;
-
     feedstuffService: FeedstuffService;
 
-    constructor(private config: any) {
-        this.formulaRepository = new FormulaRepository(this.config.db);
-        this.feedstuffRepository = new FeedstuffRepository(this.config.db);
-        this.formulationRepository = new FormulationRepository(this.config.mongodb);
-
-        this.feedstuffService = new FeedstuffService(this.config.db);
+    constructor(private formulaRepository: FormulaRepository, private feedstuffRepository: FeedstuffRepository, private formulationRepository: FormulationRepository) {
+        this.feedstuffService = new FeedstuffService(feedstuffRepository);
     }
 
     public createFormulation(feedstuffs: DomainFeedstuff[], formulaId: string, currencyCode: string): Promise<DomainFormulation> {

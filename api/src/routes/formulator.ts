@@ -6,6 +6,11 @@ import { config } from './../config';
 // Imports domain models
 import { Formulation as DomainFormulation } from './../models/formulation';
 
+// Imports repositories
+import { FeedstuffRepository } from './../repositories/mysql/feedstuff';
+import { FormulaRepository } from './../repositories/mysql/formula';
+import { FormulationRepository } from './../repositories/mysql/formulation';
+
 // Imports services
 import { FormulatorService } from './../services/formulator';
 
@@ -27,7 +32,11 @@ let router = express.Router();
  * 
  */
 router.post('/formulate', function (req: Request, res: Response, next: Function) {
-    let formulatorService = new FormulatorService(config);
+    let feedstuffRepository = new FeedstuffRepository(config.db);
+    let formulaRepository = new FormulaRepository(config.db);
+    let formulationRepository = new FormulationRepository(config.db);
+    let formulatorService = new FormulatorService(formulaRepository, feedstuffRepository, formulationRepository);
+
     formulatorService.createFormulation(req.body.feedstuffs, req.body.formulaId, req.body.currencyCode).then((formulation: DomainFormulation) => {
         formulatorService.formulate(formulation).then((result: any) => {
             res.json(result);
@@ -53,7 +62,11 @@ router.post('/formulate', function (req: Request, res: Response, next: Function)
  * 
  */
 router.get('/formulation', function (req: Request, res: Response, next: Function) {
-    let formulatorService = new FormulatorService(config);
+    let feedstuffRepository = new FeedstuffRepository(config.db);
+    let formulaRepository = new FormulaRepository(config.db);
+    let formulationRepository = new FormulationRepository(config.db);
+    let formulatorService = new FormulatorService(formulaRepository, feedstuffRepository, formulationRepository);
+
     formulatorService.getFormulation(req.query.formulationId).then((formulation: DomainFormulation) => {
         res.json(formulation);
     }).catch((err: Error) => {
@@ -71,7 +84,11 @@ router.get('/formulation', function (req: Request, res: Response, next: Function
  * 
  */
 router.get('/formulations', function (req: Request, res: Response, next: Function) {
-    let formulatorService = new FormulatorService(config);
+    let feedstuffRepository = new FeedstuffRepository(config.db);
+    let formulaRepository = new FormulaRepository(config.db);
+    let formulationRepository = new FormulationRepository(config.db);
+    let formulatorService = new FormulatorService(formulaRepository, feedstuffRepository, formulationRepository);
+    
     formulatorService.getFormulations().then((formulations: DomainFormulation[]) => {
         res.json(formulations);
     }).catch((err: Error) => {
