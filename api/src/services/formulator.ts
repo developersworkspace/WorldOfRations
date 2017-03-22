@@ -39,12 +39,8 @@ export class FormulatorService {
 
             formulation.feedstuffs = results[0];
 
-            formulation.feedstuffs.forEach((x, i) => {
-                x.name = results[1][i].name;
-            });
-
-            formulation.formula = results[2];
-            formulation.formula.elements = results[3];
+            formulation.formula = results[1];
+            formulation.formula.elements = results[2];
             return formulation;
         });
     }
@@ -67,8 +63,6 @@ export class FormulatorService {
 
         formulation.cost = results.result / 1000;
         formulation.feasible = results.feasible;
-        formulation.id = uuid.v4();
-
 
         return this.formulationRepository.saveFormulation(formulation).then((result: any) => {
             return {
@@ -109,7 +103,13 @@ export class FormulatorService {
     }
 
     public getFormulation(formulationId: string): Promise<DomainFormulation> {
-        return this.formulationRepository.getFormulationById(formulationId);
+        return this.formulationRepository.getFormulationById(formulationId).then((result: DomainFormulation) => {
+            return this.loadCompositionForFormulation(result);
+        }).then((result: DomainFormulation) => {
+            return this.loadSupplementFeedstuffsForFormulation(result)
+        }).then((result: DomainFormulation) => {
+            return result;
+        });
     }
 
     public getFormulations(): Promise<DomainFormulation[]> {

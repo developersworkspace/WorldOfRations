@@ -12,6 +12,7 @@ import { FormulationRepository } from './../repositories/mysql/formulation';
 // Imports domain models
 import { Feedstuff as DomainFeedstuff } from './../models/feedstuff';
 import { Formula as DomainFormula } from './../models/formula';
+import { SupplementElement as DomainSupplementElement } from './../models/supplement-element';
 import { Formulation as DomainFormulation } from './../models/formulation';
 import { FeedstuffMeasurement as DomainFeedstuffMeasurement } from './../models/feedstuff-measurement';
 import { FormulaMeasurement as DomainFormulaMeasurement } from './../models/formula-measurement';
@@ -35,6 +36,10 @@ describe('FormulatorService', () => {
             return Promise.resolve(new DomainFeedstuff('baada53b-3a22-43ac-9ae9-2853eb136ce2', 'Feedstuff1', null, null, null));
         };
 
+        feedstuffRepository.listSupplementFeedstuffByElementId = () => {
+            return Promise.resolve(new DomainSupplementElement('b33630fa-94d8-48aa-aba1-7f2692f3afc7', 'Element1', '%', randomNumber(0, 100)));
+        }
+
 
         formulaRepository.getFormula = () => {
             return Promise.resolve(new DomainFormula('f40339a5-0d34-4708-bcf7-6d97aaee3374', 'Formula1'));
@@ -44,6 +49,21 @@ describe('FormulatorService', () => {
             return Promise.resolve([
                 new DomainFormulaMeasurement('', 'Element1', randomNumber(0, 50), randomNumber(50, 100), '%', randomNumber(0, 100))
             ]);
+        };
+
+        formulaRepository.getComparisonFormula = () => {
+            return Promise.resolve(new DomainFormula('e17b7b0e-1301-4d5c-9a2a-7cacd18352ad', null));
+        }
+
+        formulationRepository.getFormulationById = () => {
+            let formulation = new DomainFormulation('e6eae775-1edf-47dc-a74b-65cc911bfa8a');
+            
+            formulation.formula = new DomainFormula('d6cd49a1-18cb-466f-9e3e-d8fc49e071c3', null);
+            formulation.cost = randomNumber(1000, 4000);
+            formulation.feasible = true;
+            formulation.currencyCode = 'ZAR';
+
+            return Promise.resolve(formulation);
         };
 
         formulatorService = new FormulatorService(formulaRepository, feedstuffRepository, formulationRepository);
@@ -93,6 +113,14 @@ describe('FormulatorService', () => {
             return formulatorService.createFormulation(feedstuffs, 'bf33e764-6d3c-4518-84a9-1432faea20c2', 'ZAR').then((result: DomainFormulation) => {
                     expect(result.formula.elements).to.be.not.null;
                     expect(result.formula.elements.length).to.be.eq(1);
+            });
+        });
+    });
+
+    describe('getFormulation', () => {
+        it('should return formulation', () => {
+            return formulatorService.getFormulation('ee1c1bf1-f41e-4268-aef2-3802b2ede1e1').then((result: DomainFormulation) => {
+                expect(result).to.be.not.null;
             });
         });
     });
