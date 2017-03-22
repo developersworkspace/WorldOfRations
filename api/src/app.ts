@@ -11,6 +11,7 @@ import * as cors from 'cors';
 import feedstuffRoute = require('./routes/feedstuff');
 import formulaRoute = require('./routes/formula');
 import formulatorRoute = require('./routes/formulator');
+import authRoute = require('./routes/auth');
 
 // Imports logger
 import { logger } from './logger';
@@ -37,6 +38,7 @@ export class WebApi {
         app.use("/api/feedstuff", feedstuffRoute);
         app.use("/api/formula", formulaRoute);
         app.use("/api/formulator", formulatorRoute);
+        app.use("/api/auth", authRoute);
     }
 
     public getApp() {
