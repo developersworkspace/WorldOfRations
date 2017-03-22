@@ -26,16 +26,16 @@ describe('FeedstuffService', () => {
             ]);
         };
 
-        feedstuffRepository.getFeedstuffById = () => {
+        feedstuffRepository.findFeedstuffByFeedstuffId = () => {
             return Promise.resolve(new DomainFeedstuff('baada53b-3a22-43ac-9ae9-2853eb136ce2', 'Feedstuff1', null, null, null));
         };
 
         feedstuffService = new FeedstuffService(feedstuffRepository);
     });
 
-    describe('loadElementsForFeedstuffs', () => {
+    describe('populateElementsOfFeedstuffs', () => {
         it('should return list of feedstuffs where elements are populated', () => {
-            return feedstuffService.loadElementsForFeedstuffs(
+            return feedstuffService.populateElementsOfFeedstuffs(
                 [
                     new DomainFeedstuff('baada53b-3a22-43ac-9ae9-2853eb136ce2', null, 10, 100, 5000),
                     new DomainFeedstuff('6d54758c-47d1-445e-b40d-4aba7d193b39', null, 10, 100, 5000)
@@ -53,9 +53,9 @@ describe('FeedstuffService', () => {
         });
     });
 
-    describe('loadNamesForFeedstuffs', () => {
+    describe('populateNamesOfFeedstuffs', () => {
         it('should return list of feedstuffs where names are populated', () => {
-            return feedstuffService.loadNamesForFeedstuffs(
+            return feedstuffService.populateNamesOfFeedstuffs(
                 [
                     new DomainFeedstuff('baada53b-3a22-43ac-9ae9-2853eb136ce2', null, 10, 100, 5000),
                     new DomainFeedstuff('6d54758c-47d1-445e-b40d-4aba7d193b39', null, 10, 100, 5000)

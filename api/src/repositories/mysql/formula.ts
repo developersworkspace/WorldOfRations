@@ -24,21 +24,21 @@ export class FormulaRepository extends Base {
         });
     }
 
-    public listElementsForFormula(formulaId: string): Promise<DomainFormulaMeasurement[]> {
+    public listElementsByFormulaId(formulaId: string): Promise<DomainFormulaMeasurement[]> {
         return this.query(util.format('CALL listElementsForFormula(%s)', this.escapeAndFormat(formulaId)))
             .then((listElementsForFormulaRecordSet: DataFormulaMeasurement[]) => {
                 return listElementsForFormulaRecordSet.map(x => new DomainFormulaMeasurement(x.id, x.name, x.minimum, x.maximum, x.unit, x.sortOrder));
             });
     }
 
-    public getFormula(formulaId: string) {
+    public findFormulaByFormulaId(formulaId: string) {
         return this.query(util.format('CALL getFormula(%s)', this.escapeAndFormat(formulaId)))
             .then((getFormulaRecordSet: DataFormula[]) => {
                 return new DomainFormula(getFormulaRecordSet[0].id, getFormulaRecordSet[0].name);
             });
     }
 
-    public getComparisonFormula(formulaId: string) : Promise<DomainFormula> {
+    public findComparisonFormulaByFormulaId(formulaId: string) : Promise<DomainFormula> {
         return this.query(util.format('CALL getComparisonFormula(%s)', this.escapeAndFormat(formulaId))).then((getComparisonFormulaRecordSet: any[]) => {
             return new DomainFormula(getComparisonFormulaRecordSet[0].formulaId, null);
         });

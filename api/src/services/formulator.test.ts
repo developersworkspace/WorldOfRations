@@ -32,7 +32,7 @@ describe('FormulatorService', () => {
             ]);
         };
 
-        feedstuffRepository.getFeedstuffById = () => {
+        feedstuffRepository.findFeedstuffByFeedstuffId = () => {
             return Promise.resolve(new DomainFeedstuff('baada53b-3a22-43ac-9ae9-2853eb136ce2', 'Feedstuff1', null, null, null));
         };
 
@@ -41,29 +41,37 @@ describe('FormulatorService', () => {
         }
 
 
-        formulaRepository.getFormula = () => {
+        formulaRepository.findFormulaByFormulaId = () => {
             return Promise.resolve(new DomainFormula('f40339a5-0d34-4708-bcf7-6d97aaee3374', 'Formula1'));
         };
 
-        formulaRepository.listElementsForFormula = () => {
+        formulaRepository.listElementsByFormulaId = () => {
             return Promise.resolve([
                 new DomainFormulaMeasurement('', 'Element1', randomNumber(0, 50), randomNumber(50, 100), '%', randomNumber(0, 100))
             ]);
         };
 
-        formulaRepository.getComparisonFormula = () => {
+        formulaRepository.findComparisonFormulaByFormulaId = () => {
             return Promise.resolve(new DomainFormula('e17b7b0e-1301-4d5c-9a2a-7cacd18352ad', null));
         }
 
-        formulationRepository.getFormulationById = () => {
+        formulationRepository.findFormulationById = () => {
             let formulation = new DomainFormulation('e6eae775-1edf-47dc-a74b-65cc911bfa8a');
-            
+
             formulation.formula = new DomainFormula('d6cd49a1-18cb-466f-9e3e-d8fc49e071c3', null);
             formulation.cost = randomNumber(1000, 4000);
             formulation.feasible = true;
             formulation.currencyCode = 'ZAR';
 
             return Promise.resolve(formulation);
+        };
+
+        formulationRepository.listFormulationFeedstuffByFormulationId = () => {
+            return Promise.resolve([
+                new DomainFeedstuff('baada53b-3a22-43ac-9ae9-2853eb136ce2', 'Feedstuff1', randomNumber(0, 50), randomNumber(50, 100), randomNumber(0, 100)),
+                new DomainFeedstuff('baada53b-3a22-43ac-9ae9-2853eb136ce2', 'Feedstuff2', randomNumber(0, 50), randomNumber(50, 100), randomNumber(0, 100)),
+                new DomainFeedstuff('baada53b-3a22-43ac-9ae9-2853eb136ce2', 'Feedstuff3', randomNumber(0, 50), randomNumber(50, 100), randomNumber(0, 100))
+            ]);
         };
 
         formulatorService = new FormulatorService(formulaRepository, feedstuffRepository, formulationRepository);
@@ -97,10 +105,10 @@ describe('FormulatorService', () => {
             ];
 
             return formulatorService.createFormulation(feedstuffs, 'bf33e764-6d3c-4518-84a9-1432faea20c2', 'ZAR').then((result: DomainFormulation) => {
-                for (let i = 0; i < result.feedstuffs.length; i ++) {
+                for (let i = 0; i < result.feedstuffs.length; i++) {
                     expect(result.feedstuffs[i].elements).to.be.not.null;
                     expect(result.feedstuffs[i].elements.length).to.be.eq(1);
-                } 
+                }
             });
         });
 
@@ -111,16 +119,33 @@ describe('FormulatorService', () => {
             ];
 
             return formulatorService.createFormulation(feedstuffs, 'bf33e764-6d3c-4518-84a9-1432faea20c2', 'ZAR').then((result: DomainFormulation) => {
-                    expect(result.formula.elements).to.be.not.null;
-                    expect(result.formula.elements.length).to.be.eq(1);
+                expect(result.formula.elements).to.be.not.null;
+                expect(result.formula.elements.length).to.be.eq(1);
             });
         });
     });
 
-    describe('getFormulation', () => {
+    describe('findFormulation', () => {
         it('should return formulation', () => {
-            return formulatorService.getFormulation('ee1c1bf1-f41e-4268-aef2-3802b2ede1e1').then((result: DomainFormulation) => {
+            return formulatorService.findFormulation('ee1c1bf1-f41e-4268-aef2-3802b2ede1e1').then((result: DomainFormulation) => {
                 expect(result).to.be.not.null;
+            });
+        });
+
+        it('should return formulation where composition is populated', () => {
+            return formulatorService.findFormulation('ee1c1bf1-f41e-4268-aef2-3802b2ede1e1').then((result: DomainFormulation) => {
+                expect(result).to.be.not.null;
+                expect(result.composition).to.be.not.null;
+
+                for (let i = 0; i < result.composition.length; i++) {
+                    expect(result.composition[i].id).to.be.not.null;
+                    expect(result.composition[i].maximum).to.be.not.null;
+                    expect(result.composition[i].minimum).to.be.not.null;
+                    expect(result.composition[i].name).to.be.not.null;
+                    expect(result.composition[i].sortOrder).to.be.not.null;
+                    expect(result.composition[i].unit).to.be.not.null;
+                    expect(result.composition[i].value).to.be.not.null;
+                }
             });
         });
     });

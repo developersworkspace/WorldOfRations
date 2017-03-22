@@ -19,41 +19,41 @@ export class FeedstuffService {
         return this.feedstuffRepository.listExampleFeedstuffs();
     }
 
-    public getSuggestedValues(formulaId: string, feedstuffId: string): Promise<DomainSuggestedValue> {
-        return this.feedstuffRepository.getSuggestedValuesByFormulaIdAndFeedstuffId(formulaId, feedstuffId);
+    public findSuggestedValues(formulaId: string, feedstuffId: string): Promise<DomainSuggestedValue> {
+        return this.feedstuffRepository.findSuggestedValuesByFormulaIdAndFeedstuffId(formulaId, feedstuffId);
     }
 
-    public loadElementsForFeedstuffs(feedstuffs: DomainFeedstuff[]): Promise<DomainFeedstuff[]>{
+    public populateElementsOfFeedstuffs(feedstuffs: DomainFeedstuff[]): Promise<DomainFeedstuff[]>{
 
         let listOfPromise = [];
         for (let i = 0; i < feedstuffs.length; i++) {
-            listOfPromise.push(this.loadElementsForFeedstuff(feedstuffs[i]));
+            listOfPromise.push(this.populateElementsOfFeedstuff(feedstuffs[i]));
         }
         return Promise.all(listOfPromise).then((feedstuffsResult: DomainFeedstuff[]) => {
             return feedstuffsResult;
         });
     }
 
-    public loadNamesForFeedstuffs(feedstuffs: DomainFeedstuff[]): Promise<DomainFeedstuff[]> {
+    public populateNamesOfFeedstuffs(feedstuffs: DomainFeedstuff[]): Promise<DomainFeedstuff[]> {
 
         let listOfPromise = [];
         for (let i = 0; i < feedstuffs.length; i++) {
-            listOfPromise.push(this.loadNameForFeedstuff(feedstuffs[i]));
+            listOfPromise.push(this.populateNameOfFeedstuff(feedstuffs[i]));
         }
         return Promise.all(listOfPromise).then((feedstuffsResult: DomainFeedstuff[]) => {
             return feedstuffsResult;
         });
     }
 
-    private loadElementsForFeedstuff(feedstuff: DomainFeedstuff): Promise<DomainFeedstuff> {
+    private populateElementsOfFeedstuff(feedstuff: DomainFeedstuff): Promise<DomainFeedstuff> {
         return this.feedstuffRepository.listElementsByFeedstuffId(feedstuff.id).then((elements: DomainFeedstuffMeasurement[]) => {
             feedstuff.elements = elements;
             return feedstuff;
         });
     }
 
-    private loadNameForFeedstuff(feedstuff: DomainFeedstuff): Promise<DomainFeedstuff> {
-        return this.feedstuffRepository.getFeedstuffById(feedstuff.id).then((result: DomainFeedstuff) => {
+    private populateNameOfFeedstuff(feedstuff: DomainFeedstuff): Promise<DomainFeedstuff> {
+        return this.feedstuffRepository.findFeedstuffByFeedstuffId(feedstuff.id).then((result: DomainFeedstuff) => {
             feedstuff.name = result.name;
             return feedstuff;
         });

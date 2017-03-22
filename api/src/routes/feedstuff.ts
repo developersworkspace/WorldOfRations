@@ -44,7 +44,7 @@ router.get('/list', function (req: Request, res: Response, next: Function) {
 router.get('/suggestedValues', function (req: Request, res: Response, next: Function) {
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let feedstuffService = new FeedstuffService(feedstuffRepository);
-    feedstuffService.getSuggestedValues(req.query.formulaId, req.query.feedstuffId).then((result: any) => {
+    feedstuffService.findSuggestedValues(req.query.formulaId, req.query.feedstuffId).then((result: any) => {
         res.json(result);
     }).catch((err: Error) => {
         res.json(err.message);

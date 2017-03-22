@@ -35,7 +35,7 @@ export class FeedstuffRepository extends Base {
         });
     }
 
-    public getFeedstuffById(feedstuffId: string): Promise<DomainFeedstuff> {
+    public findFeedstuffByFeedstuffId(feedstuffId: string): Promise<DomainFeedstuff> {
         return this.query(util.format('CALL getFeedstuffById(%s);', this.escapeAndFormat(feedstuffId))).then((getFeedstuffByIdResult: DataFeedstuff[]) => {
             if (getFeedstuffByIdResult.length == 0) {
                 return null;
@@ -45,7 +45,7 @@ export class FeedstuffRepository extends Base {
         });
     }
 
-    public getSuggestedValuesByFormulaIdAndFeedstuffId(formulaId: string, feedstuffId: string): Promise<DomainSuggestedValue> {
+    public findSuggestedValuesByFormulaIdAndFeedstuffId(formulaId: string, feedstuffId: string): Promise<DomainSuggestedValue> {
         return this.query(util.format('CALL getSuggestedValuesByFormulaIdAndFeedstuffId(%s, %s);', this.escapeAndFormat(formulaId), this.escapeAndFormat(feedstuffId)))
             .then((getSuggestedValuesByFormulaIdAndFeedstuffIdResult: DataSuggestedValue[]) => {
                 if (getSuggestedValuesByFormulaIdAndFeedstuffIdResult.length == 0) {

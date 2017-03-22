@@ -67,7 +67,7 @@ router.get('/formulation', function (req: Request, res: Response, next: Function
     let formulationRepository = new FormulationRepository(config.db);
     let formulatorService = new FormulatorService(formulaRepository, feedstuffRepository, formulationRepository);
 
-    formulatorService.getFormulation(req.query.formulationId).then((formulation: DomainFormulation) => {
+    formulatorService.findFormulation(req.query.formulationId).then((formulation: DomainFormulation) => {
         res.json(formulation);
     }).catch((err: Error) => {
         console.log(err.message);
@@ -89,7 +89,7 @@ router.get('/formulations', function (req: Request, res: Response, next: Functio
     let formulationRepository = new FormulationRepository(config.db);
     let formulatorService = new FormulatorService(formulaRepository, feedstuffRepository, formulationRepository);
     
-    formulatorService.getFormulations().then((formulations: DomainFormulation[]) => {
+    formulatorService.listFormulations().then((formulations: DomainFormulation[]) => {
         res.json(formulations);
     }).catch((err: Error) => {
         console.log(err.message);
