@@ -9,6 +9,7 @@ import { Feedstuff as DomainFeedstuff } from './../../models/feedstuff';
 
 // Imports data models
 import { Formulation as DataFormulation } from './../../data-models/formulation';
+import { FormulationFeedstuff as DataFormulationFeedstuff } from './../../data-models/formulation-feedstuff';
 
 export class FormulationRepository extends Base {
 
@@ -58,7 +59,13 @@ export class FormulationRepository extends Base {
     }
 
     public listFormulationFeedstuffByFormulationId(formulationId: string): Promise<DomainFeedstuff[]> {
-        return null;
+        return this.query(util.format('CALL listFormulationFeedstuffByFormulationId(%s);', this.escapeAndFormat(formulationId))).then((result: DataFormulationFeedstuff[]) => {
+            return result.map(x => {
+                let feedstuff = new DomainFeedstuff(x.id, x.name, x.minimum, x.maximum, x.cost);
+                feedstuff.weight = x.weight;
+                return feedstuff;
+            });
+        });
     }
 
     public listFormulations(): Promise<DomainFormulation[]> {
@@ -74,7 +81,6 @@ export class FormulationRepository extends Base {
 
                 return formulation;
             });
-
         });
     }
 }
