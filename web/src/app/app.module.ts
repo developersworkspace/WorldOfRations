@@ -2,7 +2,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { RouterModule } from '@angular/router';
+import { RouterModule, UrlSerializer } from '@angular/router';
+
+import { LowerCaseUrlSerializer } from './lower-case-url-serializer';
 
 // Plugins
 import { TypeaheadModule } from 'ng2-bootstrap';
@@ -83,7 +85,16 @@ var router = RouterModule.forRoot([
     SelectModule,
     TypeaheadModule
   ],
-  providers: [FeedstuffService, FormulaService, FormulatorService, ComponentLoaderFactory, PositioningService],
+  providers: [FeedstuffService,
+    FormulaService,
+    FormulatorService,
+    ComponentLoaderFactory,
+    PositioningService,
+    {
+      provide: UrlSerializer,
+      useClass: LowerCaseUrlSerializer
+    }
+  ],
   bootstrap: [AppComponent, NavbarComponent]
 })
 export class AppModule { }
