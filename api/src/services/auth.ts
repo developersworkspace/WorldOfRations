@@ -5,6 +5,9 @@ import * as base64 from 'base-64';
 import * as utf8 from 'utf8';
 import * as clientOAuth2 from 'client-oauth2';
 
+// Imports logger
+import { getLogger } from './../logger';
+
 export class AuthService {
 
     constructor(private baseUri: string, private jwtSecret: string, private jwtIssuer: string, private oauthConfig: any) { }
@@ -27,6 +30,8 @@ export class AuthService {
             issuer: this.jwtIssuer,
             jwtid: uuid.v4()
         });
+
+        getLogger('AuthService_encodeToken').debug(token);
 
         return token;
     }
