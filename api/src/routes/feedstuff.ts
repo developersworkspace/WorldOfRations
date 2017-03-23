@@ -9,6 +9,10 @@ import { FeedstuffService } from './../services/feedstuff';
 // Imports repositories
 import { FeedstuffRepository } from './../repositories/mysql/feedstuff';
 
+// Imports models
+import { Feedstuff as DomainFeedstuff } from './../models/feedstuff';
+import { SuggestedValue as DomainSuggestedValue } from './../models/suggested-value';
+
 let router = express.Router();
 
 /**
@@ -19,11 +23,16 @@ let router = express.Router();
  * @apiSuccess {Object[]} response Empty.
  * 
  */
-router.get('/list', function (req: Request, res: Response, next: Function) {
+router.get('/list', (req: Request, res: Response, next: Function) => {
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let feedstuffService = new FeedstuffService(feedstuffRepository);
-    feedstuffService.listFeedstuffs().then((result: any[]) => {
-        res.json(result);
+    feedstuffService.listFeedstuffs().then((result: DomainFeedstuff[]) => {
+        res.json(result.map(x => {
+            return {
+                id: x.id,
+                name: x.name
+            };
+        }));
     }).catch((err: Error) => {
         res.json(err.message);
     });
@@ -41,11 +50,14 @@ router.get('/list', function (req: Request, res: Response, next: Function) {
  * @apiSuccess {Boolean} maximum Empty.
  * 
  */
-router.get('/suggestedValues', function (req: Request, res: Response, next: Function) {
+router.get('/suggestedValues', (req: Request, res: Response, next: Function) => {
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let feedstuffService = new FeedstuffService(feedstuffRepository);
-    feedstuffService.findSuggestedValues(req.query.formulaId, req.query.feedstuffId).then((result: any) => {
-        res.json(result);
+    feedstuffService.findSuggestedValues(req.query.formulaId, req.query.feedstuffId).then((result: DomainSuggestedValue) => {
+        res.json({
+            minimum: result.minimum,
+            maximum: result.maximum
+        });
     }).catch((err: Error) => {
         res.json(err.message);
     });
@@ -60,11 +72,19 @@ router.get('/suggestedValues', function (req: Request, res: Response, next: Func
  * @apiSuccess {Object[]} response Empty.
  * 
  */
-router.get('/listExample', function (req: Request, res: Response, next: Function) {
+router.get('/listExample', (req: Request, res: Response, next: Function) => {
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let feedstuffService = new FeedstuffService(feedstuffRepository);
-    feedstuffService.listExampleFeedstuffs().then((result: any[]) => {
-        res.json(result);
+    feedstuffService.listExampleFeedstuffs().then((result: DomainFeedstuff[]) => {
+        res.json(result.map(x => {
+            return {
+                id: x.id,
+                name: x.name,
+                minimum: x.minimum,
+                maximum: x.maximum,
+                cost: x.cost
+            };
+        }));
     }).catch((err: Error) => {
         res.json(err.message);
     });

@@ -16,10 +16,15 @@ let router = express.Router();
  * @apiSuccess {Object[]} response Empty.
  * 
  */
-router.get('/list', function (req: Request, res: Response, next: Function) {
+router.get('/list', (req: Request, res: Response, next: Function) => {
     let formulaService = new FormulaService(config);
     formulaService.listFormula().then((result: any[]) => {
-        res.json(result);
+        res.json(result.map(x => {
+            return {
+                id: x.id,
+                name: x.name
+            };
+        }));
     }).catch((err: Error) => {
         res.json(err.message);
     });

@@ -31,7 +31,7 @@ let router = express.Router();
  * @apiSuccess {String} id Empty.
  * 
  */
-router.post('/formulate', function (req: Request, res: Response, next: Function) {
+router.post('/formulate', (req: Request, res: Response, next: Function) => {
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let formulaRepository = new FormulaRepository(config.db);
     let formulationRepository = new FormulationRepository(config.db);
@@ -61,16 +61,49 @@ router.post('/formulate', function (req: Request, res: Response, next: Function)
  * @apiSuccess {Number} cost Empty.
  * 
  */
-router.get('/formulation', function (req: Request, res: Response, next: Function) {
+router.get('/formulation', (req: Request, res: Response, next: Function) => {
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let formulaRepository = new FormulaRepository(config.db);
     let formulationRepository = new FormulationRepository(config.db);
     let formulatorService = new FormulatorService(formulaRepository, feedstuffRepository, formulationRepository);
 
     formulatorService.findFormulation(req.query.formulationId).then((formulation: DomainFormulation) => {
-        res.json(formulation);
+        res.json({
+            id: formulation.id,
+            feedstuffs: formulation.feedstuffs.map(x => {
+                return {
+                    id: x.id,
+                    name: x.name,
+                    weight: x.weight
+                };
+            }),
+            composition: formulation.composition.map(x => {
+                return {
+                    id: x.id,
+                    name: x.name,
+                    value: x.value,
+                    unit: x.unit,
+                    sortOrder: x.sortOrder,
+                    status: x.value < x.minimum? 'Inadequate' : x.value> x.maximum? 'Excessive' : 'Adequate'
+                };
+            }),
+            currencyCode: formulation.currencyCode,
+            cost: formulation.cost,
+            feasible: formulation.feasible,
+            supplementComposition: formulation.supplementComposition.map(x => {
+                return {
+                    id: x.id,
+                    name: x.name,
+                    unit: x.unit,
+                    sortOrder: x.sortOrder,
+                    supplementFeedstuffs: x.supplementFeedstuffs,
+                    selectedSupplementFeedstuffs: x.selectedSupplementFeedstuffs
+                };
+            }),
+
+        });
     }).catch((err: Error) => {
-        console.log(err.message);
+        res.json(err.message);
     });
 });
 
@@ -83,16 +116,24 @@ router.get('/formulation', function (req: Request, res: Response, next: Function
  * @apiSuccess {Object[]} response Empty.
  * 
  */
-router.get('/formulations', function (req: Request, res: Response, next: Function) {
+router.get('/formulations', (req: Request, res: Response, next: Function) => {
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let formulaRepository = new FormulaRepository(config.db);
     let formulationRepository = new FormulationRepository(config.db);
     let formulatorService = new FormulatorService(formulaRepository, feedstuffRepository, formulationRepository);
     
     formulatorService.listFormulations().then((formulations: DomainFormulation[]) => {
-        res.json(formulations);
+        res.json(formulations.map(x => {
+            return {
+                id: x.id,
+                formula: {
+                    id: x.formula.id,
+                    name: x.formula.name
+                }
+            }
+        }));
     }).catch((err: Error) => {
-        console.log(err.message);
+        res.json(err.message);
     });
 });
 
