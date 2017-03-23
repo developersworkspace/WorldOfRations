@@ -7,6 +7,10 @@ import * as request from 'request';
 // Imports services
 import { AuthService } from './../services/auth';
 
+// Imports logger
+import { logger } from './../logger';
+
+
 let router = express.Router();
 
 /**
@@ -57,7 +61,8 @@ router.get('/google/callback', (req: Request, res: Response, next: Function) => 
             request('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + user.accessToken, (error, response, body) => {
                 if (!error && response.statusCode == 200) {
                     let token = authService.encodeToken(JSON.parse(body).email);
-                    res.redirect(config.baseUri + '/login?token=' + token);
+                    logger.debug('JWT: ' + token);
+                    res.redirect(config.web.uri + '/login?token=' + token);
                 } else {
                     return res.status(500).send('An Error Occurred');
                 }

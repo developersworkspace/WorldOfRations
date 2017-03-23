@@ -4,6 +4,7 @@ var clean = require('gulp-clean');
 var ts = require('gulp-typescript');
 var rename = require("gulp-rename");
 var sequence = require('run-sequence');
+var watch = require('gulp-watch');
 
 // Compiles typescript files
 gulp.task('compile:ts.dev', function () {
@@ -63,4 +64,10 @@ gulp.task('build:dev', function (done) {
 
 gulp.task('build:prod', function (done) {
     sequence('clean:dist', 'compile:ts.prod', 'copy:package.json', 'rename:config', done);
+});
+
+gulp.task('watch', ['build:dev'], function () {
+    return watch('./src/**/*.ts', function () {
+        gulp.start('build:dev');
+    });
 });

@@ -30,18 +30,19 @@
     "winston": "^2.3.1"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "mocha": "^3.2.0",
     "@types/chai": "^3.4.34",
     "@types/mocha": "^2.2.38",
-    "typescript": "^2.1.5",
-    "run-sequence": "^1.2.2",
+    "@types/mongodb": "^2.1.37",
+    "@types/node": "^7.0.1",
+    "@types/winston": "^2.2.0",
+    "chai": "^3.5.0",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
     "gulp-rename": "^1.2.2",
     "gulp-typescript": "^3.1.4",
-    "@types/mongodb": "^2.1.37",
-    "@types/node": "^7.0.1",
-    "@types/winston": "^2.2.0"
+    "gulp-watch": "^4.3.11",
+    "mocha": "^3.2.0",
+    "run-sequence": "^1.2.2",
+    "typescript": "^2.1.5"
   }
 }
