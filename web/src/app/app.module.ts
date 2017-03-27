@@ -29,6 +29,7 @@ import { FeedstuffService } from './services/feedstuff.service';
 import { FormulaService } from './services/formula.service';
 import { FormulatorService } from './services/formulator.service';
 import { FooterComponent } from './footer/footer.component';
+import { OwnFeedstuffsComponent } from './own-feedstuffs/own-feedstuffs.component';
 
 
 
@@ -61,6 +62,10 @@ var router = RouterModule.forRoot([
     path: 'terms',
     component: TermsComponent
   },
+  {
+    path: 'ownfeedstuffs',
+    component: OwnFeedstuffsComponent
+  }
 ]);
 
 
@@ -75,7 +80,8 @@ var router = RouterModule.forRoot([
     FormulationComponent,
     TipsComponent,
     TermsComponent,
-    FooterComponent
+    FooterComponent,
+    OwnFeedstuffsComponent
   ],
   imports: [
     BrowserModule,
