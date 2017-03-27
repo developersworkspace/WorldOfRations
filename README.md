@@ -20,6 +20,7 @@ World of Rations is an online cloud-based ration formulation program, structured
     * **Verion 3.2** - [Release Notes](https://github.com/developersworkspace/WorldOfRations/milestone/2?closed=1) (18 February 2017)
     * **Verion 3.3** - [Release Notes](https://github.com/developersworkspace/WorldOfRations/milestone/3?closed=1) (13 March 2017)
     * **Verion 3.4** - [Release Notes](https://github.com/developersworkspace/WorldOfRations/milestone/4?closed=1) (17 March 2017)
+    * **Verion 3.5** - [Release Notes](https://github.com/developersworkspace/WorldOfRations/milestone/5?closed=1) (27 March 2017)
 
 
 The MIT License (MIT)
