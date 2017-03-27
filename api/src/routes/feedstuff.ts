@@ -54,10 +54,17 @@ router.get('/suggestedValues', (req: Request, res: Response, next: Function) => 
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let feedstuffService = new FeedstuffService(feedstuffRepository);
     feedstuffService.findSuggestedValues(req.query.formulaId, req.query.feedstuffId).then((result: DomainSuggestedValue) => {
-        res.json({
-            minimum: result.minimum,
-            maximum: result.maximum
-        });
+        if (result == null) {
+            res.json({
+                minimum: 0,
+                maximum: 1000
+            });
+        } else {
+            res.json({
+                minimum: result.minimum,
+                maximum: result.maximum
+            });
+        }
     }).catch((err: Error) => {
         res.json(err.message);
     });
