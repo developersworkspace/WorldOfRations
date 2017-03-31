@@ -1,6 +1,6 @@
 DELIMITER //
 
-CREATE PROCEDURE getFormula ( 
+CREATE PROCEDURE findFormulaByFormulaId ( 
 p_formulaId CHAR(36))
 BEGIN
 SELECT

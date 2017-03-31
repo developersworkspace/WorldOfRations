@@ -1,6 +1,6 @@
 DELIMITER //
 
-CREATE PROCEDURE getComparisonFormula (
+CREATE PROCEDURE findComparisonFormulaByFormulaId (
 p_formulaId CHAR(36))
 BEGIN
 SELECT `formulaId` AS `formulaId`

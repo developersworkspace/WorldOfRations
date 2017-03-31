@@ -32,15 +32,15 @@ export class FormulaRepository extends Base {
     }
 
     public findFormulaByFormulaId(formulaId: string) {
-        return this.query(util.format('CALL getFormula(%s)', this.escapeAndFormat(formulaId)))
-            .then((getFormulaRecordSet: DataFormula[]) => {
-                return new DomainFormula(getFormulaRecordSet[0].id, getFormulaRecordSet[0].name);
+        return this.query(util.format('CALL findFormulaByFormulaId(%s)', this.escapeAndFormat(formulaId)))
+            .then((findFormulaByFormulaIdResult: DataFormula[]) => {
+                return new DomainFormula(findFormulaByFormulaIdResult[0].id, findFormulaByFormulaIdResult[0].name);
             });
     }
 
     public findComparisonFormulaByFormulaId(formulaId: string) : Promise<DomainFormula> {
-        return this.query(util.format('CALL getComparisonFormula(%s)', this.escapeAndFormat(formulaId))).then((getComparisonFormulaRecordSet: any[]) => {
-            return new DomainFormula(getComparisonFormulaRecordSet[0].formulaId, null);
+        return this.query(util.format('CALL findComparisonFormulaByFormulaId(%s)', this.escapeAndFormat(formulaId))).then((findComparisonFormulaByFormulaIdResult: any[]) => {
+            return new DomainFormula(findComparisonFormulaByFormulaIdResult[0].formulaId, null);
         });
     }
 }

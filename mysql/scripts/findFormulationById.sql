@@ -1,6 +1,6 @@
 DELIMITER //
 
-CREATE PROCEDURE getFormulationById ( 
+CREATE PROCEDURE findFormulationById ( 
 p_formulationId CHAR(36))
 BEGIN
 SELECT 

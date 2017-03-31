@@ -8,7 +8,7 @@ CREATE TABLE worldofrations.elements
      `sortorder`    INT NOT NULL 
   ); 
 
-CREATE TABLE worldofrations.feedstuffgroups 
+CREATE TABLE worldofrations.feedstuffGroups 
   ( 
      `id`            CHAR(36) NOT NULL, 
      `parentgroupid` CHAR(36) NULL, 
@@ -26,14 +26,14 @@ CREATE TABLE worldofrations.feedstuffs
      `sortorder`   INT NOT NULL 
   );  
 
-CREATE TABLE worldofrations.feedstuffmeasurements 
+CREATE TABLE worldofrations.feedstuffMeasurements 
   ( 
      `feedstuffid` CHAR(36) NOT NULL, 
      `elementid`   CHAR(36) NOT NULL, 
      `value`       DECIMAL(20, 5) NOT NULL 
   ); 
 
-CREATE TABLE worldofrations.formulagroups 
+CREATE TABLE worldofrations.formulaGroups 
   ( 
      `id`            CHAR(36) NOT NULL, 
      `parentgroupid` CHAR(36) NULL, 
@@ -51,7 +51,7 @@ CREATE TABLE worldofrations.formulas
      `sortorder`   INT NOT NULL 
   ); 
 
-CREATE TABLE worldofrations.formulameasurements 
+CREATE TABLE worldofrations.formulaMeasurements 
   ( 
      `formulaid` CHAR(36) NOT NULL, 
      `elementid` CHAR(36) NOT NULL, 
@@ -59,7 +59,7 @@ CREATE TABLE worldofrations.formulameasurements
      `maximum`   DECIMAL(20, 5) NULL 
   ); 
 
-CREATE TABLE worldofrations.comparisonformulas 
+CREATE TABLE worldofrations.comparisonFormulas 
   ( 
      `id`        CHAR(36) NOT NULL, 
      `formulaid` CHAR(36) NOT NULL 
@@ -75,7 +75,7 @@ CREATE TABLE worldofrations.formulations
      `timestamp`    BIGINT NOT NULL 
   ); 
 
-CREATE TABLE worldofrations.formulationfeedstuffs 
+CREATE TABLE worldofrations.formulationFeedstuffs 
   ( 
      `formulationid` CHAR(36) NOT NULL, 
      `feedstuffid`   CHAR(36) NOT NULL, 
@@ -91,3 +91,18 @@ CREATE TABLE worldofrations.suggestedValues(
     `minimum`           DECIMAL         NULL,
     `maximum`           DECIMAL         NULL
 );
+
+
+CREATE TABLE worldofrations.users(
+    `userId`              CHAR(36)    NOT NULL,
+    `username`            CHAR(128)   NOT NULL,
+    `lastLoginTimestamp`  BIGINT      NOT NULL
+);
+
+
+CREATE TABLE worldofrations.userFeedstuffs(
+    `id`            CHAR(36)      NOT NULL,  
+    `name`          VARCHAR(255)  NOT NULL, 
+    `description`   VARCHAR(255)  NULL
+);
+

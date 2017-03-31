@@ -36,22 +36,22 @@ export class FeedstuffRepository extends Base {
     }
 
     public findFeedstuffByFeedstuffId(feedstuffId: string): Promise<DomainFeedstuff> {
-        return this.query(util.format('CALL getFeedstuffById(%s);', this.escapeAndFormat(feedstuffId))).then((getFeedstuffByIdResult: DataFeedstuff[]) => {
-            if (getFeedstuffByIdResult.length == 0) {
+        return this.query(util.format('CALL findFeedstuffByFeedstuffId(%s);', this.escapeAndFormat(feedstuffId))).then((findFeedstuffByFeedstuffIdResult: DataFeedstuff[]) => {
+            if (findFeedstuffByFeedstuffIdResult.length == 0) {
                 return null;
             } else {
-                return getFeedstuffByIdResult.map(x => new DomainFeedstuff(x.id, x.name, null, null, null))[0];
+                return findFeedstuffByFeedstuffIdResult.map(x => new DomainFeedstuff(x.id, x.name, null, null, null))[0];
             }
         });
     }
 
     public findSuggestedValuesByFormulaIdAndFeedstuffId(formulaId: string, feedstuffId: string): Promise<DomainSuggestedValue> {
-        return this.query(util.format('CALL getSuggestedValuesByFormulaIdAndFeedstuffId(%s, %s);', this.escapeAndFormat(formulaId), this.escapeAndFormat(feedstuffId)))
-            .then((getSuggestedValuesByFormulaIdAndFeedstuffIdResult: DataSuggestedValue[]) => {
-                if (getSuggestedValuesByFormulaIdAndFeedstuffIdResult.length == 0) {
+        return this.query(util.format('CALL findSuggestedValuesByFormulaIdAndFeedstuffId(%s, %s);', this.escapeAndFormat(formulaId), this.escapeAndFormat(feedstuffId)))
+            .then((findSuggestedValuesByFormulaIdAndFeedstuffIdResult: DataSuggestedValue[]) => {
+                if (findSuggestedValuesByFormulaIdAndFeedstuffIdResult.length == 0) {
                     return null;
                 } else {
-                    return getSuggestedValuesByFormulaIdAndFeedstuffIdResult.map(x => new DomainSuggestedValue(x.minimum, x.maximum))[0];
+                    return findSuggestedValuesByFormulaIdAndFeedstuffIdResult.map(x => new DomainSuggestedValue(x.minimum, x.maximum))[0];
                 }
             });
     }

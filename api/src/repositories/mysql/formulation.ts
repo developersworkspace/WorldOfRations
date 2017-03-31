@@ -46,7 +46,7 @@ export class FormulationRepository extends Base {
     }
 
     public findFormulationById(formulationId: string): Promise<DomainFormulation> {
-        return this.query(util.format('CALL getFormulationById(%s);', this.escapeAndFormat(formulationId))).then((result: DataFormulation[]) => {
+        return this.query(util.format('CALL findFormulationById(%s);', this.escapeAndFormat(formulationId))).then((result: DataFormulation[]) => {
 
             let formulation = new DomainFormulation(result[0].id);
             formulation.formula = new DomainFormula(result[0].formulaId, null);

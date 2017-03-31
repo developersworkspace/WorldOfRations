@@ -1,6 +1,6 @@
 DELIMITER //
 
-CREATE PROCEDURE getFeedstuffById ( 
+CREATE PROCEDURE findFeedstuffByFeedstuffId ( 
 p_feedstuffId CHAR(36))
 BEGIN
 SELECT 
