@@ -1,9 +1,9 @@
-{
+define({
   "name": "World of Rations Api",
   "version": "1.0.0",
   "description": "An affordable, user-friendly and cloud-based ‘least-cost’ ration formulation program which can be used for a very wide range of animal species.",
   "title": "World of Rations Api - World of Rations",
-  "url" : "https://worldofrations.com/api",
+  "url": "https://worldofrations.com/api",
   "sampleUrl": "https://worldofrations.com/api",
   "order": [
     "FeedstuffList",
@@ -11,7 +11,15 @@
     "FeedstuffSuggestedValues"
   ],
   "template": {
-  	"withCompare": true,
-  	"withGenerator": true
+    "withCompare": true,
+    "withGenerator": true
+  },
+  "defaultVersion": "0.0.0",
+  "apidoc": "0.3.0",
+  "generator": {
+    "name": "apidoc",
+    "time": "2017-04-01T20:34:42.005Z",
+    "url": "http://apidocjs.com",
+    "version": "0.17.3"
   }
-}
+});
