@@ -107,3 +107,9 @@ CREATE TABLE worldofrations.userFeedstuffs(
     `description`   VARCHAR(255)  NULL
 );
 
+CREATE TABLE worldofrations.userFeedstuffMeasurements(
+    `feedstuffId` CHAR(36) NOT NULL, 
+    `elementId`   CHAR(36) NOT NULL, 
+    `value`       DECIMAL(20, 5) NOT NULL 
+);
+
