@@ -7,7 +7,6 @@ import { FeedstuffService } from '../services/feedstuff.service';
 import { FormulaService } from '../services/formula.service';
 import { FormulatorService } from '../services/formulator.service';
 
-
 @Component({
   selector: 'app-formulator',
   templateUrl: './formulator.component.html',
@@ -187,7 +186,6 @@ export class FormulatorComponent implements OnInit {
   private loadFeedstuffList() {
     this.feedstuffService.listFeedstuffs().subscribe((result: any[]) => {
       this.feedstuffList = result;
-      console.log(result.length);
     }, (error: Error) => {
       this.errorMessage = 'An error has occurred while loading feedstuff';
     });

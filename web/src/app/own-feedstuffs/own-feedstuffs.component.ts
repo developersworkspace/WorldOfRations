@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
+// Services
+import { OwnFeedstuffsService } from '../services/own-feedstuffs.service';
+
 @Component({
   selector: 'app-own-feedstuffs',
   templateUrl: './own-feedstuffs.component.html',
@@ -7,9 +10,30 @@ import { Component, OnInit } from '@angular/core';
 })
 export class OwnFeedstuffsComponent implements OnInit {
 
-  constructor() { }
+  private feedstuffs: any[] = [];
+  private currentTimestamp = new Date();
+
+  private newFeedstuff: any = {
+    name: null
+  };
+
+  constructor(private ownFeedstuffsService: OwnFeedstuffsService) { }
 
   ngOnInit() {
+    this.ownFeedstuffsService.listFeedstuffsForUser().subscribe((result: any[]) => {
+      this.feedstuffs = result;
+    }, (error: Error) => {
+      //this.errorMessage = 'An error has occurred while loading feedstuff';
+    });
+  }
+
+  onClick_CreateFeedstuff() {
+    this.feedstuffs.push({
+      id: null,
+      name: this.newFeedstuff.name
+    });
+
+    this.newFeedstuff.name = null;
   }
 
 }

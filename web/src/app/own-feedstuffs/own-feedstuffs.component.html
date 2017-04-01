@@ -1,7 +1,7 @@
 <div id="showcase">
   <div class="container">
     <div class="section_header">
-      <h3>Own Feedstuffs</h3>
+      <h3>Own Feedstuffs or Products</h3>
       <br />
       <br />
       <p>
@@ -19,22 +19,17 @@
         </thead>
         <tbody>
           <tr>
-            <td>Sunflower seed hulls</td>
-            <td>6/15/2017 1:45 PM</td>
             <td>
-              <button class="btn btn-warning"><i class="fa fa-edit"></i>&nbsp;Edit</button>
+              <input class="form-control" [(ngModel)]="newFeedstuff.name" />
+            </td>
+            <td>{{currentTimestamp | date: 'dd MMMM yyyy'}}</td>
+            <td>
+              <button class="btn btn-success" (click)="onClick_CreateFeedstuff()"><i class="fa fa-plus"></i>&nbsp;Create</button>
             </td>
           </tr>
-          <tr>
-            <td>Molasses, sugarcane (syrup)</td>
-            <td>5/18/2017 2:55 PM</td>
-            <td>
-              <button class="btn btn-warning"><i class="fa fa-edit"></i>&nbsp;Edit</button>
-            </td>
-          </tr>
-          <tr>
-            <td>K, as Potassium Chloride (KCl)</td>
-            <td>11/26/2017 8:32 PM</td>
+          <tr *ngFor="let item of feedstuffs">
+            <td>{{item.name}}</td>
+            <td>N/A</td>
             <td>
               <button class="btn btn-warning"><i class="fa fa-edit"></i>&nbsp;Edit</button>
             </td>

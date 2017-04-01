@@ -22,14 +22,15 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { FormulationComponent } from './formulation/formulation.component';
 import { TipsComponent } from './tips/tips.component';
 import { TermsComponent } from './terms/terms.component';
+import { FooterComponent } from './footer/footer.component';
+import { OwnFeedstuffsComponent } from './own-feedstuffs/own-feedstuffs.component';
 
 
 // Services
 import { FeedstuffService } from './services/feedstuff.service';
 import { FormulaService } from './services/formula.service';
 import { FormulatorService } from './services/formulator.service';
-import { FooterComponent } from './footer/footer.component';
-import { OwnFeedstuffsComponent } from './own-feedstuffs/own-feedstuffs.component';
+import { OwnFeedstuffsService } from './services/own-feedstuffs.service';
 
 
 
@@ -96,6 +97,7 @@ var router = RouterModule.forRoot([
     FormulatorService,
     ComponentLoaderFactory,
     PositioningService,
+    OwnFeedstuffsService,
     {
       provide: UrlSerializer,
       useClass: LowerCaseUrlSerializer
