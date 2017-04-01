@@ -2,7 +2,7 @@
 import { FeedstuffRepository } from './../repositories/mysql/feedstuff';
 
 // Imports domain models
-import { FeedstuffMeasurement as DomainFeedstuffMeasurement} from './../models/feedstuff-measurement';
+import { FeedstuffMeasurement as DomainFeedstuffMeasurement } from './../models/feedstuff-measurement';
 import { Feedstuff as DomainFeedstuff } from './../models/feedstuff';
 import { SuggestedValue as DomainSuggestedValue } from './../models/suggested-value';
 
@@ -23,7 +23,7 @@ export class FeedstuffService {
         return this.feedstuffRepository.findSuggestedValuesByFormulaIdAndFeedstuffId(formulaId, feedstuffId);
     }
 
-    public populateElementsOfFeedstuffs(feedstuffs: DomainFeedstuff[]): Promise<DomainFeedstuff[]>{
+    public populateElementsOfFeedstuffs(feedstuffs: DomainFeedstuff[]): Promise<DomainFeedstuff[]> {
 
         let listOfPromise = [];
         for (let i = 0; i < feedstuffs.length; i++) {
@@ -43,6 +43,10 @@ export class FeedstuffService {
         return Promise.all(listOfPromise).then((feedstuffsResult: DomainFeedstuff[]) => {
             return feedstuffsResult;
         });
+    }
+
+    public listFeedstuffForUser(username: string): Promise<DomainFeedstuff[]> {
+        return this.feedstuffRepository.listFeedstuffsByUsername(username);
     }
 
     private populateElementsOfFeedstuff(feedstuff: DomainFeedstuff): Promise<DomainFeedstuff> {

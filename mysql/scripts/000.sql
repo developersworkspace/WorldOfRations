@@ -11,7 +11,7 @@ CREATE TABLE worldofrations.elements
 CREATE TABLE worldofrations.feedstuffGroups 
   ( 
      `id`            CHAR(36) NOT NULL, 
-     `parentgroupid` CHAR(36) NULL, 
+     `parentGroupId` CHAR(36) NULL, 
      `name`          VARCHAR(255) NOT NULL, 
      `description`   VARCHAR(255) NULL, 
      `sortorder`     INT NOT NULL 
@@ -20,7 +20,7 @@ CREATE TABLE worldofrations.feedstuffGroups
 CREATE TABLE worldofrations.feedstuffs 
   ( 
      `id`          CHAR(36) NOT NULL, 
-     `groupid`     CHAR(36) NOT NULL, 
+     `groupId`     CHAR(36) NOT NULL, 
      `name`        VARCHAR(255) NOT NULL, 
      `description` VARCHAR(255) NULL, 
      `sortorder`   INT NOT NULL 
@@ -28,15 +28,15 @@ CREATE TABLE worldofrations.feedstuffs
 
 CREATE TABLE worldofrations.feedstuffMeasurements 
   ( 
-     `feedstuffid` CHAR(36) NOT NULL, 
-     `elementid`   CHAR(36) NOT NULL, 
+     `feedstuffId` CHAR(36) NOT NULL, 
+     `elementId`   CHAR(36) NOT NULL, 
      `value`       DECIMAL(20, 5) NOT NULL 
   ); 
 
 CREATE TABLE worldofrations.formulaGroups 
   ( 
      `id`            CHAR(36) NOT NULL, 
-     `parentgroupid` CHAR(36) NULL, 
+     `parentGroupId` CHAR(36) NULL, 
      `name`          VARCHAR(255) NOT NULL, 
      `description`   VARCHAR(255) NULL, 
      `sortorder`     INT NOT NULL 
@@ -45,7 +45,7 @@ CREATE TABLE worldofrations.formulaGroups
 CREATE TABLE worldofrations.formulas 
   ( 
      `id`          CHAR(36) NOT NULL, 
-     `groupid`     CHAR(36) NOT NULL, 
+     `groupId`     CHAR(36) NOT NULL, 
      `name`        VARCHAR(255) NOT NULL, 
      `description` VARCHAR(255) NULL, 
      `sortorder`   INT NOT NULL 
@@ -53,8 +53,8 @@ CREATE TABLE worldofrations.formulas
 
 CREATE TABLE worldofrations.formulaMeasurements 
   ( 
-     `formulaid` CHAR(36) NOT NULL, 
-     `elementid` CHAR(36) NOT NULL, 
+     `formulaId` CHAR(36) NOT NULL, 
+     `elementId` CHAR(36) NOT NULL, 
      `minimum`   DECIMAL(20, 5) NULL, 
      `maximum`   DECIMAL(20, 5) NULL 
   ); 
@@ -62,13 +62,13 @@ CREATE TABLE worldofrations.formulaMeasurements
 CREATE TABLE worldofrations.comparisonFormulas 
   ( 
      `id`        CHAR(36) NOT NULL, 
-     `formulaid` CHAR(36) NOT NULL 
+     `formulaId` CHAR(36) NOT NULL 
   ); 
 
 CREATE TABLE worldofrations.formulations 
   ( 
      `id`           CHAR(36) NOT NULL, 
-     `formulaid`    CHAR(36) NOT NULL, 
+     `formulaId`    CHAR(36) NOT NULL, 
      `feasible`     BOOLEAN NOT NULL, 
      `cost`         NUMERIC(10, 3) NULL, 
      `currencycode` CHAR(6) NOT NULL, 
@@ -77,8 +77,8 @@ CREATE TABLE worldofrations.formulations
 
 CREATE TABLE worldofrations.formulationFeedstuffs 
   ( 
-     `formulationid` CHAR(36) NOT NULL, 
-     `feedstuffid`   CHAR(36) NOT NULL, 
+     `formulationId` CHAR(36) NOT NULL, 
+     `feedstuffId`   CHAR(36) NOT NULL, 
      `minimum`       NUMERIC(10, 3) NULL, 
      `maximum`       NUMERIC(10, 3) NOT NULL, 
      `cost`          NUMERIC(10, 3) NOT NULL, 
@@ -94,7 +94,7 @@ CREATE TABLE worldofrations.suggestedValues(
 
 
 CREATE TABLE worldofrations.users(
-    `userId`              CHAR(36)    NOT NULL,
+    `id`                  CHAR(36)    NOT NULL,
     `username`            CHAR(128)   NOT NULL,
     `lastLoginTimestamp`  BIGINT      NOT NULL
 );
@@ -102,6 +102,7 @@ CREATE TABLE worldofrations.users(
 
 CREATE TABLE worldofrations.userFeedstuffs(
     `id`            CHAR(36)      NOT NULL,  
+    `userId`        CHAR(36)      NOT NULL,
     `name`          VARCHAR(255)  NOT NULL, 
     `description`   VARCHAR(255)  NULL
 );

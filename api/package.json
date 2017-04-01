@@ -17,6 +17,7 @@
     "client-oauth2": "^3.4.1",
     "cors": "^2.8.1",
     "express": "^4.14.0",
+    "express-jwt": "^5.1.0",
     "express-winston": "^2.3.0",
     "javascript-lp-solver": "^0.4.3",
     "jsonwebtoken": "^7.3.0",
@@ -30,6 +31,7 @@
     "winston": "^2.3.1"
   },
   "devDependencies": {
+    "@types/express-jwt": "0.0.34",
     "@types/chai": "^3.4.34",
     "@types/mocha": "^2.2.38",
     "@types/mongodb": "^2.1.37",

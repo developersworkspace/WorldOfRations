@@ -1,11 +1,12 @@
 // Imports
 import express = require("express");
 import bodyParser = require('body-parser');
-import expressWinston = require('express-winston');
-import * as cluster from 'cluster';
+
 
 // Imports middleware
 import * as cors from 'cors';
+import jwt = require('express-jwt');
+import expressWinston = require('express-winston');
 
 // Imports routes
 import feedstuffRoute = require('./routes/feedstuff');
@@ -15,6 +16,9 @@ import authRoute = require('./routes/auth');
 
 // Imports logger
 import { logger } from './logger';
+
+// Imports configurations
+import { config } from './config';
 
 export class WebApi {
 
@@ -27,6 +31,11 @@ export class WebApi {
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({ extended: false }));
         app.use(cors());
+        jwt({
+            secret: config.oauth.jwtSecret,
+            audience: 'worldofrations.com',
+            issuer: config.oauth.jwtIssuer
+        });
         app.use(expressWinston.logger({
             winstonInstance: logger,
             meta: false,

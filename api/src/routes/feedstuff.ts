@@ -38,6 +38,39 @@ router.get('/list', (req: Request, res: Response, next: Function) => {
     });
 });
 
+
+/**
+ * @api {get} /feedstuff/listforuser RETRIEVE LIST OF FEEDSTUFFS FOR USER
+ * @apiName FeedstuffListForUser
+ * @apiGroup Feedstuff
+ * 
+ * @apiSuccess {Object[]} response Empty.
+ * 
+ */
+router.get('/listforuser', (req: Request, res: Response, next: Function) => {
+
+    // if (req.user == null) {
+    //     res.status(401).send('UNAUTHORIZED');
+    //     return;
+    // }
+
+    //req.user.username
+
+    let feedstuffRepository = new FeedstuffRepository(config.db);
+    let feedstuffService = new FeedstuffService(feedstuffRepository);
+
+    feedstuffService.listFeedstuffForUser('demouser').then((result: DomainFeedstuff[]) => {
+        res.json(result.map(x => {
+            return {
+                id: x.id,
+                name: x.name
+            };
+        }));
+    }).catch((err: Error) => {
+        res.json(err.message);
+    });
+});
+
 /**
  * @api {get} /feedstuff/suggestedValues RETRIEVE SUGGESTED VALUES
  * @apiName FeedstuffSuggestedValues

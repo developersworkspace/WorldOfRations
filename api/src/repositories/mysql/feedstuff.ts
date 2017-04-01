@@ -73,4 +73,10 @@ export class FeedstuffRepository extends Base {
                 return supplementElement;
             });
     }
+
+    public listFeedstuffsByUsername(username: string): Promise<DomainFeedstuff[]> {
+        return this.query(util.format('CALL listFeedstuffsByUsername(%s);', this.escapeAndFormat(username))).then((listFeedstuffsByUsernameResult: DataFeedstuff[]) => {
+            return listFeedstuffsByUsernameResult.map(x => new DomainFeedstuff(x.id, x.name, null, null, null));
+        });
+    }
 }
