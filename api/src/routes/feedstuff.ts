@@ -49,23 +49,40 @@ router.get('/list', (req: Request, res: Response, next: Function) => {
  */
 router.get('/listforuser', (req: Request, res: Response, next: Function) => {
 
-    // if (req.user == null) {
-    //     res.status(401).send('UNAUTHORIZED');
-    //     return;
-    // }
-
-    //req.user.username
-
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let feedstuffService = new FeedstuffService(feedstuffRepository);
 
-    feedstuffService.listFeedstuffForUser('demouser').then((result: DomainFeedstuff[]) => {
+    feedstuffService.listFeedstuffForUser(req.user.username).then((result: DomainFeedstuff[]) => {
         res.json(result.map(x => {
             return {
                 id: x.id,
                 name: x.name
             };
         }));
+    }).catch((err: Error) => {
+        res.json(err.message);
+    });
+});
+
+
+/**
+ * @api {post} /feedstuff/createforuser CREATE FEEDSTUFF FOR USER
+ * @apiName FeedstuffCreateForUser
+ * @apiGroup Feedstuff
+ * 
+ * @apiSuccess {Object} response Empty.
+ * 
+ */
+router.post('/createforuser', (req: Request, res: Response, next: Function) => {
+
+    let feedstuffRepository = new FeedstuffRepository(config.db);
+    let feedstuffService = new FeedstuffService(feedstuffRepository);
+
+    feedstuffService.createUserFeedstuff(req.user.username, req.body.name, req.body.description).then((createUserFeedstuffResult: DomainFeedstuff) => {
+        res.json({
+            id: createUserFeedstuffResult.id,
+            name: createUserFeedstuffResult.name
+        });
     }).catch((err: Error) => {
         res.json(err.message);
     });

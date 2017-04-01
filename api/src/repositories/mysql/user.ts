@@ -14,7 +14,7 @@ export class UserRepository extends Base {
     }
 
     public insertUser(username: string): Promise<Boolean> {
-      return this.query(util.format('CALL insertUser(%s)', this.escapeAndFormat(username))).then((insertUserResult: any[]) => {
+      return this.query(util.format('CALL insertUser(%s, %s)', this.escapeAndFormat(username), new Date().getTime() / 1000)).then((insertUserResult: any[]) => {
             return true;
         });
     }

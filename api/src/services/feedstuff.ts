@@ -1,3 +1,6 @@
+// Imports
+import * as uuid from 'uuid';
+
 // Imports repositories
 import { FeedstuffRepository } from './../repositories/mysql/feedstuff';
 
@@ -47,6 +50,13 @@ export class FeedstuffService {
 
     public listFeedstuffForUser(username: string): Promise<DomainFeedstuff[]> {
         return this.feedstuffRepository.listFeedstuffsByUsername(username);
+    }
+
+    public createUserFeedstuff(username: string, name: string, description: string): Promise<DomainFeedstuff> {
+        let id = uuid.v4();
+        return this.feedstuffRepository.insertUserFeedstuff(username, id, name, description).then((insertUserFeedstuff: Boolean) => {
+            return Promise.resolve(new DomainFeedstuff(id, name, null, null, null));
+        });
     }
 
     private populateElementsOfFeedstuff(feedstuff: DomainFeedstuff): Promise<DomainFeedstuff> {

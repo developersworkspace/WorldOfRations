@@ -25,17 +25,33 @@ export class WebApi {
     constructor(private app: express.Express, private port: number) {
         this.configureMiddleware(app);
         this.configureRoutes(app);
+        this.configureErrorHandling(app);
     }
 
     private configureMiddleware(app: express.Express) {
+
+        // Configure body-parser
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({ extended: false }));
+
+        // Configure CORS
         app.use(cors());
-        jwt({
+
+        // Configure express-jwt
+        app.use(jwt({
             secret: config.oauth.jwtSecret,
             audience: 'worldofrations.com',
             issuer: config.oauth.jwtIssuer
-        });
+        }).unless((req: express.Request) => {
+            
+            if (['/api/feedstuff/listforuser', '/api/feedstuff/createforuser'].indexOf(req.originalUrl) > -1)  {
+                return false;
+            }
+
+            return true;
+        }));
+
+        // Configure express-winston
         app.use(expressWinston.logger({
             winstonInstance: logger,
             meta: false,
@@ -48,6 +64,17 @@ export class WebApi {
         app.use("/api/formula", formulaRoute);
         app.use("/api/formulator", formulatorRoute);
         app.use("/api/auth", authRoute);
+    }
+
+    private configureErrorHandling(app: express.Express) {
+        app.use((err: Error, req : express.Request, res: express.Response, next: Function) => {
+            logger.error(err.message);
+            if (err.name === 'UnauthorizedError') {
+                res.status(401).end();
+            }else {
+                res.status(500).send(err.message);
+            }
+        });
     }
 
     public getApp() {

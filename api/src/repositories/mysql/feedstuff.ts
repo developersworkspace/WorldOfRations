@@ -79,4 +79,10 @@ export class FeedstuffRepository extends Base {
             return listFeedstuffsByUsernameResult.map(x => new DomainFeedstuff(x.id, x.name, null, null, null));
         });
     }
+
+    public insertUserFeedstuff(username: string, id: string, name: string, description: string): Promise<Boolean> {
+         return this.query(util.format('CALL insertUserFeedstuff(%s, %s, %s, %s);', this.escapeAndFormat(username), this.escapeAndFormat(id), this.escapeAndFormat(name), this.escapeAndFormat(description))).then((insertUserFeedstuffResult: any[]) => {
+            return true;
+        });
+    }
 }

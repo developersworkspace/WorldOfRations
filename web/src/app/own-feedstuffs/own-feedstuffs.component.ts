@@ -28,9 +28,11 @@ export class OwnFeedstuffsComponent implements OnInit {
   }
 
   onClick_CreateFeedstuff() {
-    this.feedstuffs.push({
-      id: null,
-      name: this.newFeedstuff.name
+
+    this.ownFeedstuffsService.createFeedstuffForUser(this.newFeedstuff.name, null).subscribe((result: any[]) => {
+      console.log(result);
+    }, (error: Error) => {
+      //this.errorMessage = 'An error has occurred while loading feedstuff';
     });
 
     this.newFeedstuff.name = null;

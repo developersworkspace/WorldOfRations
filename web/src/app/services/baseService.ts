@@ -16,7 +16,7 @@ export class BaseService {
 
         let jwtToken = localStorage.getItem('jwt.token');
         if (jwtToken != null || jwtToken == '') {
-            //headers.append('Authorization', 'Bearer ' + jwtToken);
+            headers.append('Authorization', 'Bearer ' + jwtToken);
         }
 
         return this.http.post(uri, obj, {
@@ -29,7 +29,7 @@ export class BaseService {
 
         let jwtToken = localStorage.getItem('jwt.token');
         if (jwtToken != null || jwtToken == '') {
-            //headers.append('Authorization', 'Bearer ' + jwtToken);
+            headers.append('Authorization', 'Bearer ' + jwtToken);
         }
         
         return this.http.get(uri, {
