@@ -74,7 +74,8 @@ router.get('/formulation', (req: Request, res: Response, next: Function) => {
                 return {
                     id: x.id,
                     name: x.name,
-                    weight: x.weight
+                    weight: x.weight,
+                    cost: x.cost
                 };
             }),
             composition: formulation.composition.map(x => {
@@ -100,7 +101,9 @@ router.get('/formulation', (req: Request, res: Response, next: Function) => {
                     selectedSupplementFeedstuffs: x.selectedSupplementFeedstuffs
                 };
             }),
-
+            formula: {
+                name: formulation.formula.name
+            }
         });
     }).catch((err: Error) => {
         res.json(err.message);
