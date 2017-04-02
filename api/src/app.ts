@@ -13,6 +13,7 @@ import feedstuffRoute = require('./routes/feedstuff');
 import formulaRoute = require('./routes/formula');
 import formulatorRoute = require('./routes/formulator');
 import authRoute = require('./routes/auth');
+import databaseRoute = require('./routes/database');
 
 // Imports logger
 import { logger } from './logger';
@@ -44,7 +45,7 @@ export class WebApi {
             issuer: config.oauth.jwtIssuer
         }).unless((req: express.Request) => {
             
-            if (['/api/feedstuff/listforuser', '/api/feedstuff/createforuser'].indexOf(req.originalUrl) > -1)  {
+            if (['/api/feedstuff/listforuser', '/api/feedstuff/createforuser', '/api/auth/verify'].indexOf(req.originalUrl) > -1)  {
                 return false;
             }
 
@@ -64,6 +65,7 @@ export class WebApi {
         app.use("/api/formula", formulaRoute);
         app.use("/api/formulator", formulatorRoute);
         app.use("/api/auth", authRoute);
+        app.use("/api/database", databaseRoute);
     }
 
     private configureErrorHandling(app: express.Express) {

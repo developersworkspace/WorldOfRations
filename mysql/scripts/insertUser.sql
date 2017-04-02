@@ -6,7 +6,9 @@ p_lastLoginTimestamp  BIGINT
 )
 BEGIN
 INSERT INTO worldofrations.users (`id`, `username`, `lastLoginTimestamp`) 
-SELECT uuid(), p_username, p_lastLoginTimestamp FROM users WHERE `username` != p_username LIMIT 1;
+SELECT uuid(), p_username, p_lastLoginTimestamp FROM worldofrations.users  
+WHERE NOT EXISTS ( SELECT * FROM worldofrations.users 
+                   WHERE `username` != p_username);
 END;
 //
 

@@ -17,15 +17,10 @@ let router = express.Router();
  *
  * @apiParam {String} token JSON Web Token (JWT) (RFC 7519).
  * 
- * @apiSuccess {Boolean} success If valid token, returns true, otherwise false.
+ * @apiSuccess {Object} response Empty.
  */
 router.get('/verify', (req: Request, res: Response, next: Function) => {
-    let authService = new AuthService(config.baseUri, config.oauth.jwtSecret, config.oauth.jwtIssuer, config.oauth);
-    let result = authService.verify(req.query.token);
-
-    res.json({
-        success: result
-    });
+    res.json(req.user);
 });
 
 /**

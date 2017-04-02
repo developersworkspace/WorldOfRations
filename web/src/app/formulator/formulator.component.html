@@ -51,11 +51,12 @@
           </div>
         </div>
       </div>
-      <div class="row" *ngFor="let item of feedstufffs;">
+      <div class="row" *ngFor="let item of feedstuffs;">
         <div class="form-group">
           <div class="col-md-4">
             <input [(ngModel)]="item.selectedFeedstuffName" (typeaheadOnSelect)="onUpdate_SuggestedValues($event, item)" [typeahead]="feedstuffList"
               typeaheadOptionField="name" class="form-control" />
+              <p class="text-danger">{{item.errorMessage}}</p>
           </div>
           <div class="col-md-2">
             <input class="form-control" [(ngModel)]="item.minimum" type="text" />

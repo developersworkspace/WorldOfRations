@@ -1,5 +1,14 @@
+// Imports
 import { Component, OnInit } from '@angular/core';
 import { JwtHelper } from 'angular2-jwt';
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
+
+// Import RxJs required methods
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+
+// Imports environment
+import { environment } from './../../environments/environment';
 
 
 @Component({
@@ -12,11 +21,30 @@ export class NavbarComponent implements OnInit {
   isAuthenticated: boolean;
   decodedToken: any;
 
-  constructor() { }
+  constructor(private http: Http) { }
 
   ngOnInit() {
-    this.decodedToken = localStorage.getItem('jwt.token') != null? new JwtHelper().decodeToken(localStorage.getItem('jwt.token')) : null;
-    this.isAuthenticated = localStorage.getItem('jwt.token') != null;
+
+
+    let headers = new Headers();
+
+    let jwtToken = localStorage.getItem('jwt.token');
+    if (jwtToken != null || jwtToken == '') {
+      headers.append('Authorization', 'Bearer ' + jwtToken);
+    }
+
+    return this.http.get(`${environment.api.uri}/api/auth/verify`, {
+      headers: headers
+    }).map((res: Response) => res).subscribe((result: Response) => {
+      if (result.status == 200) {
+        this.decodedToken = result.json();
+        this.isAuthenticated = true;
+      } else {
+        this.decodedToken = null;
+        this.isAuthenticated = false;
+        localStorage.removeItem('jwt.token');
+      }
+    })
   }
 
   logout() {

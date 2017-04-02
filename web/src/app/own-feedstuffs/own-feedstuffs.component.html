@@ -5,10 +5,11 @@
       <br />
       <br />
       <p>
-        
+
       </p>
     </div>
     <div class="row feature_wrapper">
+      <p class="text-danger">{{errorMessage}}</p>
       <table class="table table-striped">
         <thead>
           <tr>
@@ -21,6 +22,7 @@
           <tr>
             <td>
               <input class="form-control" [(ngModel)]="newFeedstuff.name" />
+              <p class="text-danger">{{newFeedstuff.errorMessage}}</p>
             </td>
             <td>{{currentTimestamp | date: 'dd MMMM yyyy'}}</td>
             <td>
@@ -31,7 +33,7 @@
             <td>{{item.name}}</td>
             <td>N/A</td>
             <td>
-              <button class="btn btn-warning"><i class="fa fa-edit"></i>&nbsp;Edit</button>
+              <button class="btn btn-warning" (click)="onClick_EditFeedstuff(item)"><i class="fa fa-edit"></i>&nbsp;Edit</button>
             </td>
           </tr>
         </tbody>

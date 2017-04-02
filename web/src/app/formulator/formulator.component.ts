@@ -27,7 +27,7 @@ export class FormulatorComponent implements OnInit {
   errorMessage: string = null;
   isFormulating: boolean = false;
 
-  feedstufffs: any[] = [];
+  feedstuffs: any[] = [];
   formulatorResult: any = null;
 
   constructor(private feedstuffService: FeedstuffService, private formulaService: FormulaService, private formulatorService: FormulatorService) { }
@@ -85,21 +85,23 @@ export class FormulatorComponent implements OnInit {
           instance.maximum = result.maximum;
         }
         instance.isLoading = false;
+
+        this.updateFeedstuffErrorMessages();
       });
     }
   }
 
   onSelect_Formula(item: any) {
     this.selectedFormula = item.item;
-    for (let i = 0; i < this.feedstufffs.length; i++) {
+    for (let i = 0; i < this.feedstuffs.length; i++) {
       this.onUpdate_SuggestedValues({
-        item: this.feedstufffs[i].selectedFeedstuff
-      }, this.feedstufffs[i]);
+        item: this.feedstuffs[i].selectedFeedstuff
+      }, this.feedstuffs[i]);
     }
   }
 
   onClick_AddFeedstuff() {
-    this.feedstufffs.push({
+    this.feedstuffs.push({
       selectedFeedstuffName: null,
       selectedFeedstuff: null,
       minimum: 0,
@@ -110,12 +112,12 @@ export class FormulatorComponent implements OnInit {
   }
 
   onClick_RemoveFeedstuff(item: any) {
-    this.feedstufffs.splice(this.feedstufffs.indexOf(item), 1);
+    this.feedstuffs.splice(this.feedstuffs.indexOf(item), 1);
   }
 
   onClick_ResetToDefaults() {
     this.feedstuffService.listExampleFeedstuffs().subscribe((result: any[]) => {
-      this.feedstufffs = result;
+      this.feedstuffs = result;
     }, (error: Error) => {
       this.errorMessage = 'An error has occurred while loading example feedstuff';
     });
@@ -127,28 +129,37 @@ export class FormulatorComponent implements OnInit {
       this.errorMessage = 'Please select a formula';
     } else {
 
+      let isValid = true;
 
-      for (let i = 0; i < this.feedstufffs.length; i ++) {
-        if (this.feedstufffs[i].selectedFeedstuff == null) {
-          continue;
+      this.updateFeedstuffErrorMessages();
+
+      for (let i = 0; i < this.feedstuffs.length; i++) {
+
+        if (this.feedstuffs[i].errorMessage != null) {
+          isValid = false;
         }
-        
-        if (this.feedstufffs.filter(x => x.selectedFeedstuff.id == this.feedstufffs[i].selectedFeedstuff.id).length > 1) {
+
+        if (this.feedstuffs[i].selectedFeedstuff != null && this.feedstuffs.filter(x => x.selectedFeedstuff != null && x.selectedFeedstuff.id == this.feedstuffs[i].selectedFeedstuff.id).length > 1) {
           this.errorMessage = 'Cannot have duplicate feedstuffs';
-          return;
+          isValid = false;
         }
+      }
+
+
+      if (!isValid) {
+        return;
       }
 
       this.isFormulating = true;
       this.errorMessage = null;
       let feedstuffs: any[] = [];
-      for (let i = 0; i < this.feedstufffs.length; i++) {
-        if (this.feedstufffs[i].selectedFeedstuff != null) {
+      for (let i = 0; i < this.feedstuffs.length; i++) {
+        if (this.feedstuffs[i].selectedFeedstuff != null) {
           feedstuffs.push({
-            id: this.feedstufffs[i].selectedFeedstuff.id,
-            cost: this.feedstufffs[i].cost,
-            minimum: this.feedstufffs[i].minimum,
-            maximum: this.feedstufffs[i].maximum
+            id: this.feedstuffs[i].selectedFeedstuff.id,
+            cost: this.feedstuffs[i].cost,
+            minimum: this.feedstuffs[i].minimum,
+            maximum: this.feedstuffs[i].maximum
           });
         }
       }
@@ -166,6 +177,40 @@ export class FormulatorComponent implements OnInit {
         this.isFormulating = false;
       });
     }
+  }
+
+  private updateFeedstuffErrorMessages() {
+    for (let i = 0; i < this.feedstuffs.length; i++) {
+      this.feedstuffs[i].errorMessage = this.validateFeedstuff(this.feedstuffs[i]);
+      if (this.feedstuffs[i].selectedFeedstuff != null && this.feedstuffs.filter(x => x.selectedFeedstuff != null && x.selectedFeedstuff.id == this.feedstuffs[i].selectedFeedstuff.id).length > 1) {
+        this.errorMessage = 'Cannot have duplicate feedstuffs';
+      }
+    }
+  }
+
+  private validateFeedstuff(item: any) {
+    
+    if (!item.selectedFeedstuff) {
+      return 'Please select a feedstuff';
+    }
+
+    if (this.isEmpty(item.minimum)) {
+      return 'Please enter a minimum value';
+    }
+
+    if (this.isEmpty(item.maximum)) {
+      return 'Please enter a maximum value';
+    }
+
+    if (this.isEmpty(item.cost)) {
+      return 'Please enter a cost';
+    }
+
+    return null;
+  }
+
+  private isEmpty(value) {
+    return typeof value == 'string' && !value.trim() || typeof value == 'undefined' || value === null;
   }
 
   private loadFormulaList() {
