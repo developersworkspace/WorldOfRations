@@ -15,13 +15,10 @@ export class ElementRepository extends Base {
     }
 
     public listElements(): Promise<DomainElement[]> {
-        // return this.query('CALL listFeedstuffs();').then((listFeedstuffsResult: DataFeedstuff[]) => {
-        //     return listFeedstuffsResult.map(x => new DomainFeedstuff(x.id, x.name, null, null, null));
-        // });
-
-        return Promise.resolve([
-           new DomainElement(null, 'Ca', null, null, null, null, null) 
-        ]);
+        return this.query('CALL listElements();').then((listElementsResult: DataElement[]) => {
+            return listElementsResult.map(x => new DomainElement(x.id, x.name, null, null, null, x.unit, x.sortOrder));
+        });
+      
     }
 
 }

@@ -5,7 +5,7 @@ CREATE TABLE worldofrations.elements
      `abbreviation` CHAR(36) NOT NULL, 
      `code`         CHAR(36) NOT NULL, 
      `name`         VARCHAR(255) NOT NULL, 
-     `sortorder`    INT NOT NULL 
+     `sortOrder`    INT NOT NULL 
   ); 
 
 CREATE TABLE worldofrations.feedstuffGroups 
@@ -14,7 +14,7 @@ CREATE TABLE worldofrations.feedstuffGroups
      `parentGroupId` CHAR(36) NULL, 
      `name`          VARCHAR(255) NOT NULL, 
      `description`   VARCHAR(255) NULL, 
-     `sortorder`     INT NOT NULL 
+     `sortOrder`     INT NOT NULL 
   ); 
 
 CREATE TABLE worldofrations.feedstuffs 
@@ -23,7 +23,7 @@ CREATE TABLE worldofrations.feedstuffs
      `groupId`     CHAR(36) NOT NULL, 
      `name`        VARCHAR(255) NOT NULL, 
      `description` VARCHAR(255) NULL, 
-     `sortorder`   INT NOT NULL 
+     `sortOrder`   INT NOT NULL 
   );  
 
 CREATE TABLE worldofrations.feedstuffMeasurements 
@@ -39,7 +39,7 @@ CREATE TABLE worldofrations.formulaGroups
      `parentGroupId` CHAR(36) NULL, 
      `name`          VARCHAR(255) NOT NULL, 
      `description`   VARCHAR(255) NULL, 
-     `sortorder`     INT NOT NULL 
+     `sortOrder`     INT NOT NULL 
   ); 
 
 CREATE TABLE worldofrations.formulas 
@@ -48,7 +48,7 @@ CREATE TABLE worldofrations.formulas
      `groupId`     CHAR(36) NOT NULL, 
      `name`        VARCHAR(255) NOT NULL, 
      `description` VARCHAR(255) NULL, 
-     `sortorder`   INT NOT NULL 
+     `sortOrder`   INT NOT NULL 
   ); 
 
 CREATE TABLE worldofrations.formulaMeasurements 
