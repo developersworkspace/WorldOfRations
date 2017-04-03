@@ -10,12 +10,12 @@ import { OwnFeedstuffsService } from '../services/own-feedstuffs.service';
 })
 export class OwnFeedstuffsComponent implements OnInit {
 
-  private feedstuffs: any[] = [];
-  private currentTimestamp = new Date();
+  feedstuffs: any[] = [];
+  currentTimestamp = new Date();
 
-  private errorMessage = null;
+  errorMessage = null;
 
-  private newFeedstuff: any = {
+  newFeedstuff: any = {
     name: null,
     errorMessage: null
   };
