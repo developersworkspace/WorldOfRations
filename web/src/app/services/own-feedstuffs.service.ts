@@ -29,4 +29,9 @@ export class OwnFeedstuffsService extends BaseService {
       .map((res: Response) => res.json());
   }
 
+  public listElements() {
+    return this.get(environment.api.uri + '/api/element/list')
+      .map((res: Response) => res.json());
+  }
+
 }

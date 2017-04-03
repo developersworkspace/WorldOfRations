@@ -8,7 +8,7 @@ BEGIN
 INSERT INTO worldofrations.users (`id`, `username`, `lastLoginTimestamp`) 
 SELECT uuid(), p_username, p_lastLoginTimestamp FROM worldofrations.users  
 WHERE NOT EXISTS ( SELECT * FROM worldofrations.users 
-                   WHERE `username` != p_username);
+                   WHERE `username` = p_username);
 END;
 //
 
