@@ -10,6 +10,7 @@ import expressWinston = require('express-winston');
 
 // Imports routes
 import feedstuffRoute = require('./routes/feedstuff');
+import elementRoute = require('./routes/element');
 import formulaRoute = require('./routes/formula');
 import formulatorRoute = require('./routes/formulator');
 import authRoute = require('./routes/auth');
@@ -65,6 +66,7 @@ export class WebApi {
         app.use("/api/formula", formulaRoute);
         app.use("/api/formulator", formulatorRoute);
         app.use("/api/auth", authRoute);
+        app.use("/api/element", elementRoute);
         app.use("/api/database", databaseRoute);
     }
 
