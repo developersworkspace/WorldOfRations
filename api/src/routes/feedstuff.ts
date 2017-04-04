@@ -12,6 +12,7 @@ import { FeedstuffRepository } from './../repositories/mysql/feedstuff';
 // Imports models
 import { Feedstuff as DomainFeedstuff } from './../models/feedstuff';
 import { SuggestedValue as DomainSuggestedValue } from './../models/suggested-value';
+import { FeedstuffMeasurement as DomainFeedstuffMeasurement } from './../models/feedstuff-measurement';
 
 let router = express.Router();
 
@@ -200,6 +201,34 @@ router.post('/saveUserFeedstuffMeasurements', (req: Request, res: Response, next
     let feedstuffService = new FeedstuffService(feedstuffRepository);
     feedstuffService.saveUserFeedstuffMeasurements(req.body.feedstuffId, req.body.measurements).then((result: Boolean) => {
         res.json(result);
+    }).catch((err: Error) => {
+        res.json(err.message);
+    });
+});
+
+
+/**
+ * @api {get} /feedstuff/listMeasurements RETRIEVE MEASUREMENTS OF FEEDSTUFF
+ * @apiName FeedstuffListMeasurements
+ * @apiGroup Feedstuff
+ * 
+ * @apiParam {String} feedstuffId Empty
+ * 
+ * @apiSuccess {Object[]} response Empty.
+ * 
+ */
+router.get('/listMeasurements', (req: Request, res: Response, next: Function) => {
+    let feedstuffRepository = new FeedstuffRepository(config.db);
+    let feedstuffService = new FeedstuffService(feedstuffRepository);
+    feedstuffService.listMeasurementsOfUserFeedstuff(req.query.feedstuffId).then((result: DomainFeedstuffMeasurement[]) => {
+        res.json(result.map(x => {
+            return {
+                id: x.id,
+                name: x.name,
+                value: x.value,
+                unit: x.unit
+            };
+        }));
     }).catch((err: Error) => {
         res.json(err.message);
     });

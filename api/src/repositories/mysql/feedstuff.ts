@@ -74,6 +74,21 @@ export class FeedstuffRepository extends Base {
             });
     }
 
+    public listElementsByUserFeedstuffId(feedstuffId: string): Promise<DomainFeedstuffMeasurement[]> {
+        return this.query(util.format('CALL listElementsByUserFeedstuffId(%s);', this.escapeAndFormat(feedstuffId)))
+            .then((listElementsByUserFeedstuffIdResult: DataFeedstuffMeasurement[]) => {
+
+                if (listElementsByUserFeedstuffIdResult.length == 0) {
+                    return this.query(util.format('CALL listElements();'))
+                        .then((listElementsResult: DataFeedstuffMeasurement[]) => {
+                            return listElementsResult.map(x => new DomainFeedstuffMeasurement(x.id, x.name, 0, x.unit, x.sortOrder));
+                        });
+                } else {
+                    return listElementsByUserFeedstuffIdResult.map(x => new DomainFeedstuffMeasurement(x.id, x.name, x.value, x.unit, x.sortOrder));
+                }
+            });
+    }
+
     public listFeedstuffsByUsername(username: string): Promise<DomainFeedstuff[]> {
         return this.query(util.format('CALL listFeedstuffsByUsername(%s);', this.escapeAndFormat(username))).then((listFeedstuffsByUsernameResult: DataFeedstuff[]) => {
             return listFeedstuffsByUsernameResult.map(x => new DomainFeedstuff(x.id, x.name, null, null, null));
@@ -81,12 +96,14 @@ export class FeedstuffRepository extends Base {
     }
 
     public insertUserFeedstuff(username: string, id: string, name: string, description: string): Promise<Boolean> {
-         return this.query(util.format('CALL insertUserFeedstuff(%s, %s, %s, %s);', this.escapeAndFormat(username), this.escapeAndFormat(id), this.escapeAndFormat(name), this.escapeAndFormat(description))).then((insertUserFeedstuffResult: any[]) => {
+        return this.query(util.format('CALL insertUserFeedstuff(%s, %s, %s, %s);', this.escapeAndFormat(username), this.escapeAndFormat(id), this.escapeAndFormat(name), this.escapeAndFormat(description))).then((insertUserFeedstuffResult: any[]) => {
             return true;
         });
     }
 
     public insertUserFeedstuffMeasurement(feedstuffId: string, elementId: string, value: number): Promise<Boolean> {
-         return Promise.resolve(true);
+        return this.query(util.format('CALL insertUserFeedstuffMeasurement(%s, %s, %s);', this.escapeAndFormat(feedstuffId), this.escapeAndFormat(elementId), value)).then((insertUserFeedstuffMeasurementResult: any[]) => {
+            return true;
+        });
     }
 }

@@ -14,6 +14,7 @@
           <tr>
             <th>Element</th>
             <th>Value</th>
+            <th>Unit</th>
           </tr>
         </thead>
         <tbody>
@@ -21,6 +22,9 @@
             <td>{{item.name}}</td>
             <td>
               <input class="form-control" [(ngModel)]="item.value"/>
+            </td>
+            <td>
+              {{item.unit}}
             </td>
           </tr>
         </tbody>

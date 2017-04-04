@@ -67,8 +67,13 @@ export class FeedstuffService {
         let tasks = measurements.map(x => this.feedstuffRepository.insertUserFeedstuffMeasurement(feedstuffId, x.id, x.value));
 
         return Promise.all(tasks).then((result: any[]) => {
+            
             return true;
         });
+    }
+
+    public listMeasurementsOfUserFeedstuff(feedstuffId: string): Promise<DomainFeedstuffMeasurement[]> {
+        return this.feedstuffRepository.listElementsByUserFeedstuffId(feedstuffId);
     }
 
     private populateElementsOfFeedstuff(feedstuff: DomainFeedstuff): Promise<DomainFeedstuff> {

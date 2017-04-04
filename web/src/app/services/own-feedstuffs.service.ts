@@ -29,8 +29,8 @@ export class OwnFeedstuffsService extends BaseService {
       .map((res: Response) => res.json());
   }
 
-  public listElements() {
-    return this.get(environment.api.uri + '/api/element/list')
+  public listMeasurements(feedstuffId: string) {
+    return this.get(environment.api.uri + `/api/feedstuff/listMeasurements?feedstuffId=${feedstuffId}`)
       .map((res: Response) => res.json());
   }
 

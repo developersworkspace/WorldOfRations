@@ -21,23 +21,24 @@ export class OwnFeedstuffEditComponent implements OnInit {
       let feedstuffId = params['feedstuffId'];
       this.ownFeedstuffsService.getFeedstuff(feedstuffId).subscribe((getFeedstuffResult: any) => {
         this.feedstuff = getFeedstuffResult;
-      });
-    });
+        this.feedstuff.id = feedstuffId;
 
-    this.ownFeedstuffsService.listElements().subscribe((listElementsResult: any[]) => {
-      this.elements = listElementsResult.map(x => {
-        return {
-          id: x.id,
-          name: x.name,
-          value: 0
-        };
+        this.ownFeedstuffsService.listMeasurements(feedstuffId).subscribe((listMeasurementsResult: any[]) => {
+          this.elements = listMeasurementsResult;
+        });
+
       });
     });
   }
 
   onClick_Save() {
-    this.ownFeedstuffsService.saveUserFeedstuffMeasurements(this.feedstuff.id, []).subscribe((saveUserFeedstuffMeasurementsResult: Boolean) => {
-      console.log(saveUserFeedstuffMeasurementsResult);
+    this.ownFeedstuffsService.saveUserFeedstuffMeasurements(this.feedstuff.id, this.elements.map(x => {
+      return {
+        id: x.id,
+        value: x.value
+      };
+    })).subscribe((saveUserFeedstuffMeasurementsResult: Boolean) => {
+      window.location.href = '/ownfeedstuffs';
     });
   }
 
