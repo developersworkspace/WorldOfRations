@@ -26,7 +26,7 @@ let router = express.Router();
 router.get('/list', (req: Request, res: Response, next: Function) => {
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let feedstuffService = new FeedstuffService(feedstuffRepository);
-    feedstuffService.listFeedstuffs().then((result: DomainFeedstuff[]) => {
+    feedstuffService.listFeedstuffs(req.user.username).then((result: DomainFeedstuff[]) => {
         res.json(result.map(x => {
             return {
                 id: x.id,

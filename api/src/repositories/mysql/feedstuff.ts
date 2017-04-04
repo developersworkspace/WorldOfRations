@@ -23,8 +23,8 @@ export class FeedstuffRepository extends Base {
         super(config);
     }
 
-    public listFeedstuffs(): Promise<DomainFeedstuff[]> {
-        return this.query('CALL listFeedstuffs();').then((listFeedstuffsResult: DataFeedstuff[]) => {
+    public listFeedstuffs(username: string): Promise<DomainFeedstuff[]> {
+        return this.query(util.format('CALL listFeedstuffs(%s);', this.escapeAndFormat(username))).then((listFeedstuffsResult: DataFeedstuff[]) => {
             return listFeedstuffsResult.map(x => new DomainFeedstuff(x.id, x.name, null, null, null));
         });
     }
@@ -57,7 +57,7 @@ export class FeedstuffRepository extends Base {
     }
 
     public listElementsByFeedstuffId(feedstuffId: string): Promise<DomainFeedstuffMeasurement[]> {
-        return this.query(util.format('CALL listElementsByFeedstuffId(%s)', this.escapeAndFormat(feedstuffId)))
+        return this.query(util.format('CALL listElementsByFeedstuffId(%s);', this.escapeAndFormat(feedstuffId)))
             .then((listElementsByFeedstuffIdResult: DataFeedstuffMeasurement[]) => {
                 return listElementsByFeedstuffIdResult.map(x => new DomainFeedstuffMeasurement(x.id, x.name, x.value, x.unit, x.sortOrder));
             });

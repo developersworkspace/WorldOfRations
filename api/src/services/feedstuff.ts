@@ -14,8 +14,8 @@ export class FeedstuffService {
     constructor(private feedstuffRepository: FeedstuffRepository) {
     }
 
-    public listFeedstuffs(): Promise<DomainFeedstuff[]> {
-        return this.feedstuffRepository.listFeedstuffs();
+    public listFeedstuffs(username: string): Promise<DomainFeedstuff[]> {
+        return this.feedstuffRepository.listFeedstuffs(username);
     }
 
     public listExampleFeedstuffs(): Promise<DomainFeedstuff[]> {
