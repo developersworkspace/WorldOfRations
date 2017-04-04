@@ -8,11 +8,11 @@ SELECT
 `id` AS `id`,
 `name` AS `name`
 FROM worldofrations.feedstuffs
-ORDER BY `name` ASC;
 UNION
 SELECT 
-`id` AS `id`,
-`name` AS `name`
+`userFeedstuffs`.`id` AS `id`,
+`userFeedstuffs`.`name` AS `name`
+FROM worldofrations.userFeedstuffs as `userFeedstuffs`
 INNER JOIN worldofrations.users as `users`
 ON `userFeedstuffs`.`userId` = `users`.`id` 
 AND `users`.`username` = p_username

@@ -85,4 +85,8 @@ export class FeedstuffRepository extends Base {
             return true;
         });
     }
+
+    public insertUserFeedstuffMeasurement(feedstuffId: string, elementId: string, value: number): Promise<Boolean> {
+         return Promise.resolve(true);
+    }
 }

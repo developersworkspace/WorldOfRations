@@ -20,11 +20,12 @@
           <tr *ngFor="let item of elements">
             <td>{{item.name}}</td>
             <td>
-              <input class="form-control" />
+              <input class="form-control" [(ngModel)]="item.value"/>
             </td>
           </tr>
         </tbody>
       </table>
+      <button class="btn btn-success pull-right" (click)="onClick_Save()"><i class="fa fa-save"></i>&nbsp;Save</button>
     </div>
   </div>
 </div>

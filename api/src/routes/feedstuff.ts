@@ -40,14 +40,14 @@ router.get('/list', (req: Request, res: Response, next: Function) => {
 
 
 /**
- * @api {get} /feedstuff/listforuser RETRIEVE LIST OF FEEDSTUFFS FOR USER
+ * @api {get} /feedstuff/listForUser RETRIEVE LIST OF FEEDSTUFFS FOR USER
  * @apiName FeedstuffListForUser
  * @apiGroup Feedstuff
  * 
  * @apiSuccess {Object[]} response Empty.
  * 
  */
-router.get('/listforuser', (req: Request, res: Response, next: Function) => {
+router.get('/listForUser', (req: Request, res: Response, next: Function) => {
 
 
     if (req.user == null) {
@@ -97,14 +97,14 @@ router.get('/get', (req: Request, res: Response, next: Function) => {
 
 
 /**
- * @api {post} /feedstuff/createforuser CREATE FEEDSTUFF FOR USER
+ * @api {post} /feedstuff/createForUser CREATE FEEDSTUFF FOR USER
  * @apiName FeedstuffCreateForUser
  * @apiGroup Feedstuff
  * 
  * @apiSuccess {Object} response Empty.
  * 
  */
-router.post('/createforuser', (req: Request, res: Response, next: Function) => {
+router.post('/createForUser', (req: Request, res: Response, next: Function) => {
 
 
     if (req.user == null) {
@@ -179,6 +179,27 @@ router.get('/listExample', (req: Request, res: Response, next: Function) => {
                 cost: x.cost
             };
         }));
+    }).catch((err: Error) => {
+        res.json(err.message);
+    });
+});
+
+/**
+ * @api {post} /feedstuff/saveUserFeedstuffMeasurements SAVE MEASUREMENTS OF USER FEEDSTUFF
+ * @apiName FeedstuffSaveUserFeedstuffMeasurements
+ * @apiGroup Feedstuff
+ *
+ * @apiParam {String} feedstuffId Empty.
+ * @apiParam {Object[]} measurements Empty.
+ * 
+ * @apiSuccess {Boolean} response Empty.
+ * 
+ */
+router.post('/saveUserFeedstuffMeasurements', (req: Request, res: Response, next: Function) => {
+    let feedstuffRepository = new FeedstuffRepository(config.db);
+    let feedstuffService = new FeedstuffService(feedstuffRepository);
+    feedstuffService.saveUserFeedstuffMeasurements(req.body.feedstuffId, req.body.measurements).then((result: Boolean) => {
+        res.json(result);
     }).catch((err: Error) => {
         res.json(err.message);
     });

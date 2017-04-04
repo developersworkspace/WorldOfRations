@@ -25,7 +25,19 @@ export class OwnFeedstuffEditComponent implements OnInit {
     });
 
     this.ownFeedstuffsService.listElements().subscribe((listElementsResult: any[]) => {
-      this.elements = listElementsResult;
+      this.elements = listElementsResult.map(x => {
+        return {
+          id: x.id,
+          name: x.name,
+          value: 0
+        };
+      });
+    });
+  }
+
+  onClick_Save() {
+    this.ownFeedstuffsService.saveUserFeedstuffMeasurements(this.feedstuff.id, []).subscribe((saveUserFeedstuffMeasurementsResult: Boolean) => {
+      console.log(saveUserFeedstuffMeasurementsResult);
     });
   }
 

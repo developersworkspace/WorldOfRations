@@ -63,6 +63,14 @@ export class FeedstuffService {
         return this.feedstuffRepository.findFeedstuffByFeedstuffId(feedstuffId, username);
     }
 
+    public saveUserFeedstuffMeasurements(feedstuffId: string, measurements: DomainFeedstuffMeasurement[]): Promise<Boolean> {
+        let tasks = measurements.map(x => this.feedstuffRepository.insertUserFeedstuffMeasurement(feedstuffId, x.id, x.value));
+
+        return Promise.all(tasks).then((result: any[]) => {
+            return true;
+        });
+    }
+
     private populateElementsOfFeedstuff(feedstuff: DomainFeedstuff): Promise<DomainFeedstuff> {
         return this.feedstuffRepository.listElementsByFeedstuffId(feedstuff.id).then((elements: DomainFeedstuffMeasurement[]) => {
             feedstuff.elements = elements;

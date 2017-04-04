@@ -17,12 +17,12 @@ export class OwnFeedstuffsService extends BaseService {
   }
 
   public listFeedstuffsForUser() {
-    return this.get(environment.api.uri + '/api/feedstuff/listforuser')
+    return this.get(environment.api.uri + '/api/feedstuff/listForUser')
       .map((res: Response) => res.json());
   }
 
   public createFeedstuffForUser(name: string, description: string) {
-    return this.post(environment.api.uri + '/api/feedstuff/createforuser', {
+    return this.post(environment.api.uri + '/api/feedstuff/createForUser', {
       name: name,
       description: description
     })
@@ -36,6 +36,14 @@ export class OwnFeedstuffsService extends BaseService {
 
   public getFeedstuff(feedstuffId: string) {
     return this.get(environment.api.uri + `/api/feedstuff/get?feedstuffId=${feedstuffId}`)
+      .map((res: Response) => res.json());
+  }
+
+  public saveUserFeedstuffMeasurements(feedstuffId: string, measurements: any[]) {
+    return this.post(environment.api.uri + `/api/feedstuff/saveUserFeedstuffMeasurements`, {
+      feedstuffId: feedstuffId,
+      measurements: measurements
+    })
       .map((res: Response) => res.json());
   }
 
