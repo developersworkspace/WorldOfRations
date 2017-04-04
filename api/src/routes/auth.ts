@@ -20,6 +20,12 @@ let router = express.Router();
  * @apiSuccess {Object} response Empty.
  */
 router.get('/verify', (req: Request, res: Response, next: Function) => {
+
+    if (req.user == null) {
+        res.status(401).end();
+        return;
+    }
+
     res.json(req.user);
 });
 
@@ -48,7 +54,7 @@ router.get('/google', (req: Request, res: Response, next: Function) => {
 router.get('/google/callback', (req: Request, res: Response, next: Function) => {
     let authService = new AuthService(config.baseUri, config.oauth.jwtSecret, config.oauth.jwtIssuer, config.oauth);
     let userService = new UserService(config.db);
-        let auth = authService.createClientAuths();
+    let auth = authService.createClientAuths();
     auth.googleAuth.code.getToken(req.originalUrl)
         .then((user: any) => {
             request('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + user.accessToken, (error, response, body) => {

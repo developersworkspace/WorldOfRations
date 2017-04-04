@@ -36,8 +36,8 @@ export class OwnFeedstuffsComponent implements OnInit {
       this.newFeedstuff.errorMessage = 'Please enter a name';
       return;
     }
-    this.ownFeedstuffsService.createFeedstuffForUser(this.newFeedstuff.name, null).subscribe((result: any[]) => {
-      console.log(result);
+    this.ownFeedstuffsService.createFeedstuffForUser(this.newFeedstuff.name, null).subscribe((result: any) => {
+      window.location.href = `/ownfeedstuffedit?feedstuffId=${result.id}`;
     }, (error: Error) => {
       this.newFeedstuff.errorMessage = 'An error has occurred while creating feedstuff';
     });
@@ -46,7 +46,7 @@ export class OwnFeedstuffsComponent implements OnInit {
   }
 
   onClick_EditFeedstuff(item: any) {
-    window.location.href = `/ownfeedstuffedit?id=${item.id}`;
+    window.location.href = `/ownfeedstuffedit?feedstuffId=${item.id}`;
   }
 
 }

@@ -59,7 +59,8 @@ describe('FeedstuffService', () => {
                 [
                     new DomainFeedstuff('baada53b-3a22-43ac-9ae9-2853eb136ce2', null, 10, 100, 5000),
                     new DomainFeedstuff('6d54758c-47d1-445e-b40d-4aba7d193b39', null, 10, 100, 5000)
-                ]
+                ],
+                null
             ).then((result: DomainFeedstuff[]) => {
                 expect(result).to.be.not.null;
                 expect(result.length).to.be.eq(2);

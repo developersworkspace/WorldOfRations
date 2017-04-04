@@ -35,8 +35,8 @@ export class FeedstuffRepository extends Base {
         });
     }
 
-    public findFeedstuffByFeedstuffId(feedstuffId: string): Promise<DomainFeedstuff> {
-        return this.query(util.format('CALL findFeedstuffByFeedstuffId(%s);', this.escapeAndFormat(feedstuffId))).then((findFeedstuffByFeedstuffIdResult: DataFeedstuff[]) => {
+    public findFeedstuffByFeedstuffId(feedstuffId: string, username: string): Promise<DomainFeedstuff> {
+        return this.query(util.format('CALL findFeedstuffByFeedstuffId(%s, %s);', this.escapeAndFormat(feedstuffId), this.escapeAndFormat(username))).then((findFeedstuffByFeedstuffIdResult: DataFeedstuff[]) => {
             if (findFeedstuffByFeedstuffIdResult.length == 0) {
                 return null;
             } else {

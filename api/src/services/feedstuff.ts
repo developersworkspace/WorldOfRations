@@ -37,11 +37,11 @@ export class FeedstuffService {
         });
     }
 
-    public populateNamesOfFeedstuffs(feedstuffs: DomainFeedstuff[]): Promise<DomainFeedstuff[]> {
+    public populateNamesOfFeedstuffs(feedstuffs: DomainFeedstuff[], username: string): Promise<DomainFeedstuff[]> {
 
         let listOfPromise = [];
         for (let i = 0; i < feedstuffs.length; i++) {
-            listOfPromise.push(this.populateNameOfFeedstuff(feedstuffs[i]));
+            listOfPromise.push(this.populateNameOfFeedstuff(feedstuffs[i], username));
         }
         return Promise.all(listOfPromise).then((feedstuffsResult: DomainFeedstuff[]) => {
             return feedstuffsResult;
@@ -59,6 +59,10 @@ export class FeedstuffService {
         });
     }
 
+    public findFeedstuff(feedstuffId: string, username: string): Promise<DomainFeedstuff> {
+        return this.feedstuffRepository.findFeedstuffByFeedstuffId(feedstuffId, username);
+    }
+
     private populateElementsOfFeedstuff(feedstuff: DomainFeedstuff): Promise<DomainFeedstuff> {
         return this.feedstuffRepository.listElementsByFeedstuffId(feedstuff.id).then((elements: DomainFeedstuffMeasurement[]) => {
             feedstuff.elements = elements;
@@ -66,8 +70,8 @@ export class FeedstuffService {
         });
     }
 
-    private populateNameOfFeedstuff(feedstuff: DomainFeedstuff): Promise<DomainFeedstuff> {
-        return this.feedstuffRepository.findFeedstuffByFeedstuffId(feedstuff.id).then((result: DomainFeedstuff) => {
+    private populateNameOfFeedstuff(feedstuff: DomainFeedstuff, username: string): Promise<DomainFeedstuff> {
+        return this.feedstuffRepository.findFeedstuffByFeedstuffId(feedstuff.id, username).then((result: DomainFeedstuff) => {
             feedstuff.name = result.name;
             return feedstuff;
         });

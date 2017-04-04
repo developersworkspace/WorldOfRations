@@ -49,6 +49,12 @@ router.get('/list', (req: Request, res: Response, next: Function) => {
  */
 router.get('/listforuser', (req: Request, res: Response, next: Function) => {
 
+
+    if (req.user == null) {
+        res.status(401).end();
+        return;
+    }
+
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let feedstuffService = new FeedstuffService(feedstuffRepository);
 
@@ -59,6 +65,31 @@ router.get('/listforuser', (req: Request, res: Response, next: Function) => {
                 name: x.name
             };
         }));
+    }).catch((err: Error) => {
+        res.json(err.message);
+    });
+});
+
+/**
+ * @api {get} /feedstuff/get RETRIEVE FEEDSTUFF
+ * @apiName FeedstuffGet
+ * @apiGroup Feedstuff
+ * 
+ * @apiParam {String} feedstuffId Empty.
+ * 
+ * @apiSuccess {Object[]} response Empty.
+ * 
+ */
+router.get('/get', (req: Request, res: Response, next: Function) => {
+
+    let feedstuffRepository = new FeedstuffRepository(config.db);
+    let feedstuffService = new FeedstuffService(feedstuffRepository);
+
+    feedstuffService.findFeedstuff(req.query.feedstuffId, req.user.username).then((result: DomainFeedstuff) => {
+        res.json({
+            id: result.id,
+            name: result.name
+        });
     }).catch((err: Error) => {
         res.json(err.message);
     });
@@ -75,6 +106,12 @@ router.get('/listforuser', (req: Request, res: Response, next: Function) => {
  */
 router.post('/createforuser', (req: Request, res: Response, next: Function) => {
 
+
+    if (req.user == null) {
+        res.status(401).end();
+        return;
+    }
+    
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let feedstuffService = new FeedstuffService(feedstuffRepository);
 

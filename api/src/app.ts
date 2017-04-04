@@ -43,14 +43,8 @@ export class WebApi {
         app.use(jwt({
             secret: config.oauth.jwtSecret,
             audience: 'worldofrations.com',
-            issuer: config.oauth.jwtIssuer
-        }).unless((req: express.Request) => {
-            
-            if (['/api/feedstuff/listforuser', '/api/feedstuff/createforuser', '/api/auth/verify'].indexOf(req.originalUrl) > -1)  {
-                return false;
-            }
-
-            return true;
+            issuer: config.oauth.jwtIssuer,
+            credentialsRequired: false
         }));
 
         // Configure express-winston
