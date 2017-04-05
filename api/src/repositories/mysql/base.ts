@@ -22,6 +22,7 @@ export class Base {
 
     protected query(query: string) {
         getLogger('mysql').debug(query);
+
         return new Promise((resolve: Function, reject: Function) => {
             pool.getConnection((err: Error, connection: any) => {
                 if (err) {

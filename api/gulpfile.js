@@ -11,14 +11,14 @@ gulp.task('compile:ts.dev', function () {
     return gulp
         .src(["./src/**/*.ts"], { base: './src' })
         .pipe(ts({ module: 'commonjs', target: 'es6', noImplicitAny: false, allowJs: true, allowUnreachableCode: true }))
-        .pipe(gulp.dest('./src'));
+        .pipe(gulp.dest('./dist'));
 });
 
 // Removes compiled js files
 gulp.task('clean:js', function () {
     return gulp
         .src([
-            './src/**/*.js',
+            './dist/**/*.js',
         ], { read: false })
         .pipe(clean())
 });

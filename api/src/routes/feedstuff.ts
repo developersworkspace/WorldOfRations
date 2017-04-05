@@ -16,19 +16,11 @@ import { FeedstuffMeasurement as DomainFeedstuffMeasurement } from './../models/
 
 let router = express.Router();
 
-/**
- * @api {get} /feedstuff/list RETRIEVE LIST OF FEEDSTUFFS
- * @apiName FeedstuffList
- * @apiGroup Feedstuff
- * 
- * @apiSuccess {Object[]} response Empty.
- * 
- */
 router.get('/list', (req: Request, res: Response, next: Function) => {
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let feedstuffService = new FeedstuffService(feedstuffRepository);
-    feedstuffService.listFeedstuffs(req.user.username).then((result: DomainFeedstuff[]) => {
-        res.json(result.map(x => {
+    feedstuffService.listFeedstuffs(req.user.username).then((listFeedstuffsResult: DomainFeedstuff[]) => {
+        res.json(listFeedstuffsResult.map(x => {
             return {
                 id: x.id,
                 name: x.name
@@ -39,15 +31,6 @@ router.get('/list', (req: Request, res: Response, next: Function) => {
     });
 });
 
-
-/**
- * @api {get} /feedstuff/listForUser RETRIEVE LIST OF FEEDSTUFFS FOR USER
- * @apiName FeedstuffListForUser
- * @apiGroup Feedstuff
- * 
- * @apiSuccess {Object[]} response Empty.
- * 
- */
 router.get('/listForUser', (req: Request, res: Response, next: Function) => {
 
 
@@ -59,8 +42,8 @@ router.get('/listForUser', (req: Request, res: Response, next: Function) => {
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let feedstuffService = new FeedstuffService(feedstuffRepository);
 
-    feedstuffService.listFeedstuffForUser(req.user.username).then((result: DomainFeedstuff[]) => {
-        res.json(result.map(x => {
+    feedstuffService.listFeedstuffsForUser(req.user.username).then((listFeedstuffsForUserResult: DomainFeedstuff[]) => {
+        res.json(listFeedstuffsForUserResult.map(x => {
             return {
                 id: x.id,
                 name: x.name
@@ -71,40 +54,21 @@ router.get('/listForUser', (req: Request, res: Response, next: Function) => {
     });
 });
 
-/**
- * @api {get} /feedstuff/get RETRIEVE FEEDSTUFF
- * @apiName FeedstuffGet
- * @apiGroup Feedstuff
- * 
- * @apiParam {String} feedstuffId Empty.
- * 
- * @apiSuccess {Object[]} response Empty.
- * 
- */
-router.get('/get', (req: Request, res: Response, next: Function) => {
+router.get('/findForUser', (req: Request, res: Response, next: Function) => {
 
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let feedstuffService = new FeedstuffService(feedstuffRepository);
 
-    feedstuffService.findFeedstuff(req.query.feedstuffId, req.user.username).then((result: DomainFeedstuff) => {
+    feedstuffService.findUserFeedstuff(req.query.feedstuffId, req.user.username).then((findUserFeedstuffResult: DomainFeedstuff) => {
         res.json({
-            id: result.id,
-            name: result.name
+            id: findUserFeedstuffResult.id,
+            name: findUserFeedstuffResult.name
         });
     }).catch((err: Error) => {
         res.json(err.message);
     });
 });
 
-
-/**
- * @api {post} /feedstuff/createForUser CREATE FEEDSTUFF FOR USER
- * @apiName FeedstuffCreateForUser
- * @apiGroup Feedstuff
- * 
- * @apiSuccess {Object} response Empty.
- * 
- */
 router.post('/createForUser', (req: Request, res: Response, next: Function) => {
 
 
@@ -125,32 +89,21 @@ router.post('/createForUser', (req: Request, res: Response, next: Function) => {
         res.json(err.message);
     });
 });
+ 
 
-/**
- * @api {get} /feedstuff/suggestedValues RETRIEVE SUGGESTED VALUES
- * @apiName FeedstuffSuggestedValues
- * @apiGroup Feedstuff
- *
- * @apiParam {String} formulaId Empty.
- * @apiParam {String} feedstuffId Empty.
- * 
- * @apiSuccess {Boolean} minumum Empty.
- * @apiSuccess {Boolean} maximum Empty.
- * 
- */
-router.get('/suggestedValues', (req: Request, res: Response, next: Function) => {
+router.get('/findSuggestedValues', (req: Request, res: Response, next: Function) => {
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let feedstuffService = new FeedstuffService(feedstuffRepository);
-    feedstuffService.findSuggestedValues(req.query.formulaId, req.query.feedstuffId).then((result: DomainSuggestedValue) => {
-        if (result == null) {
+    feedstuffService.findSuggestedValues(req.query.formulaId, req.query.feedstuffId).then((findSuggestedValuesResult: DomainSuggestedValue) => {
+        if (findSuggestedValuesResult == null) {
             res.json({
                 minimum: 0,
                 maximum: 1000
             });
         } else {
             res.json({
-                minimum: result.minimum,
-                maximum: result.maximum
+                minimum: findSuggestedValuesResult.minimum,
+                maximum: findSuggestedValuesResult.maximum
             });
         }
     }).catch((err: Error) => {
@@ -158,20 +111,11 @@ router.get('/suggestedValues', (req: Request, res: Response, next: Function) => 
     });
 });
 
-
-/**
- * @api {get} /feedstuff/listExample RETRIEVE LIST OF EXAMPLE FEEDSTUFFS
- * @apiName FeedstuffListExample
- * @apiGroup Feedstuff
- *
- * @apiSuccess {Object[]} response Empty.
- * 
- */
 router.get('/listExample', (req: Request, res: Response, next: Function) => {
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let feedstuffService = new FeedstuffService(feedstuffRepository);
-    feedstuffService.listExampleFeedstuffs().then((result: DomainFeedstuff[]) => {
-        res.json(result.map(x => {
+    feedstuffService.listExampleFeedstuffs().then((listExampleFeedstuffsResult: DomainFeedstuff[]) => {
+        res.json(listExampleFeedstuffsResult.map(x => {
             return {
                 id: x.id,
                 name: x.name,
@@ -185,43 +129,22 @@ router.get('/listExample', (req: Request, res: Response, next: Function) => {
     });
 });
 
-/**
- * @api {post} /feedstuff/saveUserFeedstuffMeasurements SAVE MEASUREMENTS OF USER FEEDSTUFF
- * @apiName FeedstuffSaveUserFeedstuffMeasurements
- * @apiGroup Feedstuff
- *
- * @apiParam {String} feedstuffId Empty.
- * @apiParam {Object[]} measurements Empty.
- * 
- * @apiSuccess {Boolean} response Empty.
- * 
- */
 router.post('/saveUserFeedstuffMeasurements', (req: Request, res: Response, next: Function) => {
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let feedstuffService = new FeedstuffService(feedstuffRepository);
-    feedstuffService.saveUserFeedstuffMeasurements(req.body.feedstuffId, req.body.measurements).then((result: Boolean) => {
-        res.json(result);
+    feedstuffService.saveUserFeedstuffMeasurements(req.body.feedstuffId, req.body.measurements).then((saveUserFeedstuffMeasurementsResult: Boolean) => {
+        res.json(saveUserFeedstuffMeasurementsResult);
     }).catch((err: Error) => {
         res.json(err.message);
     });
 });
 
 
-/**
- * @api {get} /feedstuff/listMeasurements RETRIEVE MEASUREMENTS OF FEEDSTUFF
- * @apiName FeedstuffListMeasurements
- * @apiGroup Feedstuff
- * 
- * @apiParam {String} feedstuffId Empty
- * 
- * @apiSuccess {Object[]} response Empty.
- * 
- */
-router.get('/listMeasurements', (req: Request, res: Response, next: Function) => {
+router.get('/listMeasurementsForUserFeedstuff', (req: Request, res: Response, next: Function) => {
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let feedstuffService = new FeedstuffService(feedstuffRepository);
-    feedstuffService.listMeasurementsOfUserFeedstuff(req.query.feedstuffId).then((result: DomainFeedstuffMeasurement[]) => {
-        res.json(result.map(x => {
+    feedstuffService.listUserFeedstuffMeasurements(req.query.feedstuffId).then((listUserFeedstuffMeasurementsResult: DomainFeedstuffMeasurement[]) => {
+        res.json(listUserFeedstuffMeasurementsResult.map(x => {
             return {
                 id: x.id,
                 name: x.name,

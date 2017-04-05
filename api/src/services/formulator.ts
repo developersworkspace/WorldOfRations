@@ -64,7 +64,7 @@ export class FormulatorService {
         formulation.cost = results.result / 1000;
         formulation.feasible = results.feasible;
 
-        return this.formulationRepository.insertFormulation(formulation).then((result: any) => {
+        return this.formulationRepository.insertFormulation(formulation).then((insertFormulationResult: any) => {
             return {
                 currencyCode: formulation.currencyCode,
                 cost: formulation.cost,
@@ -75,12 +75,12 @@ export class FormulatorService {
     }
 
     public findFormulation(formulationId: string): Promise<DomainFormulation> {
-        return this.formulationRepository.findFormulationById(formulationId).then((result: DomainFormulation) => {
-            return this.populateFormulationFeedstuffOfFormulation(result);
-        }).then((result: DomainFormulation) => {
+        return this.formulationRepository.findFormulationById(formulationId).then((findFormulationByIdResult: DomainFormulation) => {
+            return this.populateFormulationFeedstuffOfFormulation(findFormulationByIdResult);
+        }).then((populateFormulationFeedstuffOfFormulationResult: DomainFormulation) => {
             return Promise.all([
-                result, 
-                this.feedstuffService.populateElementsOfFeedstuffs(result.feedstuffs)
+                populateFormulationFeedstuffOfFormulationResult, 
+                this.feedstuffService.populateElementsOfFeedstuffs(populateFormulationFeedstuffOfFormulationResult.feedstuffs)
             ])
         }).then((results: any[]) => {
             let formulation: DomainFormulation = results[0];
@@ -90,10 +90,10 @@ export class FormulatorService {
         })
         .then((result: DomainFormulation) => {
             return this.populateCompositionOfFormulation(result);
-        }).then((result: DomainFormulation) => {
-            return this.populateSupplementFeedstuffsOfFormulation(result)
-        }).then((result: DomainFormulation) => {
-            return result;
+        }).then((populateCompositionOfFormulationResult: DomainFormulation) => {
+            return this.populateSupplementFeedstuffsOfFormulation(populateCompositionOfFormulationResult)
+        }).then((populateSupplementFeedstuffsOfFormulationResult: DomainFormulation) => {
+            return populateSupplementFeedstuffsOfFormulationResult;
         });
     }
 
@@ -120,8 +120,8 @@ export class FormulatorService {
 
 
     private populateCompositionOfFormulation(formulation: DomainFormulation): Promise<DomainFormulation> {
-        return this.formulaRepository.findComparisonFormulaByFormulaId(formulation.formula.id).then((getComparisonFormulaResult: DomainFormula) => {
-            return this.formulaRepository.listElementsByFormulaId(getComparisonFormulaResult.id).then((listElementsForFormulaResult: DomainFormulaMeasurement[]) => {
+        return this.formulaRepository.findComparisonFormulaByFormulaId(formulation.formula.id).then((findComparisonFormulaByFormulaIdResult: DomainFormula) => {
+            return this.formulaRepository.listElementsByFormulaId(findComparisonFormulaByFormulaIdResult.id).then((listElementsForFormulaResult: DomainFormulaMeasurement[]) => {
                 formulation.composition = [];
 
                 for (let i = 0; i < listElementsForFormulaResult.length; i++) {
@@ -150,8 +150,8 @@ export class FormulatorService {
     }
 
     private populateFormulationFeedstuffOfFormulation(formulation: DomainFormulation): Promise<DomainFormulation> {
-        return this.formulationRepository.listFormulationFeedstuffByFormulationId(formulation.id).then((result: DomainFeedstuff[]) => {
-            formulation.feedstuffs = result;
+        return this.formulationRepository.listFormulationFeedstuffByFormulationId(formulation.id).then((listFormulationFeedstuffByFormulationIdResult: DomainFeedstuff[]) => {
+            formulation.feedstuffs = listFormulationFeedstuffByFormulationIdResult;
             return formulation;
         });
     }

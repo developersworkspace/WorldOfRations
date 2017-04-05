@@ -1,6 +1,7 @@
 // Imports
 import { Base } from './base';
 import * as util from 'util';
+import * as co from 'co';
 
 // Imports domain models
 import { FeedstuffMeasurement as DomainFeedstuffMeasurement } from './../../models/feedstuff-measurement';
@@ -24,8 +25,13 @@ export class FeedstuffRepository extends Base {
     }
 
     public listFeedstuffs(username: string): Promise<DomainFeedstuff[]> {
-        return this.query(util.format('CALL listFeedstuffs(%s);', this.escapeAndFormat(username))).then((listFeedstuffsResult: DataFeedstuff[]) => {
-            return listFeedstuffsResult.map(x => new DomainFeedstuff(x.id, x.name, null, null, null));
+        let self = this;
+
+        return co(function* () {
+            let listFeedstuffsResult = yield self.query(util.format('CALL listFeedstuffs(%s);', this.escapeAndFormat(username)));
+
+
+             return listFeedstuffsResult.map(x => new DomainFeedstuff(x.id, x.name, null, null, null));
         });
     }
 
@@ -74,6 +80,7 @@ export class FeedstuffRepository extends Base {
             });
     }
 
+    // TODO: Move listElements call into its own repository
     public listElementsByUserFeedstuffId(feedstuffId: string): Promise<DomainFeedstuffMeasurement[]> {
         return this.query(util.format('CALL listElementsByUserFeedstuffId(%s);', this.escapeAndFormat(feedstuffId)))
             .then((listElementsByUserFeedstuffIdResult: DataFeedstuffMeasurement[]) => {
@@ -103,6 +110,14 @@ export class FeedstuffRepository extends Base {
 
     public insertUserFeedstuffMeasurement(feedstuffId: string, elementId: string, value: number): Promise<Boolean> {
         return this.query(util.format('CALL insertUserFeedstuffMeasurement(%s, %s, %s);', this.escapeAndFormat(feedstuffId), this.escapeAndFormat(elementId), value)).then((insertUserFeedstuffMeasurementResult: any[]) => {
+            return true;
+        });
+    }
+
+
+    // TODO: Create updateUserFeedstuffMeasurement SP
+    public updateUserFeedstuffMeasurement(feedstuffId: string, elementId: string, value: number): Promise<Boolean> {
+        return this.query(util.format('CALL updateUserFeedstuffMeasurement(%s, %s, %s);', this.escapeAndFormat(feedstuffId), this.escapeAndFormat(elementId), value)).then((insertUserFeedstuffMeasurementResult: any[]) => {
             return true;
         });
     }

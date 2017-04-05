@@ -20,16 +20,6 @@ export class Formulation {
     constructor(public id: string) {
 
     }
-    
-    clean() {
-        this.feedstuffs = this.feedstuffs.map(x => {
-            x.elements = null;
-            return x;
-        });
-
-        this.formula.elements = null;
-        
-    }
 
     getDataFormalation() {
         return new DataFormulation(this.id, this.formula.id, null, this.feasible, this.cost, this.currencyCode, new Date().getTime());

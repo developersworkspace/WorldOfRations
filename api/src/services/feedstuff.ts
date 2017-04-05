@@ -48,7 +48,7 @@ export class FeedstuffService {
         });
     }
 
-    public listFeedstuffForUser(username: string): Promise<DomainFeedstuff[]> {
+    public listFeedstuffsForUser(username: string): Promise<DomainFeedstuff[]> {
         return this.feedstuffRepository.listFeedstuffsByUsername(username);
     }
 
@@ -59,7 +59,8 @@ export class FeedstuffService {
         });
     }
 
-    public findFeedstuff(feedstuffId: string, username: string): Promise<DomainFeedstuff> {
+    // TODO: Return user feedstuff only
+    public findUserFeedstuff(feedstuffId: string, username: string): Promise<DomainFeedstuff> {
         return this.feedstuffRepository.findFeedstuffByFeedstuffId(feedstuffId, username);
     }
 
@@ -72,20 +73,20 @@ export class FeedstuffService {
         });
     }
 
-    public listMeasurementsOfUserFeedstuff(feedstuffId: string): Promise<DomainFeedstuffMeasurement[]> {
+    public listUserFeedstuffMeasurements(feedstuffId: string): Promise<DomainFeedstuffMeasurement[]> {
         return this.feedstuffRepository.listElementsByUserFeedstuffId(feedstuffId);
     }
 
     private populateElementsOfFeedstuff(feedstuff: DomainFeedstuff): Promise<DomainFeedstuff> {
-        return this.feedstuffRepository.listElementsByFeedstuffId(feedstuff.id).then((elements: DomainFeedstuffMeasurement[]) => {
-            feedstuff.elements = elements;
+        return this.feedstuffRepository.listElementsByFeedstuffId(feedstuff.id).then((listElementsByFeedstuffIdResult: DomainFeedstuffMeasurement[]) => {
+            feedstuff.elements = listElementsByFeedstuffIdResult;
             return feedstuff;
         });
     }
 
     private populateNameOfFeedstuff(feedstuff: DomainFeedstuff, username: string): Promise<DomainFeedstuff> {
-        return this.feedstuffRepository.findFeedstuffByFeedstuffId(feedstuff.id, username).then((result: DomainFeedstuff) => {
-            feedstuff.name = result.name;
+        return this.feedstuffRepository.findFeedstuffByFeedstuffId(feedstuff.id, username).then((findFeedstuffByFeedstuffIdResult: DomainFeedstuff) => {
+            feedstuff.name = findFeedstuffByFeedstuffIdResult.name;
             return feedstuff;
         });
     }

@@ -8,18 +8,10 @@ import { FormulaService } from './../services/formula';
 
 let router = express.Router();
 
-/**
- * @api {get} /formula/list RETRIEVE LIST OF FORMULAS
- * @apiName FormulaList
- * @apiGroup Formula
- * 
- * @apiSuccess {Object[]} response Empty.
- * 
- */
 router.get('/list', (req: Request, res: Response, next: Function) => {
     let formulaService = new FormulaService(config);
-    formulaService.listFormula().then((result: any[]) => {
-        res.json(result.map(x => {
+    formulaService.listFormula().then((listFormulaResult: any[]) => {
+        res.json(listFormulaResult.map(x => {
             return {
                 id: x.id,
                 name: x.name

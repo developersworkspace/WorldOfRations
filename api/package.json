@@ -4,10 +4,9 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "docs": "apidoc -i ./src/ -o docs/",
     "build": "gulp build:prod",
-    "start": "gulp build:dev & node ./src/app.js",
-    "test": "gulp build:dev & mocha --timeout=5000 ./src/**/*.test.js & gulp clean:js"
+    "start": "gulp build:dev & node ./dist/app.js",
+    "test": "gulp build:dev & mocha --timeout=5000 ./dist/**/*.test.js & gulp clean:js"
   },
   "author": "Barend Erasmus",
   "license": "MIT",
@@ -15,6 +14,7 @@
     "base-64": "^0.1.0",
     "body-parser": "^1.16.0",
     "client-oauth2": "^3.4.1",
+    "co": "^4.6.0",
     "cors": "^2.8.1",
     "express": "^4.14.0",
     "express-jwt": "^5.1.0",

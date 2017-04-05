@@ -16,61 +16,31 @@ import { FormulatorService } from './../services/formulator';
 
 let router = express.Router();
 
-
-/**
- * @api {POST} /formulator/formulate RETRIEVE LIST OF FORMULAS
- * @apiName FormulatorFormulate
- * @apiGroup Formulator
- * 
- * @apiParam {Object[]} feedstuffs Empty.
- * @apiParam {String} formulaId Empty.
- * @apiParam {String} currencyCode Empty.
- * 
- * @apiSuccess {Number} cost Empty.
- * @apiSuccess {Boolean} feasible Empty.
- * @apiSuccess {String} id Empty.
- * 
- */
 router.post('/formulate', (req: Request, res: Response, next: Function) => {
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let formulaRepository = new FormulaRepository(config.db);
     let formulationRepository = new FormulationRepository(config.db);
     let formulatorService = new FormulatorService(formulaRepository, feedstuffRepository, formulationRepository);
 
-    formulatorService.createFormulation(req.body.feedstuffs, req.body.formulaId, req.body.currencyCode).then((formulation: DomainFormulation) => {
-        formulatorService.formulate(formulation).then((result: any) => {
-            res.json(result);
+    formulatorService.createFormulation(req.body.feedstuffs, req.body.formulaId, req.body.currencyCode).then((createFormulationResult: DomainFormulation) => {
+        formulatorService.formulate(createFormulationResult).then((formulateResult: any) => {
+            res.json(formulateResult);
         });
     }).catch((err: Error) => {
-        console.log(err.message);
+        res.json(err.message);
     });
 });
 
-/**
- * @api {get} /formulator/formulation RETRIEVE LIST OF FORMULAS
- * @apiName FormulatorFormulation
- * @apiGroup Formulator
- * 
- * @apiParam {String} formulationId Empty.
- * 
- * @apiSuccess {String} id Empty.
- * @apiSuccess {Object[]} feedstuffs Empty.
- * @apiSuccess {Object[]} composition Empty.
- * @apiSuccess {Object} formula Empty.
- * @apiSuccess {Boolean} feasible Empty.
- * @apiSuccess {Number} cost Empty.
- * 
- */
 router.get('/formulation', (req: Request, res: Response, next: Function) => {
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let formulaRepository = new FormulaRepository(config.db);
     let formulationRepository = new FormulationRepository(config.db);
     let formulatorService = new FormulatorService(formulaRepository, feedstuffRepository, formulationRepository);
 
-    formulatorService.findFormulation(req.query.formulationId).then((formulation: DomainFormulation) => {
+    formulatorService.findFormulation(req.query.formulationId).then((findFormulationResult: DomainFormulation) => {
         res.json({
-            id: formulation.id,
-            feedstuffs: formulation.feedstuffs.map(x => {
+            id: findFormulationResult.id,
+            feedstuffs: findFormulationResult.feedstuffs.map(x => {
                 return {
                     id: x.id,
                     name: x.name,
@@ -78,7 +48,7 @@ router.get('/formulation', (req: Request, res: Response, next: Function) => {
                     cost: x.cost
                 };
             }),
-            composition: formulation.composition.map(x => {
+            composition: findFormulationResult.composition.map(x => {
                 return {
                     id: x.id,
                     name: x.name,
@@ -88,10 +58,10 @@ router.get('/formulation', (req: Request, res: Response, next: Function) => {
                     status: x.value < x.minimum? 'Inadequate' : x.value> x.maximum? 'Excessive' : 'Adequate'
                 };
             }),
-            currencyCode: formulation.currencyCode,
-            cost: formulation.cost,
-            feasible: formulation.feasible,
-            supplementComposition: formulation.supplementComposition.map(x => {
+            currencyCode: findFormulationResult.currencyCode,
+            cost: findFormulationResult.cost,
+            feasible: findFormulationResult.feasible,
+            supplementComposition: findFormulationResult.supplementComposition.map(x => {
                 return {
                     id: x.id,
                     name: x.name,
@@ -102,7 +72,7 @@ router.get('/formulation', (req: Request, res: Response, next: Function) => {
                 };
             }),
             formula: {
-                name: formulation.formula.name
+                name: findFormulationResult.formula.name
             }
         });
     }).catch((err: Error) => {
@@ -110,23 +80,14 @@ router.get('/formulation', (req: Request, res: Response, next: Function) => {
     });
 });
 
-
-/**
- * @api {get} /formulator/formulations RETRIEVE LIST OF FORMULATIONS
- * @apiName FormulatorFormulations
- * @apiGroup Formulator
- * 
- * @apiSuccess {Object[]} response Empty.
- * 
- */
 router.get('/formulations', (req: Request, res: Response, next: Function) => {
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let formulaRepository = new FormulaRepository(config.db);
     let formulationRepository = new FormulationRepository(config.db);
     let formulatorService = new FormulatorService(formulaRepository, feedstuffRepository, formulationRepository);
     
-    formulatorService.listFormulations().then((formulations: DomainFormulation[]) => {
-        res.json(formulations.map(x => {
+    formulatorService.listFormulations().then((listFormulationsResult: DomainFormulation[]) => {
+        res.json(listFormulationsResult.map(x => {
             return {
                 id: x.id,
                 formula: {
