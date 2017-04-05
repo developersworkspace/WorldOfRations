@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import { FeedstuffService } from './feedstuff';
 
 // Imports repositories
-import { FeedstuffRepository } from './../repositories/mysql/feedstuff';
+import { MockFeedstuffRepository } from './../repositories/mock/feedstuff';
 
 // Imports domain models
 import { Feedstuff as DomainFeedstuff } from './../models/feedstuff';
@@ -15,20 +15,11 @@ import { SuggestedValue as DomainSuggestedValue } from './../models/suggested-va
 describe('FeedstuffService', () => {
 
     let feedstuffService: FeedstuffService = null;
-    
+
+    let validUsername = 'ValidUsername';
 
     beforeEach(() => {
-        let feedstuffRepository = new FeedstuffRepository(null);
-        
-        feedstuffRepository.listElementsByFeedstuffId = () => {
-            return Promise.resolve([
-                new DomainFeedstuffMeasurement('', 'Element1', randomNumber(30, 400), '%', randomNumber(1,100))
-            ]);
-        };
-
-        feedstuffRepository.findFeedstuffByFeedstuffId = () => {
-            return Promise.resolve(new DomainFeedstuff('baada53b-3a22-43ac-9ae9-2853eb136ce2', 'Feedstuff1', null, null, null));
-        };
+        let feedstuffRepository = new MockFeedstuffRepository(null);
 
         feedstuffService = new FeedstuffService(feedstuffRepository);
     });
@@ -37,8 +28,8 @@ describe('FeedstuffService', () => {
         it('should return list of feedstuffs where elements are populated', () => {
             return feedstuffService.populateElementsOfFeedstuffs(
                 [
-                    new DomainFeedstuff('baada53b-3a22-43ac-9ae9-2853eb136ce2', null, 10, 100, 5000),
-                    new DomainFeedstuff('6d54758c-47d1-445e-b40d-4aba7d193b39', null, 10, 100, 5000)
+                    new DomainFeedstuff('1', null, 10, 100, 5000),
+                    new DomainFeedstuff('2', null, 10, 100, 5000)
                 ]
             ).then((result: DomainFeedstuff[]) => {
                 expect(result).to.be.not.null;
@@ -57,8 +48,8 @@ describe('FeedstuffService', () => {
         it('should return list of feedstuffs where names are populated', () => {
             return feedstuffService.populateNamesOfFeedstuffs(
                 [
-                    new DomainFeedstuff('baada53b-3a22-43ac-9ae9-2853eb136ce2', null, 10, 100, 5000),
-                    new DomainFeedstuff('6d54758c-47d1-445e-b40d-4aba7d193b39', null, 10, 100, 5000)
+                    new DomainFeedstuff('1', null, 10, 100, 5000),
+                    new DomainFeedstuff('2', null, 10, 100, 5000)
                 ],
                 null
             ).then((result: DomainFeedstuff[]) => {
@@ -67,6 +58,21 @@ describe('FeedstuffService', () => {
 
                 expect(result[0].name).to.be.not.null;
                 expect(result[1].name).to.be.not.null;
+            });
+        });
+    });
+
+
+    describe('listFeedstuffs', () => {
+        it('should return list of feedstuffs given null username', () => {
+            return feedstuffService.listFeedstuffs(null).then((listFeedstuffsResult: DomainFeedstuff[]) => {
+                expect(listFeedstuffsResult.length).to.be.eq(4);
+            });
+        });
+
+        it('should return list of feedstuffs given valid username', () => {
+            return feedstuffService.listFeedstuffs(validUsername).then((listFeedstuffsResult: DomainFeedstuff[]) => {
+                expect(listFeedstuffsResult.length).to.be.eq(7);
             });
         });
     });

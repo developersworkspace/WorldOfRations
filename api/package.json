@@ -6,7 +6,8 @@
   "scripts": {
     "build": "gulp build:prod",
     "start": "gulp build:dev & node ./dist/app.js",
-    "test": "gulp build:dev & mocha --timeout=5000 ./dist/**/*.test.js & gulp clean:js"
+    "test": "gulp build:dev & mocha --timeout=5000 ./dist/**/*.test.js & gulp clean:js",
+    "cover": "gulp build:dev & istanbul cover node_modules/mocha/bin/_mocha --root ./dist ./dist/**/*.test.js & gulp clean:js"
   },
   "author": "Barend Erasmus",
   "license": "MIT",

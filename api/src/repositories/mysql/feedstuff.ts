@@ -33,7 +33,6 @@ export class FeedstuffRepository extends Base implements IFeedstuffRepository {
         return co(function* () {
             let listFeedstuffsResult: DataFeedstuff[] = yield self.query(util.format('CALL listFeedstuffs(%s);', self.escapeAndFormat(username)));
 
-
             return listFeedstuffsResult.map(x => new DomainFeedstuff(x.id, x.name, null, null, null));
         });
     }
@@ -46,7 +45,6 @@ export class FeedstuffRepository extends Base implements IFeedstuffRepository {
 
             return listExampleFeedstuffsResult.map(x => new DomainFeedstuff(x.id, x.name, x.minimum, x.maximum, x.cost));
         });
-
     }
 
     public findFeedstuffByFeedstuffId(feedstuffId: string, username: string): Promise<DomainFeedstuff> {

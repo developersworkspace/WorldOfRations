@@ -31,8 +31,23 @@ export class MockFeedstuffRepository implements IFeedstuffRepository {
         new DomainFeedstuff('3', 'Feedstuff3', 100, 700, 400)
     ];
 
+
+    private userFeedstuffs = {
+        'ValidUsername': [
+            new DomainFeedstuff('5', 'Feedstuff5', null, null, null),
+            new DomainFeedstuff('6', 'Feedstuff6', null, null, null),
+            new DomainFeedstuff('7', 'Feedstuff7', null, null, null)
+        ]
+    }
+
     private feedstuffMeasurements = {
         '1': [
+            new DomainFeedstuffMeasurement('1', 'Element1', 5, '%', 1)
+        ],
+        '2': [
+            new DomainFeedstuffMeasurement('1', 'Element1', 5, '%', 1)
+        ],
+        '3': [
             new DomainFeedstuffMeasurement('1', 'Element1', 5, '%', 1)
         ]
     }
@@ -42,7 +57,11 @@ export class MockFeedstuffRepository implements IFeedstuffRepository {
     }
 
     public listFeedstuffs(username: string): Promise<DomainFeedstuff[]> {
+        if (username == null) {
         return Promise.resolve(this.feedstuffs);
+        }else {
+            return Promise.resolve(this.feedstuffs.concat(this.userFeedstuffs[username]));
+        }
     }
 
     public listExampleFeedstuffs(): Promise<DomainFeedstuff[]> {
