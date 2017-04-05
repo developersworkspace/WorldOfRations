@@ -28,21 +28,30 @@ export class FeedstuffRepository extends Base {
         let self = this;
 
         return co(function* () {
-            let listFeedstuffsResult = yield self.query(util.format('CALL listFeedstuffs(%s);', this.escapeAndFormat(username)));
+            let listFeedstuffsResult: DataFeedstuff[] = yield self.query(util.format('CALL listFeedstuffs(%s);', self.escapeAndFormat(username)));
 
 
-             return listFeedstuffsResult.map(x => new DomainFeedstuff(x.id, x.name, null, null, null));
+            return listFeedstuffsResult.map(x => new DomainFeedstuff(x.id, x.name, null, null, null));
         });
     }
 
     public listExampleFeedstuffs(): Promise<DomainFeedstuff[]> {
-        return this.query('CALL listExampleFeedstuffs();').then((listExampleFeedstuffsResult: DataExampleFeedstuff[]) => {
+        let self = this;
+
+        return co(function* () {
+            let listExampleFeedstuffsResult: DataExampleFeedstuff[] = yield self.query('CALL listExampleFeedstuffs();');
+
             return listExampleFeedstuffsResult.map(x => new DomainFeedstuff(x.id, x.name, x.minimum, x.maximum, x.cost));
         });
+
     }
 
     public findFeedstuffByFeedstuffId(feedstuffId: string, username: string): Promise<DomainFeedstuff> {
-        return this.query(util.format('CALL findFeedstuffByFeedstuffId(%s, %s);', this.escapeAndFormat(feedstuffId), this.escapeAndFormat(username))).then((findFeedstuffByFeedstuffIdResult: DataFeedstuff[]) => {
+        let self = this;
+
+        return co(function* () {
+            let findFeedstuffByFeedstuffIdResult: DataFeedstuff[] = yield self.query(util.format('CALL findFeedstuffByFeedstuffId(%s, %s);', self.escapeAndFormat(feedstuffId), self.escapeAndFormat(username)));
+
             if (findFeedstuffByFeedstuffIdResult.length == 0) {
                 return null;
             } else {
@@ -52,64 +61,83 @@ export class FeedstuffRepository extends Base {
     }
 
     public findSuggestedValuesByFormulaIdAndFeedstuffId(formulaId: string, feedstuffId: string): Promise<DomainSuggestedValue> {
-        return this.query(util.format('CALL findSuggestedValuesByFormulaIdAndFeedstuffId(%s, %s);', this.escapeAndFormat(formulaId), this.escapeAndFormat(feedstuffId)))
-            .then((findSuggestedValuesByFormulaIdAndFeedstuffIdResult: DataSuggestedValue[]) => {
-                if (findSuggestedValuesByFormulaIdAndFeedstuffIdResult.length == 0) {
-                    return null;
-                } else {
-                    return findSuggestedValuesByFormulaIdAndFeedstuffIdResult.map(x => new DomainSuggestedValue(x.minimum, x.maximum))[0];
-                }
-            });
+        let self = this;
+
+        return co(function* () {
+            let findSuggestedValuesByFormulaIdAndFeedstuffIdResult: DataSuggestedValue[] = yield self.query(util.format('CALL findSuggestedValuesByFormulaIdAndFeedstuffId(%s, %s);', self.escapeAndFormat(formulaId), self.escapeAndFormat(feedstuffId)));
+
+            if (findSuggestedValuesByFormulaIdAndFeedstuffIdResult.length == 0) {
+                return null;
+            } else {
+                return findSuggestedValuesByFormulaIdAndFeedstuffIdResult.map(x => new DomainSuggestedValue(x.minimum, x.maximum))[0];
+            }
+        });
     }
 
     public listElementsByFeedstuffId(feedstuffId: string): Promise<DomainFeedstuffMeasurement[]> {
-        return this.query(util.format('CALL listElementsByFeedstuffId(%s);', this.escapeAndFormat(feedstuffId)))
-            .then((listElementsByFeedstuffIdResult: DataFeedstuffMeasurement[]) => {
-                return listElementsByFeedstuffIdResult.map(x => new DomainFeedstuffMeasurement(x.id, x.name, x.value, x.unit, x.sortOrder));
-            });
+        let self = this;
+
+        return co(function* () {
+            let listElementsByFeedstuffIdResult: DataFeedstuffMeasurement[] = yield self.query(util.format('CALL listElementsByFeedstuffId(%s);', self.escapeAndFormat(feedstuffId)));
+
+            return listElementsByFeedstuffIdResult.map(x => new DomainFeedstuffMeasurement(x.id, x.name, x.value, x.unit, x.sortOrder));
+        });
     }
 
     public listSupplementFeedstuffByElementId(element: DomainCompositionElement): Promise<DomainSupplementElement> {
-        return this.query(util.format('CALL listSupplementFeedstuffByElementId(%s, %s);', this.escapeAndFormat(element.id), (element.minimum * 1000) - (element.value * 1000)))
-            .then((getSupplementValuesRecordSet: DataSupplementFeedstuff[]) => {
-                let supplementElement = new DomainSupplementElement(element.id, element.name, element.unit, element.sortOrder);
+        let self = this;
 
-                supplementElement.supplementFeedstuffs = getSupplementValuesRecordSet.map(x => new DomainSupplementFeedstuff(x.id, x.name, x.weight));
-                supplementElement.selectedSupplementFeedstuffs = supplementElement.supplementFeedstuffs.length == 0 ? [] : [supplementElement.supplementFeedstuffs[0]];
-                return supplementElement;
-            });
+        return co(function* () {
+            let listSupplementFeedstuffByElementIdResult: DataSupplementFeedstuff[] = yield self.query(util.format('CALL listSupplementFeedstuffByElementId(%s, %s);', self.escapeAndFormat(element.id), (element.minimum * 1000) - (element.value * 1000)));
+
+            let supplementElement = new DomainSupplementElement(element.id, element.name, element.unit, element.sortOrder);
+
+            supplementElement.supplementFeedstuffs = listSupplementFeedstuffByElementIdResult.map(x => new DomainSupplementFeedstuff(x.id, x.name, x.weight));
+            supplementElement.selectedSupplementFeedstuffs = supplementElement.supplementFeedstuffs.length == 0 ? [] : [supplementElement.supplementFeedstuffs[0]];
+            return supplementElement;
+        });
     }
 
     // TODO: Move listElements call into its own repository
     public listElementsByUserFeedstuffId(feedstuffId: string): Promise<DomainFeedstuffMeasurement[]> {
-        return this.query(util.format('CALL listElementsByUserFeedstuffId(%s);', this.escapeAndFormat(feedstuffId)))
-            .then((listElementsByUserFeedstuffIdResult: DataFeedstuffMeasurement[]) => {
+        let self = this;
 
-                if (listElementsByUserFeedstuffIdResult.length == 0) {
-                    return this.query(util.format('CALL listElements();'))
-                        .then((listElementsResult: DataFeedstuffMeasurement[]) => {
-                            return listElementsResult.map(x => new DomainFeedstuffMeasurement(x.id, x.name, 0, x.unit, x.sortOrder));
-                        });
-                } else {
-                    return listElementsByUserFeedstuffIdResult.map(x => new DomainFeedstuffMeasurement(x.id, x.name, x.value, x.unit, x.sortOrder));
-                }
-            });
+        return co(function* () {
+            let listElementsByUserFeedstuffIdResult: DataFeedstuffMeasurement[] = yield self.query(util.format('CALL listElementsByUserFeedstuffId(%s);', self.escapeAndFormat(feedstuffId)));
+
+            if (listElementsByUserFeedstuffIdResult.length == 0) {
+                let listElementsResult: DataFeedstuffMeasurement[] = yield self.query(util.format('CALL listElements();'));
+
+                return listElementsResult.map(x => new DomainFeedstuffMeasurement(x.id, x.name, 0, x.unit, x.sortOrder));
+            } else {
+                return listElementsByUserFeedstuffIdResult.map(x => new DomainFeedstuffMeasurement(x.id, x.name, x.value, x.unit, x.sortOrder));
+            }
+        });
     }
 
     public listFeedstuffsByUsername(username: string): Promise<DomainFeedstuff[]> {
-        return this.query(util.format('CALL listFeedstuffsByUsername(%s);', this.escapeAndFormat(username))).then((listFeedstuffsByUsernameResult: DataFeedstuff[]) => {
+        let self = this;
+
+        return co(function* () {
+            let listFeedstuffsByUsernameResult: DataFeedstuff[] = yield self.query(util.format('CALL listFeedstuffsByUsername(%s);', self.escapeAndFormat(username)));
             return listFeedstuffsByUsernameResult.map(x => new DomainFeedstuff(x.id, x.name, null, null, null));
         });
     }
 
     public insertUserFeedstuff(username: string, id: string, name: string, description: string): Promise<Boolean> {
-        return this.query(util.format('CALL insertUserFeedstuff(%s, %s, %s, %s);', this.escapeAndFormat(username), this.escapeAndFormat(id), this.escapeAndFormat(name), this.escapeAndFormat(description))).then((insertUserFeedstuffResult: any[]) => {
+        let self = this;
+
+        return co(function* () {
+            let insertUserFeedstuffResult: any[] = yield self.query(util.format('CALL insertUserFeedstuff(%s, %s, %s, %s);', self.escapeAndFormat(username), self.escapeAndFormat(id), self.escapeAndFormat(name), self.escapeAndFormat(description)));
             return true;
         });
     }
 
     public insertUserFeedstuffMeasurement(feedstuffId: string, elementId: string, value: number): Promise<Boolean> {
-        return this.query(util.format('CALL insertUserFeedstuffMeasurement(%s, %s, %s);', this.escapeAndFormat(feedstuffId), this.escapeAndFormat(elementId), value)).then((insertUserFeedstuffMeasurementResult: any[]) => {
+        let self = this;
+
+        return co(function* () {
+            let insertUserFeedstuffMeasurementResult: any[] = yield self.query(util.format('CALL insertUserFeedstuffMeasurement(%s, %s, %s);', self.escapeAndFormat(feedstuffId), self.escapeAndFormat(elementId), value));
             return true;
         });
     }
@@ -117,7 +145,10 @@ export class FeedstuffRepository extends Base {
 
     // TODO: Create updateUserFeedstuffMeasurement SP
     public updateUserFeedstuffMeasurement(feedstuffId: string, elementId: string, value: number): Promise<Boolean> {
-        return this.query(util.format('CALL updateUserFeedstuffMeasurement(%s, %s, %s);', this.escapeAndFormat(feedstuffId), this.escapeAndFormat(elementId), value)).then((insertUserFeedstuffMeasurementResult: any[]) => {
+        let self = this;
+
+        return co(function* () {
+            let updateUserFeedstuffMeasurementResult: any[] = yield self.query(util.format('CALL updateUserFeedstuffMeasurement(%s, %s, %s);', self.escapeAndFormat(feedstuffId), self.escapeAndFormat(elementId), value));
             return true;
         });
     }

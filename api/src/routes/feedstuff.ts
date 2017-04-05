@@ -19,7 +19,7 @@ let router = express.Router();
 router.get('/list', (req: Request, res: Response, next: Function) => {
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let feedstuffService = new FeedstuffService(feedstuffRepository);
-    feedstuffService.listFeedstuffs(req.user.username).then((listFeedstuffsResult: DomainFeedstuff[]) => {
+    feedstuffService.listFeedstuffs(req.user == null ? null : req.user.username).then((listFeedstuffsResult: DomainFeedstuff[]) => {
         res.json(listFeedstuffsResult.map(x => {
             return {
                 id: x.id,
@@ -56,6 +56,11 @@ router.get('/listForUser', (req: Request, res: Response, next: Function) => {
 
 router.get('/findForUser', (req: Request, res: Response, next: Function) => {
 
+    if (req.user == null) {
+        res.status(401).end();
+        return;
+    }
+
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let feedstuffService = new FeedstuffService(feedstuffRepository);
 
@@ -76,7 +81,7 @@ router.post('/createForUser', (req: Request, res: Response, next: Function) => {
         res.status(401).end();
         return;
     }
-    
+
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let feedstuffService = new FeedstuffService(feedstuffRepository);
 
@@ -89,7 +94,7 @@ router.post('/createForUser', (req: Request, res: Response, next: Function) => {
         res.json(err.message);
     });
 });
- 
+
 
 router.get('/findSuggestedValues', (req: Request, res: Response, next: Function) => {
     let feedstuffRepository = new FeedstuffRepository(config.db);
@@ -130,6 +135,12 @@ router.get('/listExample', (req: Request, res: Response, next: Function) => {
 });
 
 router.post('/saveUserFeedstuffMeasurements', (req: Request, res: Response, next: Function) => {
+
+    if (req.user == null) {
+        res.status(401).end();
+        return;
+    }
+
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let feedstuffService = new FeedstuffService(feedstuffRepository);
     feedstuffService.saveUserFeedstuffMeasurements(req.body.feedstuffId, req.body.measurements).then((saveUserFeedstuffMeasurementsResult: Boolean) => {
@@ -141,6 +152,12 @@ router.post('/saveUserFeedstuffMeasurements', (req: Request, res: Response, next
 
 
 router.get('/listMeasurementsForUserFeedstuff', (req: Request, res: Response, next: Function) => {
+
+    if (req.user == null) {
+        res.status(401).end();
+        return;
+    }
+
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let feedstuffService = new FeedstuffService(feedstuffRepository);
     feedstuffService.listUserFeedstuffMeasurements(req.query.feedstuffId).then((listUserFeedstuffMeasurementsResult: DomainFeedstuffMeasurement[]) => {

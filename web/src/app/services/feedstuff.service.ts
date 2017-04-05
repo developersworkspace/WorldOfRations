@@ -22,7 +22,7 @@ export class FeedstuffService extends BaseService {
   }
 
   public getSuggestedValues(formulaId: string, feedstuffId: string) {
-    return this.get(environment.api.uri + '/api/feedstuff/suggestedValues?formulaId=' + formulaId + '&feedstuffId=' + feedstuffId)
+    return this.get(environment.api.uri + '/api/feedstuff/findSuggestedValues?formulaId=' + formulaId + '&feedstuffId=' + feedstuffId)
       .map((res: Response) => res.json());
   }
 
