@@ -58,8 +58,8 @@ export class MockFeedstuffRepository implements IFeedstuffRepository {
 
     public listFeedstuffs(username: string): Promise<DomainFeedstuff[]> {
         if (username == null) {
-        return Promise.resolve(this.feedstuffs);
-        }else {
+            return Promise.resolve(this.feedstuffs);
+        } else {
             return Promise.resolve(this.feedstuffs.concat(this.userFeedstuffs[username]));
         }
     }
@@ -69,7 +69,14 @@ export class MockFeedstuffRepository implements IFeedstuffRepository {
     }
 
     public findFeedstuffByFeedstuffId(feedstuffId: string, username: string): Promise<DomainFeedstuff> {
-        return Promise.resolve(this.feedstuffs.find(x => x.id == feedstuffId));
+        if (username == null) {
+            let result = this.feedstuffs.find(x => x.id == feedstuffId);
+
+            return Promise.resolve(result == undefined? null : result);
+        }
+
+        let result = this.feedstuffs.concat(this.userFeedstuffs[username]).find(x => x.id == feedstuffId);
+        return Promise.resolve(result == undefined? null : result);
     }
 
     public findSuggestedValuesByFormulaIdAndFeedstuffId(formulaId: string, feedstuffId: string): Promise<DomainSuggestedValue> {
@@ -96,10 +103,15 @@ export class MockFeedstuffRepository implements IFeedstuffRepository {
     }
 
     public listFeedstuffsByUsername(username: string): Promise<DomainFeedstuff[]> {
-        return Promise.resolve(this.exampleFeedstuffs);
+        if (username == null) {
+            return Promise.resolve([]);
+        } else {
+            return Promise.resolve(this.userFeedstuffs[username]);
+        }
     }
 
     public insertUserFeedstuff(username: string, id: string, name: string, description: string): Promise<Boolean> {
+        this.userFeedstuffs[username].push(new DomainFeedstuff(id, name, null, null, null));
         return Promise.resolve(true);
     }
 

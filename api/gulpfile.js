@@ -19,6 +19,7 @@ gulp.task('clean:js', function () {
     return gulp
         .src([
             './dist/**/*.js',
+            './src/**/*.js',
         ], { read: false })
         .pipe(clean())
 });

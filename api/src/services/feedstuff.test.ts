@@ -18,6 +18,11 @@ describe('FeedstuffService', () => {
 
     let validUsername = 'ValidUsername';
 
+    let validFormulaId = '1';
+    let validFeedstuffId = '1';
+
+    let validUserFeedstuffId = '6';
+
     beforeEach(() => {
         let feedstuffRepository = new MockFeedstuffRepository(null);
 
@@ -73,6 +78,72 @@ describe('FeedstuffService', () => {
         it('should return list of feedstuffs given valid username', () => {
             return feedstuffService.listFeedstuffs(validUsername).then((listFeedstuffsResult: DomainFeedstuff[]) => {
                 expect(listFeedstuffsResult.length).to.be.eq(7);
+            });
+        });
+    });
+
+    describe('listExampleFeedstuffs', () => {
+        it('should return list of feedstuffs', () => {
+            return feedstuffService.listExampleFeedstuffs().then((listExampleFeedstuffsResult: DomainFeedstuff[]) => {
+                expect(listExampleFeedstuffsResult.length).to.be.eq(3);
+            });
+        });
+    });
+
+    describe('findSuggestedValues', () => {
+        it('should return suggested value', () => {
+            return feedstuffService.findSuggestedValues(validFormulaId, validFeedstuffId).then((findSuggestedValuesResult: DomainSuggestedValue) => {
+                expect(findSuggestedValuesResult).to.be.not.null;
+            });
+        });
+    });
+
+    describe('listUserFeedstuffs', () => {
+        it('should return list of feedstuffs given null username', () => {
+            return feedstuffService.listUserFeedstuffs(null).then((listUserFeedstuffsResult: DomainFeedstuff[]) => {
+                expect(listUserFeedstuffsResult.length).to.be.eq(0);
+            });
+        });
+
+        it('should return list of feedstuffs given valid username', () => {
+            return feedstuffService.listUserFeedstuffs(validUsername).then((listUserFeedstuffsResult: DomainFeedstuff[]) => {
+                expect(listUserFeedstuffsResult.length).to.be.eq(3);
+            });
+        });
+    });
+
+    describe('createUserFeedstuff', () => {
+        it('should return feedstuff', () => {
+            return feedstuffService.createUserFeedstuff(validUsername, 'Feedstuff8', null).then((createUserFeedstuffResult: DomainFeedstuff) => {
+                expect(createUserFeedstuffResult).to.be.not.null;
+            });
+        });
+
+        it('should be inserted into repository', () => {
+            return feedstuffService.createUserFeedstuff(validUsername, 'Feedstuff8', null).then((createUserFeedstuffResult: DomainFeedstuff) => {
+                return feedstuffService.listUserFeedstuffs(validUsername);
+            }).then((listUserFeedstuffs: DomainFeedstuff[]) => {
+                expect(listUserFeedstuffs.find(x => x.name == 'Feedstuff8')).to.be.not.undefined;
+            });
+        });
+    });
+
+    describe('findUserFeedstuff', () => {
+        it('should return null given null username with valid user feedstuff id', () => {
+            return feedstuffService.findUserFeedstuff(validUserFeedstuffId, null).then((findUserFeedstuffResult: DomainFeedstuff) => {
+                expect(findUserFeedstuffResult).to.be.null;
+            });
+        });
+
+        it('should return feedstuff given valid username with valid user feedstuff id', () => {
+            return feedstuffService.findUserFeedstuff(validUserFeedstuffId, validUsername).then((findUserFeedstuffResult: DomainFeedstuff) => {
+                expect(findUserFeedstuffResult).to.be.not.null;
+            });
+        });
+
+        it('should return null given null username with valid feedstuff id', () => {
+            return feedstuffService.findUserFeedstuff(validFeedstuffId, null).then((findUserFeedstuffResult: DomainFeedstuff) => {
+                expect(findUserFeedstuffResult).to.be.null;
             });
         });
     });

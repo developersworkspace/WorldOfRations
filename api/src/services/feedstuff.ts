@@ -60,7 +60,7 @@ export class FeedstuffService {
         });
     }
 
-    public listFeedstuffsForUser(username: string): Promise<DomainFeedstuff[]> {
+    public listUserFeedstuffs(username: string): Promise<DomainFeedstuff[]> {
         return this.feedstuffRepository.listFeedstuffsByUsername(username);
     }
 

@@ -16,7 +16,7 @@ import { FeedstuffMeasurement as DomainFeedstuffMeasurement } from './../models/
 
 let router = express.Router();
 
-router.get('/list', (req: Request, res: Response, next: Function) => {
+router.get('/listFeedstuffs', (req: Request, res: Response, next: Function) => {
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let feedstuffService = new FeedstuffService(feedstuffRepository);
     feedstuffService.listFeedstuffs(req.user == null ? null : req.user.username).then((listFeedstuffsResult: DomainFeedstuff[]) => {
@@ -31,7 +31,7 @@ router.get('/list', (req: Request, res: Response, next: Function) => {
     });
 });
 
-router.get('/listForUser', (req: Request, res: Response, next: Function) => {
+router.get('/listUserFeedstuffs', (req: Request, res: Response, next: Function) => {
 
 
     if (req.user == null) {
@@ -42,7 +42,7 @@ router.get('/listForUser', (req: Request, res: Response, next: Function) => {
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let feedstuffService = new FeedstuffService(feedstuffRepository);
 
-    feedstuffService.listFeedstuffsForUser(req.user.username).then((listFeedstuffsForUserResult: DomainFeedstuff[]) => {
+    feedstuffService.listUserFeedstuffs(req.user.username).then((listFeedstuffsForUserResult: DomainFeedstuff[]) => {
         res.json(listFeedstuffsForUserResult.map(x => {
             return {
                 id: x.id,
@@ -54,7 +54,7 @@ router.get('/listForUser', (req: Request, res: Response, next: Function) => {
     });
 });
 
-router.get('/findForUser', (req: Request, res: Response, next: Function) => {
+router.get('/findUserFeedstuff', (req: Request, res: Response, next: Function) => {
 
     if (req.user == null) {
         res.status(401).end();
@@ -74,7 +74,7 @@ router.get('/findForUser', (req: Request, res: Response, next: Function) => {
     });
 });
 
-router.post('/createForUser', (req: Request, res: Response, next: Function) => {
+router.post('/createUserFeedstuff', (req: Request, res: Response, next: Function) => {
 
 
     if (req.user == null) {
@@ -116,7 +116,7 @@ router.get('/findSuggestedValues', (req: Request, res: Response, next: Function)
     });
 });
 
-router.get('/listExample', (req: Request, res: Response, next: Function) => {
+router.get('/listExampleFeedstuffs', (req: Request, res: Response, next: Function) => {
     let feedstuffRepository = new FeedstuffRepository(config.db);
     let feedstuffService = new FeedstuffService(feedstuffRepository);
     feedstuffService.listExampleFeedstuffs().then((listExampleFeedstuffsResult: DomainFeedstuff[]) => {
@@ -151,7 +151,7 @@ router.post('/saveUserFeedstuffMeasurements', (req: Request, res: Response, next
 });
 
 
-router.get('/listMeasurementsForUserFeedstuff', (req: Request, res: Response, next: Function) => {
+router.get('/listUserFeedstuffMeasurements', (req: Request, res: Response, next: Function) => {
 
     if (req.user == null) {
         res.status(401).end();
