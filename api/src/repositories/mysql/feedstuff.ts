@@ -2,6 +2,7 @@
 import { Base } from './base';
 import * as util from 'util';
 import * as co from 'co';
+import { IFeedstuffRepository } from './../feedstuff';
 
 // Imports domain models
 import { FeedstuffMeasurement as DomainFeedstuffMeasurement } from './../../models/feedstuff-measurement';
@@ -18,12 +19,14 @@ import { ExampleFeedstuff as DataExampleFeedstuff } from './../../data-models/ex
 import { SupplementFeedstuff as DataSupplementFeedstuff } from './../../data-models/supplement-feedstuff';
 import { SuggestedValue as DataSuggestedValue } from './../../data-models/suggested-value';
 
-export class FeedstuffRepository extends Base {
+export class FeedstuffRepository extends Base implements IFeedstuffRepository {
 
     constructor(config: any) {
         super(config);
     }
 
+
+    // TODO: Move userFeedstuffs into a separate method on repository
     public listFeedstuffs(username: string): Promise<DomainFeedstuff[]> {
         let self = this;
 

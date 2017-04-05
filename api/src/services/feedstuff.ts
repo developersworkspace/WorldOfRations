@@ -1,5 +1,6 @@
 // Imports
 import * as uuid from 'uuid';
+import { IFeedstuffRepository } from './../repositories/feedstuff';
 
 // Imports repositories
 import { FeedstuffRepository } from './../repositories/mysql/feedstuff';
@@ -11,7 +12,7 @@ import { SuggestedValue as DomainSuggestedValue } from './../models/suggested-va
 
 export class FeedstuffService {
 
-    constructor(private feedstuffRepository: FeedstuffRepository) {
+    constructor(private feedstuffRepository: IFeedstuffRepository) {
     }
 
     public listFeedstuffs(username: string): Promise<DomainFeedstuff[]> {
