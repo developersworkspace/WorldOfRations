@@ -5,7 +5,7 @@ export class FormulaMeasurement {
         public minimum: number,
         public maximum: number,
         public unit: string,
-        public sortOrder: number
+        public sortOrder: number,
     ) {
     }
 }

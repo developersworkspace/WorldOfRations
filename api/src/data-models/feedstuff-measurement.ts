@@ -7,8 +7,8 @@ export class FeedstuffMeasurement extends DataElement {
         name: string,
         unit: string,
         sortOrder: number,
-        public value: number
+        public value: number,
     ) {
         super(id, name, unit, sortOrder);
     }
-} 
+}

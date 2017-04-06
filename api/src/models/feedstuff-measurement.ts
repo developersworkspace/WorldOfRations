@@ -4,7 +4,7 @@ export class FeedstuffMeasurement {
         public name: string,
         public value: number,
         public unit: string,
-        public sortOrder: number
+        public sortOrder: number,
     ) {
     }
 }

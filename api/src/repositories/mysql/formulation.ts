@@ -61,7 +61,7 @@ export class FormulationRepository extends Base {
     public listFormulationFeedstuffByFormulationId(formulationId: string): Promise<DomainFeedstuff[]> {
         return this.query(util.format('CALL listFormulationFeedstuffByFormulationId(%s);', this.escapeAndFormat(formulationId))).then((result: DataFormulationFeedstuff[]) => {
             return result.map(x => {
-                let feedstuff = new DomainFeedstuff(x.id, x.name, x.minimum, x.maximum, x.cost);
+                let feedstuff = new DomainFeedstuff(x.feedstuffId, x.name, x.minimum, x.maximum, x.cost);
                 feedstuff.weight = x.weight;
                 return feedstuff;
             });

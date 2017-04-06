@@ -1,12 +1,12 @@
 // Imports domain models
 import { CompositionElement as DomainCompositionElement } from './composition-element';
-import { SupplementElement as DomainSupplementElement } from './supplement-element';
 import { Feedstuff as DomainFeedstuff } from './feedstuff';
 import { Formula as DomainFormula } from './formula';
+import { SupplementElement as DomainSupplementElement } from './supplement-element';
 
 // Imports data models
 import { Formulation as DataFormulation } from './../data-models/formulation';
-import { FormulationFeedstuff as DataFormulationFeedstuff } from './../data-models/formulationFeedstuff';
+import { FormulationFeedstuff as DataFormulationFeedstuff } from './../data-models/formulation-feedstuff';
 
 export class Formulation {
     public feedstuffs: DomainFeedstuff[] = null;
@@ -21,11 +21,13 @@ export class Formulation {
 
     }
 
-    getDataFormalation() {
+    // TODO: toDataFormulation
+    public getDataFormalation() {
         return new DataFormulation(this.id, this.formula.id, null, this.feasible, this.cost, this.currencyCode, new Date().getTime());
     }
 
-    getDataFormulationFeedstuffs() {
-        return this.feedstuffs.map(x => new DataFormulationFeedstuff(this.id, x.id, x.minimum, x.maximum, x.cost, x.weight));
+    // TODO: toDataFormulationFeedstuffs
+    public getDataFormulationFeedstuffs() {
+        return this.feedstuffs.map((x) => new DataFormulationFeedstuff(this.id, x.id, x.name, x.minimum, x.maximum, x.cost, x.weight));
     }
 }

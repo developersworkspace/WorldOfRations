@@ -10,7 +10,7 @@ export class Feedstuff {
         public name: string,
         public minimum: number,
         public maximum: number,
-        public cost: number
+        public cost: number,
     ) {
     }
 }

@@ -4,7 +4,8 @@ CREATE PROCEDURE listFormulationFeedstuffByFormulationId (
 p_formulationId CHAR(36))
 BEGIN
 SELECT 
-`feedstuffId` AS `id`,
+p_formulationId AS `formulationId`,
+`feedstuffId` AS `feedstuffId`,
 `feedstuffs`.`name` AS `name`,
 `minimum` AS `minimum`,
 `maximum` AS `maximum`,

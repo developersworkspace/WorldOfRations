@@ -3,7 +3,7 @@ export class Element {
         public id: string,
         public name: string,
         public unit: string,
-        public sortOrder: number
+        public sortOrder: number,
     ) {
     }
 }

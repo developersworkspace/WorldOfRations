@@ -5,6 +5,7 @@ var ts = require('gulp-typescript');
 var rename = require("gulp-rename");
 var sequence = require('run-sequence');
 var watch = require('gulp-watch');
+var tslint = require('gulp-tslint');
 
 // Compiles typescript files
 gulp.task('compile:ts.dev', function () {
@@ -58,6 +59,14 @@ gulp.task('rename:config', function () {
         .pipe(gulp.dest('./dist'));
 });
 
+gulp.task("tslint", () =>
+    gulp.src("./src/**/*.ts")
+        .pipe(tslint({
+            extends: "tslint:latest",
+            formatter: "verbose"
+        }))
+        .pipe(tslint.report())
+);
 
 gulp.task('build:dev', function (done) {
     sequence('clean:js', 'compile:ts.dev', done);

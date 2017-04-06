@@ -7,7 +7,7 @@ export class ExampleFeedstuff extends DataFeedstuff {
         name: string,
         public minimum: number,
         public maximum: number,
-        public cost: number
+        public cost: number,
     ) {
         super(id, name);
     }

@@ -12,26 +12,26 @@ export class Base {
         if (pool == null && config != null) {
             pool = mysql.createPool({
                 connectionLimit: 50,
+                database: this.config.database,
                 host: this.config.server,
-                user: this.config.user,
                 password: this.config.password,
-                database: this.config.database
+                user: this.config.user,
             });
         }
     }
 
-    protected query(query: string) {
+    protected query(query: string): Promise<any> {
         getLogger('mysql').debug(query);
 
-        return new Promise((resolve: Function, reject: Function) => {
-            pool.getConnection((err: Error, connection: any) => {
-                if (err) {
-                    reject(err);
+        return new Promise((resolve: (x: any) => void, reject: (err: Error) => void) => {
+            pool.getConnection((err1: Error, connection: any) => {
+                if (err1) {
+                    reject(err1);
                 } else {
-                    connection.query(query, (err: Error, results: any[], fields) => {
+                    connection.query(query, (err2: Error, results: any[], fields) => {
                         connection.release();
-                        if (err) {
-                            reject(err);
+                        if (err2) {
+                            reject(err2);
                         } else {
                             resolve(results[0]);
                         }
@@ -41,15 +41,13 @@ export class Base {
         });
     }
 
-
-    protected roundToTwoDecimal(value: number) {
+    protected roundToTwoDecimal(value: number): number {
         return Math.round(value * 100) / 100;
     }
 
+    protected escapeAndFormat(str: string): string {
 
-    protected escapeAndFormat(str: string) {
-
-        if (str == null || str == 'null') {
+        if (str === null || str === 'null') {
             return 'null';
         }
 

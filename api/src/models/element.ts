@@ -12,7 +12,7 @@ export class Element {
         public maximum: number,
         public value: number,
         public unit: string,
-        public sortOrder: number
+        public sortOrder: number,
     ) {
     }
 }

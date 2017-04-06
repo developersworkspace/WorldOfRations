@@ -2,7 +2,6 @@
 import express = require("express");
 import bodyParser = require('body-parser');
 
-
 // Imports middleware
 import * as cors from 'cors';
 import jwt = require('express-jwt');
@@ -29,6 +28,14 @@ export class WebApi {
         this.configureErrorHandling(app);
     }
 
+    public getApp(): express.Application {
+        return this.app;
+    }
+
+    public run() {
+        this.app.listen(this.port);
+    }
+
     private configureMiddleware(app: express.Express) {
 
         // Configure body-parser
@@ -40,17 +47,17 @@ export class WebApi {
 
         // Configure express-jwt
         app.use(jwt({
-            secret: config.oauth.jwtSecret,
             audience: 'worldofrations.com',
+            credentialsRequired: false,
             issuer: config.oauth.jwtIssuer,
-            credentialsRequired: false
+            secret: config.oauth.jwtSecret,
         }));
 
         // Configure express-winston
         app.use(expressWinston.logger({
-            winstonInstance: logger,
             meta: false,
-            msg: 'HTTP Request: {{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}'
+            msg: 'HTTP Request: {{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}',
+            winstonInstance: logger,
         }));
     }
 
@@ -63,26 +70,18 @@ export class WebApi {
     }
 
     private configureErrorHandling(app: express.Express) {
-        app.use((err: Error, req : express.Request, res: express.Response, next: Function) => {
+        app.use((err: Error, req: express.Request, res: express.Response, next: () => void) => {
             logger.error(err.message);
             if (err.name === 'UnauthorizedError') {
                 res.status(401).end();
-            }else {
+            } else {
                 res.status(500).send(err.message);
             }
         });
     }
-
-    public getApp() {
-        return this.app;
-    }
-
-    public run() {
-        this.app.listen(this.port);
-    }
 }
 
-let port = 8083;
-let api = new WebApi(express(), port);
+const port = 8083;
+const api = new WebApi(express(), port);
 api.run();
 logger.info(`Listening on ${port}`);
