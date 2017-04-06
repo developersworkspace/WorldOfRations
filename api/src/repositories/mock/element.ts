@@ -11,11 +11,10 @@ export class MockElementRepository implements IElementRepository {
         new DomainElement('2', 'Element2', 0, 0, 0, '%', 0),
         new DomainElement('3', 'Element3', 0, 0, 0, '%', 0),
         new DomainElement('4', 'Element4', 0, 0, 0, '%', 0),
-        new DomainElement('5', 'Element5', 0, 0, 0, '%', 0)
+        new DomainElement('5', 'Element5', 0, 0, 0, '%', 0),
     ];
 
-
-    constructor(config: any) {
+    constructor(private config: any) {
 
     }
 

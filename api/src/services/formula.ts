@@ -1,5 +1,5 @@
 // Imports repositories
-import { FormulaRepository } from './../repositories/mysql/formula'
+import { FormulaRepository } from './../repositories/mysql/formula';
 
 // Imports domain models
 import { Formula as DomainFormula } from './../models/formula';
@@ -16,4 +16,3 @@ export class FormulaService {
       return this.formulaRepository.listFormulas();
     }
 }
-

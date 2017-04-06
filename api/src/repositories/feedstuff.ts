@@ -1,9 +1,9 @@
 // Imports domain models
-import { FeedstuffMeasurement as DomainFeedstuffMeasurement } from './../models/feedstuff-measurement';
 import { CompositionElement as DomainCompositionElement } from './../models/composition-element';
-import { SupplementElement as DomainSupplementElement } from './../models/supplement-element';
 import { Feedstuff as DomainFeedstuff } from './../models/feedstuff';
+import { FeedstuffMeasurement as DomainFeedstuffMeasurement } from './../models/feedstuff-measurement';
 import { SuggestedValue as DomainSuggestedValue } from './../models/suggested-value';
+import { SupplementElement as DomainSupplementElement } from './../models/supplement-element';
 
 export interface IFeedstuffRepository {
     listFeedstuffs(username: string): Promise<DomainFeedstuff[]>;
@@ -16,9 +16,9 @@ export interface IFeedstuffRepository {
     findFeedstuffByFeedstuffId(feedstuffId: string): Promise<DomainFeedstuff>;
     findUserFeedstuffByFeedstuffId(feedstuffId: string, username: string): Promise<DomainFeedstuff>;
     findSuggestedValuesByFormulaIdAndFeedstuffId(formulaId: string, feedstuffId: string): Promise<DomainSuggestedValue>;
-    
-    insertUserFeedstuff(username: string, id: string, name: string, description: string): Promise<Boolean>;
-    insertUserFeedstuffMeasurement(feedstuffId: string, elementId: string, value: number): Promise<Boolean>;
 
-    updateUserFeedstuffMeasurement(feedstuffId: string, elementId: string, value: number): Promise<Boolean>;
+    insertUserFeedstuff(username: string, id: string, name: string, description: string): Promise<boolean>;
+    insertUserFeedstuffMeasurement(feedstuffId: string, elementId: string, value: number): Promise<boolean>;
+
+    updateUserFeedstuffMeasurement(feedstuffId: string, elementId: string, value: number): Promise<boolean>;
 }

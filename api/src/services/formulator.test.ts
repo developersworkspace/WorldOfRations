@@ -40,7 +40,6 @@
 //             return Promise.resolve(new DomainSupplementElement('b33630fa-94d8-48aa-aba1-7f2692f3afc7', 'Element1', '%', randomNumber(0, 100)));
 //         }
 
-
 //         formulaRepository.findFormulaByFormulaId = () => {
 //             return Promise.resolve(new DomainFormula('f40339a5-0d34-4708-bcf7-6d97aaee3374', 'Formula1'));
 //         };
@@ -150,7 +149,6 @@
 //         });
 //     });
 // });
-
 
 // function randomNumber(low: number, high: number) {
 //     return Math.random() * (high - low) + low;

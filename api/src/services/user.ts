@@ -1,5 +1,5 @@
 // Imports repositories
-import { UserRepository } from './../repositories/mysql/user'
+import { UserRepository } from './../repositories/mysql/user';
 
 // Imports domain models
 import { User as DomainUser } from './../models/user';
@@ -22,4 +22,3 @@ export class UserService {
       });
     }
 }
-

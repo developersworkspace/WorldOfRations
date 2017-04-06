@@ -1,15 +1,15 @@
 // Imports
-import { Base } from './base';
 import * as util from 'util';
+import { Base } from './base';
 
 // Imports data models
-import { FormulaMeasurement as DataFormulaMeasurement } from './../../data-models/formula-measurement';
 import { Formula as DataFormula } from './../../data-models/formula';
+import { FormulaMeasurement as DataFormulaMeasurement } from './../../data-models/formula-measurement';
 
 // Imports domain models
+import { CompositionElement as DomainCompositionElement } from './../../models/composition-element';
 import { Formula as DomainFormula } from './../../models/formula';
 import { FormulaMeasurement as DomainFormulaMeasurement } from './../../models/formula-measurement';
-import { CompositionElement as DomainCompositionElement } from './../../models/composition-element';
 import { Formulation as DomainFormulation } from './../../models/formulation';
 
 export class FormulaRepository extends Base {
@@ -20,14 +20,14 @@ export class FormulaRepository extends Base {
 
     public listFormulas(): Promise<DomainFormula[]> {
         return this.query('CALL listFormulas();').then((result: DataFormula[]) => {
-            return result.map(x => new DomainFormula(x.id, x.name));
+            return result.map((x) => new DomainFormula(x.id, x.name));
         });
     }
 
     public listElementsByFormulaId(formulaId: string): Promise<DomainFormulaMeasurement[]> {
         return this.query(util.format('CALL listElementsForFormula(%s);', this.escapeAndFormat(formulaId)))
             .then((listElementsForFormulaRecordSet: DataFormulaMeasurement[]) => {
-                return listElementsForFormulaRecordSet.map(x => new DomainFormulaMeasurement(x.id, x.name, x.minimum, x.maximum, x.unit, x.sortOrder));
+                return listElementsForFormulaRecordSet.map((x) => new DomainFormulaMeasurement(x.id, x.name, x.minimum, x.maximum, x.unit, x.sortOrder));
             });
     }
 
@@ -38,7 +38,7 @@ export class FormulaRepository extends Base {
             });
     }
 
-    public findComparisonFormulaByFormulaId(formulaId: string) : Promise<DomainFormula> {
+    public findComparisonFormulaByFormulaId(formulaId: string): Promise<DomainFormula> {
         return this.query(util.format('CALL findComparisonFormulaByFormulaId(%s);', this.escapeAndFormat(formulaId))).then((findComparisonFormulaByFormulaIdResult: any[]) => {
             return new DomainFormula(findComparisonFormulaByFormulaIdResult[0].formulaId, null);
         });

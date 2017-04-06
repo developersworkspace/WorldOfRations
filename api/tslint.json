@@ -2,7 +2,8 @@
   "extends": "tslint:latest",
   "defaultSeverity": "warning",
   "rules": {
-    "quotemark": ["single"],
-    "max-line-length": [150]
+    "quotemark": "single",
+    "max-line-length": 150,
+    "no-unused-expression": false
   }
 }

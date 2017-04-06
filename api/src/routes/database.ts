@@ -4,24 +4,22 @@ import * as express from 'express';
 import { config } from './../config';
 import mysqldump = require('mysqldump');
 
-let router = express.Router();
+const router = express.Router();
 
-router.get('/export', (req: Request, res: Response, next: Function) => {
+router.get('/export', (req: Request, res: Response, next: () => void) => {
     mysqldump({
-        host: config.db.server,
-        user: 'root',
-        password: 'password',
         database: config.db.database,
-        dest: './data.sql' 
+        dest: './data.sql',
+        host: config.db.server,
+        password: 'password',
+        user: 'root',
     }, (err: Error) => {
         res.sendfile('./data.sql', {
             headers: {
-                "content-disposition": "attachment; filename=\"data.sql\""
-            }
-        })
-    })
+                "content-disposition": "attachment; filename=\"data.sql\"",
+            },
+        });
+    });
 });
-
-
 
 export = router;

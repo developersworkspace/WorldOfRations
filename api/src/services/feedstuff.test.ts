@@ -1,12 +1,12 @@
-import 'mocha';
 import { expect } from 'chai';
+import 'mocha';
 
 // Imports services
 import { FeedstuffService } from './feedstuff';
 
 // Imports repositories
-import { MockFeedstuffRepository } from './../repositories/mock/feedstuff';
 import { MockElementRepository } from './../repositories/mock/element';
+import { MockFeedstuffRepository } from './../repositories/mock/feedstuff';
 
 // Imports domain models
 import { Feedstuff as DomainFeedstuff } from './../models/feedstuff';
@@ -17,17 +17,17 @@ describe('FeedstuffService', () => {
 
     let feedstuffService: FeedstuffService = null;
 
-    let validUsername = 'ValidUsername';
+    const validUsername = 'ValidUsername';
 
-    let validFormulaId = '1';
-    let validFeedstuffId = '1';
+    const validFormulaId = '1';
+    const validFeedstuffId = '1';
 
-    let validUserFeedstuffId = '6';
-    let validUserFeedstuffIdWitNoFeedstuffMeasurements = '8';
+    const validUserFeedstuffId = '6';
+    const validUserFeedstuffIdWitNoFeedstuffMeasurements = '8';
 
     beforeEach(() => {
-        let feedstuffRepository = new MockFeedstuffRepository(null);
-        let elementRepository = new MockElementRepository(null);
+        const feedstuffRepository = new MockFeedstuffRepository(null);
+        const elementRepository = new MockElementRepository(null);
 
         feedstuffService = new FeedstuffService(feedstuffRepository, elementRepository);
     });
@@ -37,8 +37,8 @@ describe('FeedstuffService', () => {
             return feedstuffService.populateElementsOfFeedstuffs(
                 [
                     new DomainFeedstuff('1', null, 10, 100, 5000),
-                    new DomainFeedstuff('2', null, 10, 100, 5000)
-                ]
+                    new DomainFeedstuff('2', null, 10, 100, 5000),
+                ],
             ).then((result: DomainFeedstuff[]) => {
                 expect(result).to.be.not.null;
                 expect(result.length).to.be.eq(2);
@@ -51,13 +51,12 @@ describe('FeedstuffService', () => {
             });
         });
 
-
         it('should return list of feedstuffs where elements are populated given user feedstuffs', () => {
             return feedstuffService.populateElementsOfFeedstuffs(
                 [
                     new DomainFeedstuff('5', null, 10, 100, 5000),
-                    new DomainFeedstuff('6', null, 10, 100, 5000)
-                ]
+                    new DomainFeedstuff('6', null, 10, 100, 5000),
+                ],
             ).then((result: DomainFeedstuff[]) => {
                 expect(result).to.be.not.null;
                 expect(result.length).to.be.eq(2);
@@ -76,9 +75,9 @@ describe('FeedstuffService', () => {
             return feedstuffService.populateNamesOfFeedstuffs(
                 [
                     new DomainFeedstuff('1', null, 10, 100, 5000),
-                    new DomainFeedstuff('2', null, 10, 100, 5000)
+                    new DomainFeedstuff('2', null, 10, 100, 5000),
                 ],
-                null
+                null,
             ).then((result: DomainFeedstuff[]) => {
                 expect(result).to.be.not.null;
                 expect(result.length).to.be.eq(2);
@@ -92,9 +91,9 @@ describe('FeedstuffService', () => {
             return feedstuffService.populateNamesOfFeedstuffs(
                 [
                     new DomainFeedstuff('5', null, 10, 100, 5000),
-                    new DomainFeedstuff('6', null, 10, 100, 5000)
+                    new DomainFeedstuff('6', null, 10, 100, 5000),
                 ],
-                validUsername
+                validUsername,
             ).then((result: DomainFeedstuff[]) => {
                 expect(result).to.be.not.null;
                 expect(result.length).to.be.eq(2);
@@ -104,7 +103,6 @@ describe('FeedstuffService', () => {
             });
         });
     });
-
 
     describe('listFeedstuffs', () => {
         it('should return list of feedstuffs given null username', () => {
@@ -161,7 +159,7 @@ describe('FeedstuffService', () => {
             return feedstuffService.createUserFeedstuff(validUsername, 'Feedstuff9', null).then((createUserFeedstuffResult: DomainFeedstuff) => {
                 return feedstuffService.listUserFeedstuffs(validUsername);
             }).then((listUserFeedstuffs: DomainFeedstuff[]) => {
-                expect(listUserFeedstuffs.find(x => x.name == 'Feedstuff9')).to.be.not.undefined;
+                expect(listUserFeedstuffs.find((x) => x.name === 'Feedstuff9')).to.be.not.undefined;
             });
         });
     });
@@ -205,16 +203,16 @@ describe('FeedstuffService', () => {
     describe('saveUserFeedstuffMeasurements', () => {
         it('should return true', () => {
             return feedstuffService.saveUserFeedstuffMeasurements(validUserFeedstuffId, [
-                new DomainFeedstuffMeasurement('2', 'Element2', 10, null, null)
-            ]).then((saveUserFeedstuffMeasurementsResult: Boolean) => {
+                new DomainFeedstuffMeasurement('2', 'Element2', 10, null, null),
+            ]).then((saveUserFeedstuffMeasurementsResult: boolean) => {
                 expect(saveUserFeedstuffMeasurementsResult).to.be.true;
             });
         });
 
         it('should be inserted into repository', () => {
             return feedstuffService.saveUserFeedstuffMeasurements(validUserFeedstuffId, [
-                new DomainFeedstuffMeasurement('2', 'Element2', 10, null, null)
-            ]).then((saveUserFeedstuffMeasurementsResult: Boolean) => {
+                new DomainFeedstuffMeasurement('2', 'Element2', 10, null, null),
+            ]).then((saveUserFeedstuffMeasurementsResult: boolean) => {
                 return feedstuffService.listUserFeedstuffMeasurements(validUserFeedstuffId);
             }).then((listUserFeedstuffMeasurementsResult: DomainFeedstuffMeasurement[]) => {
                 expect(listUserFeedstuffMeasurementsResult).to.be.not.null;
@@ -224,8 +222,8 @@ describe('FeedstuffService', () => {
 
         it('should update existing in repository', () => {
             return feedstuffService.saveUserFeedstuffMeasurements(validUserFeedstuffId, [
-                new DomainFeedstuffMeasurement('1', 'Element1', 10, null, null)
-            ]).then((saveUserFeedstuffMeasurementsResult: Boolean) => {
+                new DomainFeedstuffMeasurement('1', 'Element1', 10, null, null),
+            ]).then((saveUserFeedstuffMeasurementsResult: boolean) => {
                 return feedstuffService.listUserFeedstuffMeasurements(validUserFeedstuffId);
             }).then((listUserFeedstuffMeasurementsResult: DomainFeedstuffMeasurement[]) => {
                 expect(listUserFeedstuffMeasurementsResult).to.be.not.null;
@@ -236,8 +234,3 @@ describe('FeedstuffService', () => {
     });
 
 });
-
-
-function randomNumber(low: number, high: number) {
-    return Math.random() * (high - low) + low;
-}

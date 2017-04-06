@@ -1,9 +1,9 @@
 // Imports
-import * as uuid from 'uuid';
-import * as jwt from 'jsonwebtoken';
 import * as base64 from 'base-64';
-import * as utf8 from 'utf8';
 import * as clientOAuth2 from 'client-oauth2';
+import * as jwt from 'jsonwebtoken';
+import * as utf8 from 'utf8';
+import * as uuid from 'uuid';
 
 // Imports logger
 import { getLogger } from './../logger';
@@ -12,10 +12,10 @@ export class AuthService {
 
     constructor(private baseUri: string, private jwtSecret: string, private jwtIssuer: string, private oauthConfig: any) { }
 
-    verify(token: string): Boolean {
+    public verify(token: string): boolean {
         try {
-            let decoded = jwt.verify(token, this.jwtSecret, {
-                issuer: this.jwtIssuer
+            const decoded = jwt.verify(token, this.jwtSecret, {
+                issuer: this.jwtIssuer,
             });
             return true;
         } catch (err) {
@@ -23,12 +23,12 @@ export class AuthService {
         }
     }
 
-     encodeToken(username: string): string {
-        let token = jwt.sign({ username: username }, this.jwtSecret, {
-            expiresIn: 3600,
+    public encodeToken(username: string): string {
+        const token = jwt.sign({ username }, this.jwtSecret, {
             audience: 'worldofrations.com',
+            expiresIn: 3600,
             issuer: this.jwtIssuer,
-            jwtid: uuid.v4()
+            jwtid: uuid.v4(),
         });
 
         getLogger('AuthService_encodeToken').debug(token);
@@ -36,10 +36,10 @@ export class AuthService {
         return token;
     }
 
-    decodeToken(token: string): any {
+    public decodeToken(token: string): any {
         try {
-            let decoded = jwt.verify(token, this.jwtSecret, {
-                issuer: this.jwtIssuer
+            const decoded = jwt.verify(token, this.jwtSecret, {
+                issuer: this.jwtIssuer,
             });
             return decoded;
         } catch (err) {
@@ -47,19 +47,19 @@ export class AuthService {
         }
     }
 
-    createClientAuths(): any {
+    private createClientAuths(): any {
 
-        let googleAuth = new clientOAuth2({
-            clientId: this.oauthConfig.google.clientId,
-            clientSecret: this.oauthConfig.google.clientSecret,
+        const googleAuth = new clientOAuth2({
             accessTokenUri: 'https://www.googleapis.com/oauth2/v4/token',
             authorizationUri: 'https://accounts.google.com/o/oauth2/v2/auth',
+            clientId: this.oauthConfig.google.clientId,
+            clientSecret: this.oauthConfig.google.clientSecret,
             redirectUri: this.baseUri + '/api/auth/google/callback',
-            scopes: ['https://www.googleapis.com/auth/userinfo.email']
+            scopes: ['https://www.googleapis.com/auth/userinfo.email'],
         }, null);
 
         return {
-            googleAuth: googleAuth
+            googleAuth,
         };
     }
 }

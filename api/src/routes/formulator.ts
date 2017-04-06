@@ -14,13 +14,13 @@ import { FormulationRepository } from './../repositories/mysql/formulation';
 // Imports services
 import { FormulatorService } from './../services/formulator';
 
-let router = express.Router();
+const router = express.Router();
 
-router.post('/formulate', (req: Request, res: Response, next: Function) => {
-    let feedstuffRepository = new FeedstuffRepository(config.db);
-    let formulaRepository = new FormulaRepository(config.db);
-    let formulationRepository = new FormulationRepository(config.db);
-    let formulatorService = new FormulatorService(formulaRepository, feedstuffRepository, formulationRepository);
+router.post('/formulate', (req: Request, res: Response, next: () => void) => {
+    const feedstuffRepository = new FeedstuffRepository(config.db);
+    const formulaRepository = new FormulaRepository(config.db);
+    const formulationRepository = new FormulationRepository(config.db);
+    const formulatorService = new FormulatorService(formulaRepository, feedstuffRepository, formulationRepository);
 
     formulatorService.createFormulation(req.body.feedstuffs, req.body.formulaId, req.body.currencyCode).then((createFormulationResult: DomainFormulation) => {
         formulatorService.formulate(createFormulationResult).then((formulateResult: any) => {
@@ -31,70 +31,70 @@ router.post('/formulate', (req: Request, res: Response, next: Function) => {
     });
 });
 
-router.get('/formulation', (req: Request, res: Response, next: Function) => {
-    let feedstuffRepository = new FeedstuffRepository(config.db);
-    let formulaRepository = new FormulaRepository(config.db);
-    let formulationRepository = new FormulationRepository(config.db);
-    let formulatorService = new FormulatorService(formulaRepository, feedstuffRepository, formulationRepository);
+router.get('/formulation', (req: Request, res: Response, next: () => void) => {
+    const feedstuffRepository = new FeedstuffRepository(config.db);
+    const formulaRepository = new FormulaRepository(config.db);
+    const formulationRepository = new FormulationRepository(config.db);
+    const formulatorService = new FormulatorService(formulaRepository, feedstuffRepository, formulationRepository);
 
     formulatorService.findFormulation(req.query.formulationId).then((findFormulationResult: DomainFormulation) => {
         res.json({
-            id: findFormulationResult.id,
-            feedstuffs: findFormulationResult.feedstuffs.map(x => {
+            composition: findFormulationResult.composition.map((x) => {
                 return {
+                    id: x.id,
+                    name: x.name,
+                    sortOrder: x.sortOrder,
+                    status: x.value < x.minimum ? 'Inadequate' : x.value > x.maximum ? 'Excessive' : 'Adequate',
+                    unit: x.unit,
+                    value: x.value,
+                };
+            }),
+            cost: findFormulationResult.cost,
+            currencyCode: findFormulationResult.currencyCode,
+            feasible: findFormulationResult.feasible,
+            feedstuffs: findFormulationResult.feedstuffs.map((x) => {
+                return {
+                    cost: x.cost,
                     id: x.id,
                     name: x.name,
                     weight: x.weight,
-                    cost: x.cost
-                };
-            }),
-            composition: findFormulationResult.composition.map(x => {
-                return {
-                    id: x.id,
-                    name: x.name,
-                    value: x.value,
-                    unit: x.unit,
-                    sortOrder: x.sortOrder,
-                    status: x.value < x.minimum? 'Inadequate' : x.value> x.maximum? 'Excessive' : 'Adequate'
-                };
-            }),
-            currencyCode: findFormulationResult.currencyCode,
-            cost: findFormulationResult.cost,
-            feasible: findFormulationResult.feasible,
-            supplementComposition: findFormulationResult.supplementComposition.map(x => {
-                return {
-                    id: x.id,
-                    name: x.name,
-                    unit: x.unit,
-                    sortOrder: x.sortOrder,
-                    supplementFeedstuffs: x.supplementFeedstuffs,
-                    selectedSupplementFeedstuffs: x.selectedSupplementFeedstuffs
                 };
             }),
             formula: {
-                name: findFormulationResult.formula.name
-            }
+                name: findFormulationResult.formula.name,
+            },
+            id: findFormulationResult.id,
+            supplementComposition: findFormulationResult.supplementComposition.map((x) => {
+                return {
+                    id: x.id,
+                    name: x.name,
+                    selectedSupplementFeedstuffs: x.selectedSupplementFeedstuffs,
+                    sortOrder: x.sortOrder,
+                    supplementFeedstuffs: x.supplementFeedstuffs,
+                    unit: x.unit,
+                };
+            }),
         });
     }).catch((err: Error) => {
         res.json(err.message);
     });
 });
 
-router.get('/formulations', (req: Request, res: Response, next: Function) => {
-    let feedstuffRepository = new FeedstuffRepository(config.db);
-    let formulaRepository = new FormulaRepository(config.db);
-    let formulationRepository = new FormulationRepository(config.db);
-    let formulatorService = new FormulatorService(formulaRepository, feedstuffRepository, formulationRepository);
-    
+router.get('/formulations', (req: Request, res: Response, next: () => void) => {
+    const feedstuffRepository = new FeedstuffRepository(config.db);
+    const formulaRepository = new FormulaRepository(config.db);
+    const formulationRepository = new FormulationRepository(config.db);
+    const formulatorService = new FormulatorService(formulaRepository, feedstuffRepository, formulationRepository);
+
     formulatorService.listFormulations().then((listFormulationsResult: DomainFormulation[]) => {
-        res.json(listFormulationsResult.map(x => {
+        res.json(listFormulationsResult.map((x) => {
             return {
-                id: x.id,
                 formula: {
                     id: x.formula.id,
-                    name: x.formula.name
-                }
-            }
+                    name: x.formula.name,
+                },
+                id: x.id,
+            };
         }));
     }).catch((err: Error) => {
         res.json(err.message);
