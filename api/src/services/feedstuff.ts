@@ -121,11 +121,12 @@ export class FeedstuffService {
 
             let listElementsByUserFeedstuffIdResult: DomainFeedstuffMeasurement[] = yield self.feedstuffRepository.listElementsByUserFeedstuffId(feedstuff.id);
 
-            if (listElementsByFeedstuffIdResult != null) {
+      
+            if (listElementsByFeedstuffIdResult != null && listElementsByFeedstuffIdResult.length != 0) {
                 feedstuff.elements = listElementsByFeedstuffIdResult;
             }
 
-            if (listElementsByUserFeedstuffIdResult != null) {
+            if (listElementsByUserFeedstuffIdResult != null && listElementsByUserFeedstuffIdResult.length != 0) {
                 feedstuff.elements = listElementsByUserFeedstuffIdResult;
             }
 

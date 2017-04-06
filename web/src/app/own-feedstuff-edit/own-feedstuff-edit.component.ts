@@ -19,11 +19,11 @@ export class OwnFeedstuffEditComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe((params: Params) => {
       let feedstuffId = params['feedstuffId'];
-      this.ownFeedstuffsService.getFeedstuff(feedstuffId).subscribe((getFeedstuffResult: any) => {
+      this.ownFeedstuffsService.findUserFeedstuff(feedstuffId).subscribe((getFeedstuffResult: any) => {
         this.feedstuff = getFeedstuffResult;
         this.feedstuff.id = feedstuffId;
 
-        this.ownFeedstuffsService.listMeasurements(feedstuffId).subscribe((listMeasurementsResult: any[]) => {
+        this.ownFeedstuffsService.listUserFeedstuffMeasurements(feedstuffId).subscribe((listMeasurementsResult: any[]) => {
           this.elements = listMeasurementsResult;
         });
 

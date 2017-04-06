@@ -39,11 +39,11 @@ export class NavbarComponent implements OnInit {
       if (result.status == 200) {
         this.decodedToken = result.json();
         this.isAuthenticated = true;
-      } else {
-        this.decodedToken = null;
-        this.isAuthenticated = false;
-        localStorage.removeItem('jwt.token');
       }
+    }, (error: Error) => {
+      this.decodedToken = null;
+      this.isAuthenticated = false;
+      localStorage.removeItem('jwt.token');
     })
   }
 

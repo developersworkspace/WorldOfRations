@@ -41,6 +41,7 @@ export class FormulatorService {
 
             formulation.formula = results[1];
             formulation.formula.elements = results[2];
+
             return formulation;
         });
     }

@@ -15,6 +15,7 @@ export class BaseService {
         let headers = new Headers();
 
         let jwtToken = localStorage.getItem('jwt.token');
+
         if (jwtToken != null || jwtToken == '') {
             headers.append('Authorization', 'Bearer ' + jwtToken);
         }
@@ -28,6 +29,7 @@ export class BaseService {
         let headers = new Headers();
 
         let jwtToken = localStorage.getItem('jwt.token');
+
         if (jwtToken != null || jwtToken == '') {
             headers.append('Authorization', 'Bearer ' + jwtToken);
         }

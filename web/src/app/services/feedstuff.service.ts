@@ -17,17 +17,17 @@ export class FeedstuffService extends BaseService {
    }
 
   public listFeedstuffs() {
-    return this.get(environment.api.uri + '/api/feedstuff/list')
+    return this.get(environment.api.uri + '/api/feedstuff/listFeedstuffs')
       .map((res: Response) => res.json());
   }
 
-  public getSuggestedValues(formulaId: string, feedstuffId: string) {
+  public findSuggestedValues(formulaId: string, feedstuffId: string) {
     return this.get(environment.api.uri + '/api/feedstuff/findSuggestedValues?formulaId=' + formulaId + '&feedstuffId=' + feedstuffId)
       .map((res: Response) => res.json());
   }
 
   public listExampleFeedstuffs() {
-    return this.get(environment.api.uri + '/api/feedstuff/listExample')
+    return this.get(environment.api.uri + '/api/feedstuff/listExampleFeedstuffs')
       .map((res: Response) => {
         let result: any[] = res.json();
         let resultArr: any[] = []
