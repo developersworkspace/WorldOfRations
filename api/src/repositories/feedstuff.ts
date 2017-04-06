@@ -13,7 +13,8 @@ export interface IFeedstuffRepository {
     listElementsByUserFeedstuffId(feedstuffId: string): Promise<DomainFeedstuffMeasurement[]>;
     listFeedstuffsByUsername(username: string): Promise<DomainFeedstuff[]>;
 
-    findFeedstuffByFeedstuffId(feedstuffId: string, username: string): Promise<DomainFeedstuff>;
+    findFeedstuffByFeedstuffId(feedstuffId: string): Promise<DomainFeedstuff>;
+    findUserFeedstuffByFeedstuffId(feedstuffId: string, username: string): Promise<DomainFeedstuff>;
     findSuggestedValuesByFormulaIdAndFeedstuffId(formulaId: string, feedstuffId: string): Promise<DomainSuggestedValue>;
     
     insertUserFeedstuff(username: string, id: string, name: string, description: string): Promise<Boolean>;

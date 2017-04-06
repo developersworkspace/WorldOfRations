@@ -22,6 +22,7 @@ describe('FeedstuffService', () => {
     let validFeedstuffId = '1';
 
     let validUserFeedstuffId = '6';
+    let validUserFeedstuffIdWitNoFeedstuffMeasurements = '8';
 
     beforeEach(() => {
         let feedstuffRepository = new MockFeedstuffRepository(null);
@@ -47,16 +48,51 @@ describe('FeedstuffService', () => {
                 expect(result[1].elements.length).to.be.eq(1);
             });
         });
+
+
+        it('should return list of feedstuffs where elements are populated given user feedstuffs', () => {
+            return feedstuffService.populateElementsOfFeedstuffs(
+                [
+                    new DomainFeedstuff('5', null, 10, 100, 5000),
+                    new DomainFeedstuff('6', null, 10, 100, 5000)
+                ]
+            ).then((result: DomainFeedstuff[]) => {
+                expect(result).to.be.not.null;
+                expect(result.length).to.be.eq(2);
+
+                expect(result[0].elements).to.be.not.null;
+                expect(result[1].elements).to.be.not.null;
+
+                expect(result[0].elements.length).to.be.eq(1);
+                expect(result[1].elements.length).to.be.eq(1);
+            });
+        });
     });
 
     describe('populateNamesOfFeedstuffs', () => {
-        it('should return list of feedstuffs where names are populated', () => {
+        it('should return list of feedstuffs where feedstuffs names are populated', () => {
             return feedstuffService.populateNamesOfFeedstuffs(
                 [
                     new DomainFeedstuff('1', null, 10, 100, 5000),
                     new DomainFeedstuff('2', null, 10, 100, 5000)
                 ],
                 null
+            ).then((result: DomainFeedstuff[]) => {
+                expect(result).to.be.not.null;
+                expect(result.length).to.be.eq(2);
+
+                expect(result[0].name).to.be.not.null;
+                expect(result[1].name).to.be.not.null;
+            });
+        });
+
+        it('should return list of feedstuffs where feedstuffs names are populated given user feedstuffs', () => {
+            return feedstuffService.populateNamesOfFeedstuffs(
+                [
+                    new DomainFeedstuff('5', null, 10, 100, 5000),
+                    new DomainFeedstuff('6', null, 10, 100, 5000)
+                ],
+                validUsername
             ).then((result: DomainFeedstuff[]) => {
                 expect(result).to.be.not.null;
                 expect(result.length).to.be.eq(2);
@@ -114,16 +150,16 @@ describe('FeedstuffService', () => {
 
     describe('createUserFeedstuff', () => {
         it('should return feedstuff', () => {
-            return feedstuffService.createUserFeedstuff(validUsername, 'Feedstuff8', null).then((createUserFeedstuffResult: DomainFeedstuff) => {
+            return feedstuffService.createUserFeedstuff(validUsername, 'Feedstuff9', null).then((createUserFeedstuffResult: DomainFeedstuff) => {
                 expect(createUserFeedstuffResult).to.be.not.null;
             });
         });
 
         it('should be inserted into repository', () => {
-            return feedstuffService.createUserFeedstuff(validUsername, 'Feedstuff8', null).then((createUserFeedstuffResult: DomainFeedstuff) => {
+            return feedstuffService.createUserFeedstuff(validUsername, 'Feedstuff9', null).then((createUserFeedstuffResult: DomainFeedstuff) => {
                 return feedstuffService.listUserFeedstuffs(validUsername);
             }).then((listUserFeedstuffs: DomainFeedstuff[]) => {
-                expect(listUserFeedstuffs.find(x => x.name == 'Feedstuff8')).to.be.not.undefined;
+                expect(listUserFeedstuffs.find(x => x.name == 'Feedstuff9')).to.be.not.undefined;
             });
         });
     });
@@ -144,6 +180,22 @@ describe('FeedstuffService', () => {
         it('should return null given null username with valid feedstuff id', () => {
             return feedstuffService.findUserFeedstuff(validFeedstuffId, null).then((findUserFeedstuffResult: DomainFeedstuff) => {
                 expect(findUserFeedstuffResult).to.be.null;
+            });
+        });
+    });
+
+    describe('listUserFeedstuffMeasurements', () => {
+        it('should return list of feedstuff measurements given valid user feedstuff id', () => {
+            return feedstuffService.listUserFeedstuffMeasurements(validUserFeedstuffId).then((listUserFeedstuffMeasurementsResult: DomainFeedstuffMeasurement[]) => {
+                expect(listUserFeedstuffMeasurementsResult).to.be.not.null;
+                expect(listUserFeedstuffMeasurementsResult.length).to.be.eq(1);
+            });
+        });
+
+        it('should return list of feedstuff measurements given valid user feedstuff id with no feedstuff measurements', () => {
+            return feedstuffService.listUserFeedstuffMeasurements(validUserFeedstuffIdWitNoFeedstuffMeasurements).then((listUserFeedstuffMeasurementsResult: DomainFeedstuffMeasurement[]) => {
+                expect(listUserFeedstuffMeasurementsResult).to.be.not.null;
+                expect(listUserFeedstuffMeasurementsResult.length).to.be.eq(5);
             });
         });
     });

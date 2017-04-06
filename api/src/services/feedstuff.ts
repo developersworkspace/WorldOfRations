@@ -76,9 +76,8 @@ export class FeedstuffService {
         });
     }
 
-    // TODO: Return user feedstuff only
     public findUserFeedstuff(feedstuffId: string, username: string): Promise<DomainFeedstuff> {
-        return this.feedstuffRepository.findFeedstuffByFeedstuffId(feedstuffId, username);
+        return this.feedstuffRepository.findUserFeedstuffByFeedstuffId(feedstuffId, username);
     }
 
     public saveUserFeedstuffMeasurements(feedstuffId: string, measurements: DomainFeedstuffMeasurement[]): Promise<Boolean> {
@@ -103,7 +102,16 @@ export class FeedstuffService {
         return co(function* () {
             let listElementsByFeedstuffIdResult: DomainFeedstuffMeasurement[] = yield self.feedstuffRepository.listElementsByFeedstuffId(feedstuff.id);
 
-            feedstuff.elements = listElementsByFeedstuffIdResult;
+            let listElementsByUserFeedstuffIdResult: DomainFeedstuffMeasurement[] = yield self.feedstuffRepository.listElementsByUserFeedstuffId(feedstuff.id);
+
+            if (listElementsByFeedstuffIdResult != null) {
+                feedstuff.elements = listElementsByFeedstuffIdResult;
+            }
+
+            if (listElementsByUserFeedstuffIdResult != null) {
+                feedstuff.elements = listElementsByUserFeedstuffIdResult;
+            }
+
             return feedstuff;
         });
     }
@@ -112,9 +120,18 @@ export class FeedstuffService {
         let self = this;
 
         return co(function* () {
-            let findFeedstuffByFeedstuffIdResult: DomainFeedstuff = yield self.feedstuffRepository.findFeedstuffByFeedstuffId(feedstuff.id, username);
+            let findFeedstuffByFeedstuffIdResult: DomainFeedstuff = yield self.feedstuffRepository.findFeedstuffByFeedstuffId(feedstuff.id);
 
-           feedstuff.name = findFeedstuffByFeedstuffIdResult.name;
+            let findUserFeedstuffByFeedstuffIdResult: DomainFeedstuff = yield self.feedstuffRepository.findUserFeedstuffByFeedstuffId(feedstuff.id, username);
+
+            if (findFeedstuffByFeedstuffIdResult != null) {
+                feedstuff.name = findFeedstuffByFeedstuffIdResult.name;
+            }
+
+            if (findUserFeedstuffByFeedstuffIdResult != null) {
+                feedstuff.name = findUserFeedstuffByFeedstuffIdResult.name;
+            }
+
             return feedstuff;
         });
     }

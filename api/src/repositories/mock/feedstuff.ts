@@ -36,7 +36,8 @@ export class MockFeedstuffRepository implements IFeedstuffRepository {
         'ValidUsername': [
             new DomainFeedstuff('5', 'Feedstuff5', null, null, null),
             new DomainFeedstuff('6', 'Feedstuff6', null, null, null),
-            new DomainFeedstuff('7', 'Feedstuff7', null, null, null)
+            new DomainFeedstuff('7', 'Feedstuff7', null, null, null),
+            new DomainFeedstuff('8', 'Feedstuff8', null, null, null)
         ]
     }
 
@@ -49,7 +50,20 @@ export class MockFeedstuffRepository implements IFeedstuffRepository {
         ],
         '3': [
             new DomainFeedstuffMeasurement('1', 'Element1', 5, '%', 1)
-        ]
+        ],
+        '4': [
+            new DomainFeedstuffMeasurement('1', 'Element1', 5, '%', 1)
+        ],
+        '5': [
+            new DomainFeedstuffMeasurement('1', 'Element1', 5, '%', 1)
+        ],
+        '6': [
+            new DomainFeedstuffMeasurement('1', 'Element1', 5, '%', 1)
+        ],
+        '7': [
+            new DomainFeedstuffMeasurement('1', 'Element1', 5, '%', 1)
+        ],
+        '8': []          
     }
 
     constructor(config: any) {
@@ -68,16 +82,21 @@ export class MockFeedstuffRepository implements IFeedstuffRepository {
         return Promise.resolve(this.exampleFeedstuffs);
     }
 
-    public findFeedstuffByFeedstuffId(feedstuffId: string, username: string): Promise<DomainFeedstuff> {
-        if (username == null) {
-            let result = this.feedstuffs.find(x => x.id == feedstuffId);
+    public findFeedstuffByFeedstuffId(feedstuffId: string): Promise<DomainFeedstuff> {
 
-            return Promise.resolve(result == undefined? null : result);
-        }
-
-        let result = this.feedstuffs.concat(this.userFeedstuffs[username]).find(x => x.id == feedstuffId);
+        let result = this.feedstuffs.find(x => x.id == feedstuffId);
         return Promise.resolve(result == undefined? null : result);
     }
+
+     public findUserFeedstuffByFeedstuffId(feedstuffId: string, username: string): Promise<DomainFeedstuff> {
+        if (username == null) {
+            return Promise.resolve(null);
+        }
+
+        let result = this.userFeedstuffs[username].find(x => x.id == feedstuffId);
+        return Promise.resolve(result == undefined? null : result);
+    }
+
 
     public findSuggestedValuesByFormulaIdAndFeedstuffId(formulaId: string, feedstuffId: string): Promise<DomainSuggestedValue> {
         return Promise.resolve(new DomainSuggestedValue(0, 1000));

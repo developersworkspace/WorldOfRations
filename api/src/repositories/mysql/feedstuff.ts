@@ -47,7 +47,21 @@ export class FeedstuffRepository extends Base implements IFeedstuffRepository {
         });
     }
 
-    public findFeedstuffByFeedstuffId(feedstuffId: string, username: string): Promise<DomainFeedstuff> {
+    public findFeedstuffByFeedstuffId(feedstuffId: string): Promise<DomainFeedstuff> {
+        let self = this;
+
+        return co(function* () {
+            let findFeedstuffByFeedstuffIdResult: DataFeedstuff[] = yield self.query(util.format('CALL findFeedstuffByFeedstuffId(%s, %s);', self.escapeAndFormat(feedstuffId), self.escapeAndFormat(null)));
+
+            if (findFeedstuffByFeedstuffIdResult.length == 0) {
+                return null;
+            } else {
+                return findFeedstuffByFeedstuffIdResult.map(x => new DomainFeedstuff(x.id, x.name, null, null, null))[0];
+            }
+        });
+    }
+
+    public findUserFeedstuffByFeedstuffId(feedstuffId: string, username: string): Promise<DomainFeedstuff> {
         let self = this;
 
         return co(function* () {
