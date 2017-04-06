@@ -113,20 +113,13 @@ export class FeedstuffRepository extends Base implements IFeedstuffRepository {
         });
     }
 
-    // TODO: Move listElements call into its own repository
     public listElementsByUserFeedstuffId(feedstuffId: string): Promise<DomainFeedstuffMeasurement[]> {
         let self = this;
 
         return co(function* () {
             let listElementsByUserFeedstuffIdResult: DataFeedstuffMeasurement[] = yield self.query(util.format('CALL listElementsByUserFeedstuffId(%s);', self.escapeAndFormat(feedstuffId)));
 
-            if (listElementsByUserFeedstuffIdResult.length == 0) {
-                let listElementsResult: DataFeedstuffMeasurement[] = yield self.query(util.format('CALL listElements();'));
-
-                return listElementsResult.map(x => new DomainFeedstuffMeasurement(x.id, x.name, 0, x.unit, x.sortOrder));
-            } else {
-                return listElementsByUserFeedstuffIdResult.map(x => new DomainFeedstuffMeasurement(x.id, x.name, x.value, x.unit, x.sortOrder));
-            }
+            return listElementsByUserFeedstuffIdResult.map(x => new DomainFeedstuffMeasurement(x.id, x.name, x.value, x.unit, x.sortOrder));
         });
     }
 
@@ -157,8 +150,6 @@ export class FeedstuffRepository extends Base implements IFeedstuffRepository {
         });
     }
 
-
-    // TODO: Create updateUserFeedstuffMeasurement SP
     public updateUserFeedstuffMeasurement(feedstuffId: string, elementId: string, value: number): Promise<Boolean> {
         let self = this;
 
