@@ -1,6 +1,6 @@
 {
   "extends": "tslint:latest",
-  "defaultSeverity": "warning",
+  "defaultSeverity": "error",
   "rules": {
     "quotemark": "single",
     "max-line-length": 150,

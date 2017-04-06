@@ -1,18 +1,18 @@
 // Imports
-import * as winston from 'winston';
 import * as path from 'path';
+import * as winston from 'winston';
 
 // Imports configuration
 import { config } from './config';
 
-let logger = new (winston.Logger)({
+const logger = new (winston.Logger)({
   transports: [
     new (winston.transports.Console)({ level: 'debug' }),
     new (winston.transports.File)({
       filename: path.join(config.logging.path, 'worldofrations_api.log'),
-      level: 'debug'
-    })
-  ]
+      level: 'debug',
+    }),
+  ],
 });
 
 export function getLogger(name: string) {
@@ -21,9 +21,9 @@ export function getLogger(name: string) {
       new (winston.transports.Console)({ level: 'debug' }),
       new (winston.transports.File)({
         filename: path.join(config.logging.path, `worldofrations_api_${name}.log`),
-        level: 'debug'
-      })
-    ]
+        level: 'debug',
+      }),
+    ],
   });
 }
 

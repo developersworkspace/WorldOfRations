@@ -47,7 +47,7 @@ export class AuthService {
         }
     }
 
-    private createClientAuths(): any {
+    public createClientAuths(): any {
 
         const googleAuth = new clientOAuth2({
             accessTokenUri: 'https://www.googleapis.com/oauth2/v4/token',

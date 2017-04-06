@@ -12,7 +12,7 @@ export class UserService {
         this.userRepository = new UserRepository(this.config.db);
      }
 
-    public login(username: string): Promise<Boolean> {
+    public login(username: string): Promise<boolean> {
       return this.userRepository.findUserByUsername(username).then((findUserByUsernameResult: DomainUser) => {
         if (findUserByUsernameResult == null) {
             return this.userRepository.insertUser(username);
