@@ -50,9 +50,9 @@ export class FormulatorService {
 
         let results: any;
         const model = {
-            optimize: "cost",
-            opType: "min",
             constraints: this.buildConstraintsForSolver(formulation.feedstuffs, formulation.formula),
+            opType: "min",
+            optimize: "cost",
             variables: this.buildVariablesForSolver(formulation.feedstuffs),
         };
 
@@ -67,8 +67,8 @@ export class FormulatorService {
 
         return this.formulationRepository.insertFormulation(formulation).then((insertFormulationResult: any) => {
             return {
-                currencyCode: formulation.currencyCode,
                 cost: formulation.cost,
+                currencyCode: formulation.currencyCode,
                 feasible: formulation.feasible,
                 id: formulation.id,
             };
@@ -157,7 +157,9 @@ export class FormulatorService {
     }
 
     private buildConstraintsForSolver(feedstuffs: DomainFeedstuff[], formula: DomainFormula) {
-        const constraints = {};
+        const constraints = {
+            weight: null,
+        };
 
         for (const element of formula.elements) {
             constraints[element.id] = {
@@ -173,7 +175,7 @@ export class FormulatorService {
             };
         }
 
-        constraints['weight'] = {
+        constraints.weight = {
             max: 1000,
             min: 1000,
         };
