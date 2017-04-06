@@ -23,7 +23,7 @@ export class FormulatorService {
     feedstuffService: FeedstuffService;
 
     constructor(private formulaRepository: FormulaRepository, private feedstuffRepository: FeedstuffRepository, private formulationRepository: FormulationRepository) {
-        this.feedstuffService = new FeedstuffService(feedstuffRepository);
+        this.feedstuffService = new FeedstuffService(feedstuffRepository, null);
     }
 
     public createFormulation(feedstuffs: DomainFeedstuff[], formulaId: string, currencyCode: string): Promise<DomainFormulation> {

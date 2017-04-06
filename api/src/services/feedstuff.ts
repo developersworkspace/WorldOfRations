@@ -2,18 +2,18 @@
 import * as uuid from 'uuid';
 import * as co from 'co';
 import { IFeedstuffRepository } from './../repositories/feedstuff';
+import { IElementRepository } from './../repositories/element';
 
-// Imports repositories
-import { FeedstuffRepository } from './../repositories/mysql/feedstuff';
 
 // Imports domain models
 import { FeedstuffMeasurement as DomainFeedstuffMeasurement } from './../models/feedstuff-measurement';
+import { Element as DomainElement } from './../models/element';
 import { Feedstuff as DomainFeedstuff } from './../models/feedstuff';
 import { SuggestedValue as DomainSuggestedValue } from './../models/suggested-value';
 
 export class FeedstuffService {
 
-    constructor(private feedstuffRepository: IFeedstuffRepository) {
+    constructor(private feedstuffRepository: IFeedstuffRepository, private elementRepository: IElementRepository) {
     }
 
     public listFeedstuffs(username: string): Promise<DomainFeedstuff[]> {
@@ -84,16 +84,33 @@ export class FeedstuffService {
         let self = this;
 
         return co(function* () {
-            let tasks = measurements.map(x => self.feedstuffRepository.insertUserFeedstuffMeasurement(feedstuffId, x.id, x.value));
 
-            let results: any[] = yield tasks;
+            let listElementsByUserFeedstuffIdResult: DomainFeedstuffMeasurement[] = yield self.feedstuffRepository.listElementsByUserFeedstuffId(feedstuffId);
+
+            let tasksInsert = measurements.filter(x => listElementsByUserFeedstuffIdResult.find(y => y.id == x.id) == undefined).map(x => self.feedstuffRepository.insertUserFeedstuffMeasurement(feedstuffId, x.id, x.value));
+
+            let tasksUpdate = measurements.filter(x => listElementsByUserFeedstuffIdResult.find(y => y.id == x.id) != undefined).map(x => self.feedstuffRepository.updateUserFeedstuffMeasurement(feedstuffId, x.id, x.value));
+
+            let results: any[] = yield [tasksInsert, tasksUpdate];
 
             return true;
         });
     }
 
     public listUserFeedstuffMeasurements(feedstuffId: string): Promise<DomainFeedstuffMeasurement[]> {
-        return this.feedstuffRepository.listElementsByUserFeedstuffId(feedstuffId);
+        let self = this;
+
+        return co(function* () {
+            let listElementsByUserFeedstuffIdResult: DomainFeedstuffMeasurement[] = yield self.feedstuffRepository.listElementsByUserFeedstuffId(feedstuffId);
+
+            if (listElementsByUserFeedstuffIdResult.length == 0) {
+                let listElementsResult: DomainElement[] = yield self.elementRepository.listElements();
+                return listElementsResult.map(x => new DomainFeedstuffMeasurement(x.id, x.name, x.value, x.unit, x.sortOrder));
+            }
+
+            return listElementsByUserFeedstuffIdResult;
+        });
+
     }
 
     private populateElementsOfFeedstuff(feedstuff: DomainFeedstuff): Promise<DomainFeedstuff> {

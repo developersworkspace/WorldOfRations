@@ -63,7 +63,7 @@ export class MockFeedstuffRepository implements IFeedstuffRepository {
         '7': [
             new DomainFeedstuffMeasurement('1', 'Element1', 5, '%', 1)
         ],
-        '8': []          
+        '8': []
     }
 
     constructor(config: any) {
@@ -85,16 +85,16 @@ export class MockFeedstuffRepository implements IFeedstuffRepository {
     public findFeedstuffByFeedstuffId(feedstuffId: string): Promise<DomainFeedstuff> {
 
         let result = this.feedstuffs.find(x => x.id == feedstuffId);
-        return Promise.resolve(result == undefined? null : result);
+        return Promise.resolve(result == undefined ? null : result);
     }
 
-     public findUserFeedstuffByFeedstuffId(feedstuffId: string, username: string): Promise<DomainFeedstuff> {
+    public findUserFeedstuffByFeedstuffId(feedstuffId: string, username: string): Promise<DomainFeedstuff> {
         if (username == null) {
             return Promise.resolve(null);
         }
 
         let result = this.userFeedstuffs[username].find(x => x.id == feedstuffId);
-        return Promise.resolve(result == undefined? null : result);
+        return Promise.resolve(result == undefined ? null : result);
     }
 
 
@@ -135,10 +135,12 @@ export class MockFeedstuffRepository implements IFeedstuffRepository {
     }
 
     public insertUserFeedstuffMeasurement(feedstuffId: string, elementId: string, value: number): Promise<Boolean> {
+        this.feedstuffMeasurements[feedstuffId].push(new DomainFeedstuffMeasurement(elementId, 'Element' + elementId, value, '%', 1))
         return Promise.resolve(true);
     }
 
     public updateUserFeedstuffMeasurement(feedstuffId: string, elementId: string, value: number): Promise<Boolean> {
+        this.feedstuffMeasurements[feedstuffId].find(x => x.id == elementId).value = value;
         return Promise.resolve(true);
     }
 }

@@ -8,6 +8,7 @@ import { FeedstuffService } from './../services/feedstuff';
 
 // Imports repositories
 import { FeedstuffRepository } from './../repositories/mysql/feedstuff';
+import { MockElementRepository as ElementRepository } from './../repositories/mock/element';
 
 // Imports models
 import { Feedstuff as DomainFeedstuff } from './../models/feedstuff';
@@ -18,7 +19,8 @@ let router = express.Router();
 
 router.get('/listFeedstuffs', (req: Request, res: Response, next: Function) => {
     let feedstuffRepository = new FeedstuffRepository(config.db);
-    let feedstuffService = new FeedstuffService(feedstuffRepository);
+    let elementRepository = new ElementRepository(config.db);
+    let feedstuffService = new FeedstuffService(feedstuffRepository, elementRepository);
     feedstuffService.listFeedstuffs(req.user == null ? null : req.user.username).then((listFeedstuffsResult: DomainFeedstuff[]) => {
         res.json(listFeedstuffsResult.map(x => {
             return {
@@ -40,7 +42,8 @@ router.get('/listUserFeedstuffs', (req: Request, res: Response, next: Function) 
     }
 
     let feedstuffRepository = new FeedstuffRepository(config.db);
-    let feedstuffService = new FeedstuffService(feedstuffRepository);
+    let elementRepository = new ElementRepository(config.db);
+    let feedstuffService = new FeedstuffService(feedstuffRepository, elementRepository);
 
     feedstuffService.listUserFeedstuffs(req.user.username).then((listFeedstuffsForUserResult: DomainFeedstuff[]) => {
         res.json(listFeedstuffsForUserResult.map(x => {
@@ -62,7 +65,8 @@ router.get('/findUserFeedstuff', (req: Request, res: Response, next: Function) =
     }
 
     let feedstuffRepository = new FeedstuffRepository(config.db);
-    let feedstuffService = new FeedstuffService(feedstuffRepository);
+    let elementRepository = new ElementRepository(config.db);
+    let feedstuffService = new FeedstuffService(feedstuffRepository, elementRepository);
 
     feedstuffService.findUserFeedstuff(req.query.feedstuffId, req.user.username).then((findUserFeedstuffResult: DomainFeedstuff) => {
         res.json({
@@ -83,7 +87,8 @@ router.post('/createUserFeedstuff', (req: Request, res: Response, next: Function
     }
 
     let feedstuffRepository = new FeedstuffRepository(config.db);
-    let feedstuffService = new FeedstuffService(feedstuffRepository);
+    let elementRepository = new ElementRepository(config.db);
+    let feedstuffService = new FeedstuffService(feedstuffRepository, elementRepository);
 
     feedstuffService.createUserFeedstuff(req.user.username, req.body.name, req.body.description).then((createUserFeedstuffResult: DomainFeedstuff) => {
         res.json({
@@ -98,7 +103,8 @@ router.post('/createUserFeedstuff', (req: Request, res: Response, next: Function
 
 router.get('/findSuggestedValues', (req: Request, res: Response, next: Function) => {
     let feedstuffRepository = new FeedstuffRepository(config.db);
-    let feedstuffService = new FeedstuffService(feedstuffRepository);
+    let elementRepository = new ElementRepository(config.db);
+    let feedstuffService = new FeedstuffService(feedstuffRepository, elementRepository);
     feedstuffService.findSuggestedValues(req.query.formulaId, req.query.feedstuffId).then((findSuggestedValuesResult: DomainSuggestedValue) => {
         if (findSuggestedValuesResult == null) {
             res.json({
@@ -118,7 +124,8 @@ router.get('/findSuggestedValues', (req: Request, res: Response, next: Function)
 
 router.get('/listExampleFeedstuffs', (req: Request, res: Response, next: Function) => {
     let feedstuffRepository = new FeedstuffRepository(config.db);
-    let feedstuffService = new FeedstuffService(feedstuffRepository);
+    let elementRepository = new ElementRepository(config.db);
+    let feedstuffService = new FeedstuffService(feedstuffRepository, elementRepository);
     feedstuffService.listExampleFeedstuffs().then((listExampleFeedstuffsResult: DomainFeedstuff[]) => {
         res.json(listExampleFeedstuffsResult.map(x => {
             return {
@@ -142,7 +149,8 @@ router.post('/saveUserFeedstuffMeasurements', (req: Request, res: Response, next
     }
 
     let feedstuffRepository = new FeedstuffRepository(config.db);
-    let feedstuffService = new FeedstuffService(feedstuffRepository);
+    let elementRepository = new ElementRepository(config.db);
+    let feedstuffService = new FeedstuffService(feedstuffRepository, elementRepository);
     feedstuffService.saveUserFeedstuffMeasurements(req.body.feedstuffId, req.body.measurements).then((saveUserFeedstuffMeasurementsResult: Boolean) => {
         res.json(saveUserFeedstuffMeasurementsResult);
     }).catch((err: Error) => {
@@ -159,7 +167,8 @@ router.get('/listUserFeedstuffMeasurements', (req: Request, res: Response, next:
     }
 
     let feedstuffRepository = new FeedstuffRepository(config.db);
-    let feedstuffService = new FeedstuffService(feedstuffRepository);
+    let elementRepository = new ElementRepository(config.db);
+    let feedstuffService = new FeedstuffService(feedstuffRepository, elementRepository);
     feedstuffService.listUserFeedstuffMeasurements(req.query.feedstuffId).then((listUserFeedstuffMeasurementsResult: DomainFeedstuffMeasurement[]) => {
         res.json(listUserFeedstuffMeasurementsResult.map(x => {
             return {

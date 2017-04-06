@@ -6,6 +6,7 @@ import { FeedstuffService } from './feedstuff';
 
 // Imports repositories
 import { MockFeedstuffRepository } from './../repositories/mock/feedstuff';
+import { MockElementRepository } from './../repositories/mock/element';
 
 // Imports domain models
 import { Feedstuff as DomainFeedstuff } from './../models/feedstuff';
@@ -26,8 +27,9 @@ describe('FeedstuffService', () => {
 
     beforeEach(() => {
         let feedstuffRepository = new MockFeedstuffRepository(null);
+        let elementRepository = new MockElementRepository(null);
 
-        feedstuffService = new FeedstuffService(feedstuffRepository);
+        feedstuffService = new FeedstuffService(feedstuffRepository, elementRepository);
     });
 
     describe('populateElementsOfFeedstuffs', () => {
@@ -113,7 +115,7 @@ describe('FeedstuffService', () => {
 
         it('should return list of feedstuffs given valid username', () => {
             return feedstuffService.listFeedstuffs(validUsername).then((listFeedstuffsResult: DomainFeedstuff[]) => {
-                expect(listFeedstuffsResult.length).to.be.eq(7);
+                expect(listFeedstuffsResult.length).to.be.eq(8);
             });
         });
     });
@@ -143,7 +145,7 @@ describe('FeedstuffService', () => {
 
         it('should return list of feedstuffs given valid username', () => {
             return feedstuffService.listUserFeedstuffs(validUsername).then((listUserFeedstuffsResult: DomainFeedstuff[]) => {
-                expect(listUserFeedstuffsResult.length).to.be.eq(3);
+                expect(listUserFeedstuffsResult.length).to.be.eq(4);
             });
         });
     });
@@ -196,6 +198,39 @@ describe('FeedstuffService', () => {
             return feedstuffService.listUserFeedstuffMeasurements(validUserFeedstuffIdWitNoFeedstuffMeasurements).then((listUserFeedstuffMeasurementsResult: DomainFeedstuffMeasurement[]) => {
                 expect(listUserFeedstuffMeasurementsResult).to.be.not.null;
                 expect(listUserFeedstuffMeasurementsResult.length).to.be.eq(5);
+            });
+        });
+    });
+
+    describe('saveUserFeedstuffMeasurements', () => {
+        it('should return true', () => {
+            return feedstuffService.saveUserFeedstuffMeasurements(validUserFeedstuffId, [
+                new DomainFeedstuffMeasurement('2', 'Element2', 10, null, null)
+            ]).then((saveUserFeedstuffMeasurementsResult: Boolean) => {
+                expect(saveUserFeedstuffMeasurementsResult).to.be.true;
+            });
+        });
+
+        it('should be inserted into repository', () => {
+            return feedstuffService.saveUserFeedstuffMeasurements(validUserFeedstuffId, [
+                new DomainFeedstuffMeasurement('2', 'Element2', 10, null, null)
+            ]).then((saveUserFeedstuffMeasurementsResult: Boolean) => {
+                return feedstuffService.listUserFeedstuffMeasurements(validUserFeedstuffId);
+            }).then((listUserFeedstuffMeasurementsResult: DomainFeedstuffMeasurement[]) => {
+                expect(listUserFeedstuffMeasurementsResult).to.be.not.null;
+                expect(listUserFeedstuffMeasurementsResult.length).to.be.eq(2);
+            });
+        });
+
+        it('should update existing in repository', () => {
+            return feedstuffService.saveUserFeedstuffMeasurements(validUserFeedstuffId, [
+                new DomainFeedstuffMeasurement('1', 'Element1', 10, null, null)
+            ]).then((saveUserFeedstuffMeasurementsResult: Boolean) => {
+                return feedstuffService.listUserFeedstuffMeasurements(validUserFeedstuffId);
+            }).then((listUserFeedstuffMeasurementsResult: DomainFeedstuffMeasurement[]) => {
+                expect(listUserFeedstuffMeasurementsResult).to.be.not.null;
+                expect(listUserFeedstuffMeasurementsResult.length).to.be.eq(1);
+                expect(listUserFeedstuffMeasurementsResult[0].value).to.be.eq(10);
             });
         });
     });
