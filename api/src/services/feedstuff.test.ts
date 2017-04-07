@@ -238,7 +238,7 @@ describe('FeedstuffService', () => {
 
     describe('findSuggestedValues', () => {
 
-        let findSuggestedValuesByFormulaIdAndFeedstuffIdSpy: sinon.SinonSpy = null;
+        const findSuggestedValuesByFormulaIdAndFeedstuffIdSpy: sinon.SinonSpy = null;
         let feedstuffService: FeedstuffService = null;
 
         beforeEach(() => {
@@ -246,7 +246,9 @@ describe('FeedstuffService', () => {
             const feedstuffRepository = new MockFeedstuffRepository(null);
             const elementRepository = new MockElementRepository(null);
 
-            findSuggestedValuesByFormulaIdAndFeedstuffIdSpy = sinon.spy(feedstuffRepository, 'findSuggestedValuesByFormulaIdAndFeedstuffId');
+            sinon.stub(feedstuffRepository, 'findSuggestedValuesByFormulaIdAndFeedstuffId').callsFake((formulaId: string, feedstuffId: string) => {
+                return Promise.resolve(new DomainSuggestedValue(0, 1000));
+            });
 
             feedstuffService = new FeedstuffService(feedstuffRepository, elementRepository);
         });
@@ -255,7 +257,7 @@ describe('FeedstuffService', () => {
             return co(function*() {
                 const findSuggestedValuesResult: DomainSuggestedValue = yield feedstuffService.findSuggestedValues('1', '1');
 
-                sinon.assert.calledOnce(findSuggestedValuesByFormulaIdAndFeedstuffIdSpy);
+                expect(findSuggestedValuesResult).to.be.not.null;
             });
         });
     });
@@ -460,7 +462,7 @@ describe('FeedstuffService', () => {
             });
         });
 
-        it('should be inserted into repository', () => {
+        it('should call insertUserFeedstuffMeasurement on repository', () => {
             return co(function*() {
                 const saveUserFeedstuffMeasurementsResult: boolean = yield feedstuffService.saveUserFeedstuffMeasurements('5', [
                     new DomainFeedstuffMeasurement('2', 'Element2', 10, null, null),
@@ -470,7 +472,7 @@ describe('FeedstuffService', () => {
             });
         });
 
-        it('should update existing in repository', () => {
+        it('should call updateUserFeedstuffMeasurement on repository', () => {
             return co(function*() {
                 const saveUserFeedstuffMeasurementsResult: boolean = yield feedstuffService.saveUserFeedstuffMeasurements('5', [
                     new DomainFeedstuffMeasurement('1', 'Element1', 10, null, null),
