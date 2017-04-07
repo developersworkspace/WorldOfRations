@@ -17,7 +17,7 @@ export class FormulaService extends BaseService {
    }
 
   public listFormulas() {
-    return this.get(environment.api.uri + '/api/formula/list')
+    return this.get(environment.api.uri + '/api/formula/listFormula')
       .map((res: Response) => res.json());
   }
 

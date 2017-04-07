@@ -22,12 +22,12 @@ export class FormulatorService extends BaseService {
   }
 
   public getFormulation(formulationId: string) {
-    return this.get(environment.api.uri + '/api/formulator/formulation?formulationId=' + formulationId)
+    return this.get(environment.api.uri + '/api/formulator/findFormulation?formulationId=' + formulationId)
     .map((res: Response) => res.json());
   }
 
   public getFormulations() {
-    return this.get(environment.api.uri + '/api/formulator/formulations')
+    return this.get(environment.api.uri + '/api/formulator/listFormulations')
     .map((res: Response) => res.json());
   }
 

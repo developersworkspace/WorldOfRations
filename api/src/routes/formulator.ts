@@ -31,7 +31,7 @@ router.post('/formulate', (req: Request, res: Response, next: () => void) => {
     });
 });
 
-router.get('/formulation', (req: Request, res: Response, next: () => void) => {
+router.get('/findFormulation', (req: Request, res: Response, next: () => void) => {
     const feedstuffRepository = new FeedstuffRepository(config.db);
     const formulaRepository = new FormulaRepository(config.db);
     const formulationRepository = new FormulationRepository(config.db);
@@ -80,7 +80,7 @@ router.get('/formulation', (req: Request, res: Response, next: () => void) => {
     });
 });
 
-router.get('/formulations', (req: Request, res: Response, next: () => void) => {
+router.get('/listFormulations', (req: Request, res: Response, next: () => void) => {
     const feedstuffRepository = new FeedstuffRepository(config.db);
     const formulaRepository = new FormulaRepository(config.db);
     const formulationRepository = new FormulationRepository(config.db);

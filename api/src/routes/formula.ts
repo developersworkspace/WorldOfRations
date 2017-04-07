@@ -8,7 +8,7 @@ import { FormulaService } from './../services/formula';
 
 const router = express.Router();
 
-router.get('/list', (req: Request, res: Response, next: () => void) => {
+router.get('/listFormula', (req: Request, res: Response, next: () => void) => {
     const formulaService = new FormulaService(config);
     formulaService.listFormula().then((listFormulaResult: any[]) => {
         res.json(listFormulaResult.map((x) => {
