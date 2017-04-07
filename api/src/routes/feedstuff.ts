@@ -7,7 +7,7 @@ import { config } from './../config';
 import { FeedstuffService } from './../services/feedstuff';
 
 // Imports repositories
-import { MockElementRepository as ElementRepository } from './../repositories/mock/element';
+import { ElementRepository } from './../repositories/mysql/element';
 import { FeedstuffRepository } from './../repositories/mysql/feedstuff';
 
 // Imports models

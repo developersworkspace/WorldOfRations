@@ -1,5 +1,6 @@
 // Imports
 import * as util from 'util';
+import { IFormulaRepository } from './../formula';
 import { Base } from './base';
 
 // Imports data models
@@ -12,7 +13,7 @@ import { Formula as DomainFormula } from './../../models/formula';
 import { FormulaMeasurement as DomainFormulaMeasurement } from './../../models/formula-measurement';
 import { Formulation as DomainFormulation } from './../../models/formulation';
 
-export class FormulaRepository extends Base {
+export class FormulaRepository extends Base implements IFormulaRepository {
 
     constructor(config: any) {
         super(config);
@@ -31,7 +32,7 @@ export class FormulaRepository extends Base {
             });
     }
 
-    public findFormulaByFormulaId(formulaId: string) {
+    public findFormulaByFormulaId(formulaId: string): Promise<DomainFormula> {
         return this.query(util.format('CALL findFormulaByFormulaId(%s);', this.escapeAndFormat(formulaId)))
             .then((findFormulaByFormulaIdResult: DataFormula[]) => {
                 return new DomainFormula(findFormulaByFormulaIdResult[0].id, findFormulaByFormulaIdResult[0].name);

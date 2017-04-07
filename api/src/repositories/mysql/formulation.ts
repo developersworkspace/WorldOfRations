@@ -1,5 +1,6 @@
 // Imports
 import * as util from 'util';
+import { IFormulationRepository } from './../formulation';
 import { Base } from './base';
 
 // Imports domain models
@@ -11,13 +12,13 @@ import { Formulation as DomainFormulation } from './../../models/formulation';
 import { Formulation as DataFormulation } from './../../data-models/formulation';
 import { FormulationFeedstuff as DataFormulationFeedstuff } from './../../data-models/formulation-feedstuff';
 
-export class FormulationRepository extends Base {
+export class FormulationRepository extends Base implements IFormulationRepository {
 
     constructor(config: any) {
         super(config);
     }
 
-    public insertFormulation(formulation: DomainFormulation): Promise<any> {
+    public insertFormulation(formulation: DomainFormulation): Promise<boolean> {
 
         const dataFormulation = formulation.getDataFormalation();
         const dataFormulationFeedstuffs = formulation.getDataFormulationFeedstuffs();
@@ -41,7 +42,9 @@ export class FormulationRepository extends Base {
 
         const p = formulationFeedstuffsP.concat([formulationP]);
 
-        return Promise.all(p);
+        return Promise.all(p).then((result: any) => {
+            return true;
+        });
     }
 
     public findFormulationById(formulationId: string): Promise<DomainFormulation> {

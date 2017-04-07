@@ -1,6 +1,9 @@
 // Imports
 import * as solver from 'javascript-lp-solver';
 import * as uuid from 'uuid';
+import { IFeedstuffRepository } from './../repositories/feedstuff';
+import { IFormulaRepository } from './../repositories/formula';
+import { IFormulationRepository } from './../repositories/formulation';
 
 // Imports domain models
 import { CompositionElement as DomainCompositionElement } from './../models/composition-element';
@@ -22,7 +25,7 @@ export class FormulatorService {
 
     private feedstuffService: FeedstuffService;
 
-    constructor(private formulaRepository: FormulaRepository, private feedstuffRepository: FeedstuffRepository, private formulationRepository: FormulationRepository) {
+    constructor(private formulaRepository: IFormulaRepository, private feedstuffRepository: IFeedstuffRepository, private formulationRepository: IFormulationRepository) {
         this.feedstuffService = new FeedstuffService(feedstuffRepository, null);
     }
 
