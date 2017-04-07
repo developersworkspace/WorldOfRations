@@ -37,7 +37,7 @@ export class FormulatorService {
 
         const self = this;
 
-        return co(function*() {
+        return co(function* () {
 
             const populateElementsOfFeedstuffsResult: DomainFeedstuff[] = yield self.feedstuffService.populateElementsOfFeedstuffs(feedstuffs, username);
             const findFormulaByFormulaIdResult: DomainFormula = yield self.formulaRepository.findFormulaByFormulaId(formula.id);
@@ -72,37 +72,45 @@ export class FormulatorService {
         formulation.cost = results.result / 1000;
         formulation.feasible = results.feasible;
 
-        return this.formulationRepository.insertFormulation(formulation).then((insertFormulationResult: any) => {
+        const self = this;
+
+        return co(function* () {
+
+            const insertFormulationResult: any = yield self.formulationRepository.insertFormulation(formulation);
+
             return {
                 cost: formulation.cost,
                 currencyCode: formulation.currencyCode,
                 feasible: formulation.feasible,
                 id: formulation.id,
             };
+
         });
     }
 
     public findFormulation(formulationId: string, username: string): Promise<DomainFormulation> {
-        return this.formulationRepository.findFormulationById(formulationId).then((findFormulationByIdResult: DomainFormulation) => {
-            return this.populateFormulationFeedstuffOfFormulation(findFormulationByIdResult);
-        }).then((populateFormulationFeedstuffOfFormulationResult: DomainFormulation) => {
-            return Promise.all([
-                populateFormulationFeedstuffOfFormulationResult,
-                this.feedstuffService.populateElementsOfFeedstuffs(populateFormulationFeedstuffOfFormulationResult.feedstuffs, username),
-            ]);
-        }).then((results: any[]) => {
-            const formulation: DomainFormulation = results[0];
 
-            formulation.feedstuffs = results[1];
+        const self = this;
+
+        return co(function* () {
+            const findFormulationByIdResult: DomainFormulation = yield self.formulationRepository.findFormulationById(formulationId);
+
+            let formulation: DomainFormulation = findFormulationByIdResult;
+
+            const populateFormulationFeedstuffOfFormulationResult: DomainFormulation = yield self.populateFormulationFeedstuffOfFormulation(findFormulationByIdResult);
+            formulation = populateFormulationFeedstuffOfFormulationResult;
+
+            const populateElementsOfFeedstuffsResult: DomainFeedstuff[] = yield self.feedstuffService.populateElementsOfFeedstuffs(populateFormulationFeedstuffOfFormulationResult.feedstuffs, username);
+            formulation.feedstuffs = populateElementsOfFeedstuffsResult;
+
+            const populateCompositionOfFormulationResult: DomainFormulation = yield self.populateCompositionOfFormulation(formulation);
+            formulation = populateCompositionOfFormulationResult;
+
+            const populateSupplementFeedstuffsOfFormulationResult: DomainFormulation = yield self.populateSupplementFeedstuffsOfFormulation(populateCompositionOfFormulationResult);
+            formulation = populateSupplementFeedstuffsOfFormulationResult;
+
             return formulation;
-        })
-            .then((result: DomainFormulation) => {
-                return this.populateCompositionOfFormulation(result);
-            }).then((populateCompositionOfFormulationResult: DomainFormulation) => {
-                return this.populateSupplementFeedstuffsOfFormulation(populateCompositionOfFormulationResult);
-            }).then((populateSupplementFeedstuffsOfFormulationResult: DomainFormulation) => {
-                return populateSupplementFeedstuffsOfFormulationResult;
-            });
+        });
     }
 
     public listFormulations(): Promise<DomainFormulation[]> {
@@ -127,37 +135,48 @@ export class FormulatorService {
     }
 
     private populateCompositionOfFormulation(formulation: DomainFormulation): Promise<DomainFormulation> {
-        return this.formulaRepository.findComparisonFormulaByFormulaId(formulation.formula.id).then((findComparisonFormulaByFormulaIdResult: DomainFormula) => {
-            return this.formulaRepository.listElementsByFormulaId(findComparisonFormulaByFormulaIdResult.id).then((listElementsForFormulaResult: DomainFormulaMeasurement[]) => {
-                formulation.composition = [];
 
-                for (const element of listElementsForFormulaResult) {
-                    const elementId = element.id;
-                    const elementName = element.name;
-                    let elementMinimum = element.minimum == null ? 0 : element.minimum;
-                    let elementMaximum = element.maximum == null ? 1000000 : element.maximum;
-                    const elementUnit = element.unit;
-                    const elementSortOrder = element.sortOrder;
-                    let sum = 0;
-                    for (const feedstuff of formulation.feedstuffs) {
-                        const feedstuffElements = feedstuff.elements.filter((x) => x.id === elementId);
-                        if (feedstuffElements.length > 0 && feedstuff.weight !== undefined) {
-                            sum += feedstuffElements[0].value * feedstuff.weight;
-                        }
+        const self = this;
+
+        return co(function* () {
+            const findComparisonFormulaByFormulaIdResult: DomainFormula = yield self.formulaRepository.findComparisonFormulaByFormulaId(formulation.formula.id);
+            const listElementsForFormulaResult: DomainFormulaMeasurement[] = yield self.formulaRepository.listElementsByFormulaId(findComparisonFormulaByFormulaIdResult.id)
+
+
+            formulation.composition = [];
+
+            for (const element of listElementsForFormulaResult) {
+                const elementId = element.id;
+                const elementName = element.name;
+                let elementMinimum = element.minimum == null ? 0 : element.minimum;
+                let elementMaximum = element.maximum == null ? 1000000 : element.maximum;
+                const elementUnit = element.unit;
+                const elementSortOrder = element.sortOrder;
+                let sum = 0;
+                for (const feedstuff of formulation.feedstuffs) {
+                    const feedstuffElements = feedstuff.elements.filter((x) => x.id === elementId);
+                    if (feedstuffElements.length > 0 && feedstuff.weight !== undefined) {
+                        sum += feedstuffElements[0].value * feedstuff.weight;
                     }
-
-                    elementMinimum = element.minimum === null ? 0 : element.minimum;
-                    elementMaximum = element.maximum === null ? 1000000 : element.maximum;
-
-                    formulation.composition.push(new DomainCompositionElement(elementId, elementName, this.roundToTwoDecimal(elementMinimum), this.roundToTwoDecimal(elementMaximum), this.roundToTwoDecimal(sum / 1000), elementUnit, elementSortOrder));
                 }
-                return formulation;
-            });
+
+                elementMinimum = element.minimum === null ? 0 : element.minimum;
+                elementMaximum = element.maximum === null ? 1000000 : element.maximum;
+
+                formulation.composition.push(new DomainCompositionElement(elementId, elementName, this.roundToTwoDecimal(elementMinimum), this.roundToTwoDecimal(elementMaximum), this.roundToTwoDecimal(sum / 1000), elementUnit, elementSortOrder));
+            }
+            return formulation;
+
         });
     }
 
     private populateFormulationFeedstuffOfFormulation(formulation: DomainFormulation): Promise<DomainFormulation> {
-        return this.formulationRepository.listFormulationFeedstuffByFormulationId(formulation.id).then((listFormulationFeedstuffByFormulationIdResult: DomainFeedstuff[]) => {
+
+        const self = this;
+
+        return co(function* () {
+            const listFormulationFeedstuffByFormulationIdResult: DomainFeedstuff[] = yield self.formulationRepository.listFormulationFeedstuffByFormulationId(formulation.id);
+
             formulation.feedstuffs = listFormulationFeedstuffByFormulationIdResult;
             return formulation;
         });
