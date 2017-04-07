@@ -18,13 +18,6 @@ import { SupplementFeedstuff as DataSupplementFeedstuff } from './../../data-mod
 
 export class MockFeedstuffRepository implements IFeedstuffRepository {
 
-    private feedstuffs = [
-        new DomainFeedstuff('1', 'Feedstuff1', null, null, null),
-        new DomainFeedstuff('2', 'Feedstuff2', null, null, null),
-        new DomainFeedstuff('3', 'Feedstuff3', null, null, null),
-        new DomainFeedstuff('4', 'Feedstuff4', null, null, null),
-    ];
-
     private exampleFeedstuffs = [
         new DomainFeedstuff('1', 'Feedstuff1', 50, 1000, 600),
         new DomainFeedstuff('2', 'Feedstuff2', 200, 800, 300),
@@ -70,75 +63,50 @@ export class MockFeedstuffRepository implements IFeedstuffRepository {
     }
 
     public listFeedstuffs(username: string): Promise<DomainFeedstuff[]> {
-        if (username == null) {
-            return Promise.resolve(this.feedstuffs);
-        } else {
-            return Promise.resolve(this.feedstuffs.concat(this.userFeedstuffs[username]));
-        }
+        return Promise.resolve([]);
     }
 
     public listExampleFeedstuffs(): Promise<DomainFeedstuff[]> {
-        return Promise.resolve(this.exampleFeedstuffs);
+        return Promise.resolve([]);
     }
 
     public findFeedstuffByFeedstuffId(feedstuffId: string): Promise<DomainFeedstuff> {
-
-        const result = this.feedstuffs.find((x) => x.id === feedstuffId);
-        return Promise.resolve(result === undefined ? null : result);
+        return Promise.resolve(null);
     }
 
     public findUserFeedstuffByFeedstuffId(feedstuffId: string, username: string): Promise<DomainFeedstuff> {
-        if (username == null) {
-            return Promise.resolve(null);
-        }
-
-        const result = this.userFeedstuffs[username].find((x) => x.id === feedstuffId);
-        return Promise.resolve(result === undefined ? null : result);
+         return Promise.resolve(null);
     }
 
     public findSuggestedValuesByFormulaIdAndFeedstuffId(formulaId: string, feedstuffId: string): Promise<DomainSuggestedValue> {
-        return Promise.resolve(new DomainSuggestedValue(0, 1000));
+        return Promise.resolve(null);
     }
 
     public listElementsByFeedstuffId(feedstuffId: string): Promise<DomainFeedstuffMeasurement[]> {
-        return Promise.resolve(this.feedstuffMeasurements[feedstuffId]);
+         return Promise.resolve([]);
     }
 
     public listSupplementFeedstuffByElementId(element: DomainCompositionElement): Promise<DomainSupplementElement> {
-        const supplementElement = new DomainSupplementElement(element.id, element.name, element.unit, element.sortOrder);
-
-        supplementElement.supplementFeedstuffs = [
-            new DomainSupplementFeedstuff('1', 'Feedstuff1', 10),
-        ];
-
-        supplementElement.selectedSupplementFeedstuffs = supplementElement.supplementFeedstuffs.length === 0 ? [] : [supplementElement.supplementFeedstuffs[0]];
-        return Promise.resolve(supplementElement);
+         return Promise.resolve(null);
     }
 
     public listElementsByUserFeedstuffId(feedstuffId: string): Promise<DomainFeedstuffMeasurement[]> {
-        return Promise.resolve(this.feedstuffMeasurements[feedstuffId]);
+         return Promise.resolve([]);
     }
 
     public listFeedstuffsByUsername(username: string): Promise<DomainFeedstuff[]> {
-        if (username === null) {
-            return Promise.resolve([]);
-        } else {
-            return Promise.resolve(this.userFeedstuffs[username]);
-        }
+         return Promise.resolve([]);
     }
 
     public insertUserFeedstuff(username: string, id: string, name: string, description: string): Promise<boolean> {
-        this.userFeedstuffs[username].push(new DomainFeedstuff(id, name, null, null, null));
         return Promise.resolve(true);
     }
 
     public insertUserFeedstuffMeasurement(feedstuffId: string, elementId: string, value: number): Promise<boolean> {
-        this.feedstuffMeasurements[feedstuffId].push(new DomainFeedstuffMeasurement(elementId, 'Element' + elementId, value, '%', 1));
         return Promise.resolve(true);
     }
 
     public updateUserFeedstuffMeasurement(feedstuffId: string, elementId: string, value: number): Promise<boolean> {
-        this.feedstuffMeasurements[feedstuffId].find((x) => x.id === elementId).value = value;
         return Promise.resolve(true);
     }
 }

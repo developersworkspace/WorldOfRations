@@ -14,7 +14,7 @@ import { MockFormulationRepository } from './../repositories/mock/formulation';
 import { Feedstuff as DomainFeedstuff } from './../models/feedstuff';
 import { Formulation as DomainFormulation } from './../models/formulation';
 
-describe('FeedstuffService', () => {
+describe('FormualtorService', () => {
 
     let formulatorService: FormulatorService = null;
 
