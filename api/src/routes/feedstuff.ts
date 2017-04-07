@@ -148,7 +148,7 @@ router.post('/saveUserFeedstuffMeasurements', (req: Request, res: Response, next
     const feedstuffRepository = new FeedstuffRepository(config.db);
     const elementRepository = new ElementRepository(config.db);
     const feedstuffService = new FeedstuffService(feedstuffRepository, elementRepository);
-    feedstuffService.saveUserFeedstuffMeasurements(req.body.feedstuffId, req.body.measurements).then((saveUserFeedstuffMeasurementsResult: boolean) => {
+    feedstuffService.saveUserFeedstuffMeasurements(req.body.feedstuffId, req.body.measurements, req.user.username).then((saveUserFeedstuffMeasurementsResult: boolean) => {
         res.json(saveUserFeedstuffMeasurementsResult);
     }).catch((err: Error) => {
         res.json(err.message);
@@ -165,7 +165,7 @@ router.get('/listUserFeedstuffMeasurements', (req: Request, res: Response, next:
     const feedstuffRepository = new FeedstuffRepository(config.db);
     const elementRepository = new ElementRepository(config.db);
     const feedstuffService = new FeedstuffService(feedstuffRepository, elementRepository);
-    feedstuffService.listUserFeedstuffMeasurements(req.query.feedstuffId).then((listUserFeedstuffMeasurementsResult: DomainFeedstuffMeasurement[]) => {
+    feedstuffService.listUserFeedstuffMeasurements(req.query.feedstuffId, req.user.username).then((listUserFeedstuffMeasurementsResult: DomainFeedstuffMeasurement[]) => {
         res.json(listUserFeedstuffMeasurementsResult.map((x) => {
             return {
                 id: x.id,

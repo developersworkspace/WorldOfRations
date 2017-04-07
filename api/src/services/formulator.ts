@@ -26,13 +26,13 @@ export class FormulatorService {
         this.feedstuffService = new FeedstuffService(feedstuffRepository, null);
     }
 
-    public createFormulation(feedstuffs: DomainFeedstuff[], formulaId: string, currencyCode: string): Promise<DomainFormulation> {
+    public createFormulation(feedstuffs: DomainFeedstuff[], formulaId: string, currencyCode: string, username: string): Promise<DomainFormulation> {
         const formula = new DomainFormula(formulaId, null);
         const formulation = new DomainFormulation(uuid.v4());
         formulation.currencyCode = currencyCode;
 
         return Promise.all([
-            this.feedstuffService.populateElementsOfFeedstuffs(feedstuffs),
+            this.feedstuffService.populateElementsOfFeedstuffs(feedstuffs, username),
             this.formulaRepository.findFormulaByFormulaId(formula.id),
             this.formulaRepository.listElementsByFormulaId(formula.id),
         ]).then((results: any[]) => {
@@ -75,13 +75,13 @@ export class FormulatorService {
         });
     }
 
-    public findFormulation(formulationId: string): Promise<DomainFormulation> {
+    public findFormulation(formulationId: string, username: string): Promise<DomainFormulation> {
         return this.formulationRepository.findFormulationById(formulationId).then((findFormulationByIdResult: DomainFormulation) => {
             return this.populateFormulationFeedstuffOfFormulation(findFormulationByIdResult);
         }).then((populateFormulationFeedstuffOfFormulationResult: DomainFormulation) => {
             return Promise.all([
                 populateFormulationFeedstuffOfFormulationResult,
-                this.feedstuffService.populateElementsOfFeedstuffs(populateFormulationFeedstuffOfFormulationResult.feedstuffs),
+                this.feedstuffService.populateElementsOfFeedstuffs(populateFormulationFeedstuffOfFormulationResult.feedstuffs, username),
             ]);
         }).then((results: any[]) => {
             const formulation: DomainFormulation = results[0];

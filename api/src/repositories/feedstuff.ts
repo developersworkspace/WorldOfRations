@@ -10,7 +10,7 @@ export interface IFeedstuffRepository {
     listExampleFeedstuffs(): Promise<DomainFeedstuff[]>;
     listElementsByFeedstuffId(feedstuffId: string): Promise<DomainFeedstuffMeasurement[]>;
     listSupplementFeedstuffByElementId(element: DomainCompositionElement): Promise<DomainSupplementElement>;
-    listElementsByUserFeedstuffId(feedstuffId: string): Promise<DomainFeedstuffMeasurement[]>;
+    listElementsByUserFeedstuffId(feedstuffId: string, username: string): Promise<DomainFeedstuffMeasurement[]>;
     listFeedstuffsByUsername(username: string): Promise<DomainFeedstuff[]>;
 
     findFeedstuffByFeedstuffId(feedstuffId: string): Promise<DomainFeedstuff>;
@@ -18,7 +18,7 @@ export interface IFeedstuffRepository {
     findSuggestedValuesByFormulaIdAndFeedstuffId(formulaId: string, feedstuffId: string): Promise<DomainSuggestedValue>;
 
     insertUserFeedstuff(username: string, id: string, name: string, description: string): Promise<boolean>;
-    insertUserFeedstuffMeasurement(feedstuffId: string, elementId: string, value: number): Promise<boolean>;
+    insertUserFeedstuffMeasurement(feedstuffId: string, elementId: string, value: number, username: string): Promise<boolean>;
 
-    updateUserFeedstuffMeasurement(feedstuffId: string, elementId: string, value: number): Promise<boolean>;
+    updateUserFeedstuffMeasurement(feedstuffId: string, elementId: string, value: number, username: string): Promise<boolean>;
 }

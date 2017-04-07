@@ -38,7 +38,7 @@ describe('FeedstuffService', () => {
                 [
                     new DomainFeedstuff('1', null, 10, 100, 5000),
                     new DomainFeedstuff('2', null, 10, 100, 5000),
-                ],
+                ], validUsername,
             ).then((result: DomainFeedstuff[]) => {
                 expect(result).to.be.not.null;
                 expect(result.length).to.be.eq(2);
@@ -56,7 +56,7 @@ describe('FeedstuffService', () => {
                 [
                     new DomainFeedstuff('5', null, 10, 100, 5000),
                     new DomainFeedstuff('6', null, 10, 100, 5000),
-                ],
+                ], validUsername,
             ).then((result: DomainFeedstuff[]) => {
                 expect(result).to.be.not.null;
                 expect(result.length).to.be.eq(2);
@@ -186,14 +186,14 @@ describe('FeedstuffService', () => {
 
     describe('listUserFeedstuffMeasurements', () => {
         it('should return list of feedstuff measurements given valid user feedstuff id', () => {
-            return feedstuffService.listUserFeedstuffMeasurements(validUserFeedstuffId).then((listUserFeedstuffMeasurementsResult: DomainFeedstuffMeasurement[]) => {
+            return feedstuffService.listUserFeedstuffMeasurements(validUserFeedstuffId, validUsername).then((listUserFeedstuffMeasurementsResult: DomainFeedstuffMeasurement[]) => {
                 expect(listUserFeedstuffMeasurementsResult).to.be.not.null;
                 expect(listUserFeedstuffMeasurementsResult.length).to.be.eq(1);
             });
         });
 
         it('should return list of feedstuff measurements given valid user feedstuff id with no feedstuff measurements', () => {
-            return feedstuffService.listUserFeedstuffMeasurements(validUserFeedstuffIdWitNoFeedstuffMeasurements).then((listUserFeedstuffMeasurementsResult: DomainFeedstuffMeasurement[]) => {
+            return feedstuffService.listUserFeedstuffMeasurements(validUserFeedstuffIdWitNoFeedstuffMeasurements, validUsername).then((listUserFeedstuffMeasurementsResult: DomainFeedstuffMeasurement[]) => {
                 expect(listUserFeedstuffMeasurementsResult).to.be.not.null;
                 expect(listUserFeedstuffMeasurementsResult.length).to.be.eq(5);
             });
@@ -204,7 +204,7 @@ describe('FeedstuffService', () => {
         it('should return true', () => {
             return feedstuffService.saveUserFeedstuffMeasurements(validUserFeedstuffId, [
                 new DomainFeedstuffMeasurement('2', 'Element2', 10, null, null),
-            ]).then((saveUserFeedstuffMeasurementsResult: boolean) => {
+            ], validUsername).then((saveUserFeedstuffMeasurementsResult: boolean) => {
                 expect(saveUserFeedstuffMeasurementsResult).to.be.true;
             });
         });
@@ -212,8 +212,8 @@ describe('FeedstuffService', () => {
         it('should be inserted into repository', () => {
             return feedstuffService.saveUserFeedstuffMeasurements(validUserFeedstuffId, [
                 new DomainFeedstuffMeasurement('2', 'Element2', 10, null, null),
-            ]).then((saveUserFeedstuffMeasurementsResult: boolean) => {
-                return feedstuffService.listUserFeedstuffMeasurements(validUserFeedstuffId);
+            ], validUsername).then((saveUserFeedstuffMeasurementsResult: boolean) => {
+                return feedstuffService.listUserFeedstuffMeasurements(validUserFeedstuffId, validUsername);
             }).then((listUserFeedstuffMeasurementsResult: DomainFeedstuffMeasurement[]) => {
                 expect(listUserFeedstuffMeasurementsResult).to.be.not.null;
                 expect(listUserFeedstuffMeasurementsResult.length).to.be.eq(2);
@@ -223,8 +223,8 @@ describe('FeedstuffService', () => {
         it('should update existing in repository', () => {
             return feedstuffService.saveUserFeedstuffMeasurements(validUserFeedstuffId, [
                 new DomainFeedstuffMeasurement('1', 'Element1', 10, null, null),
-            ]).then((saveUserFeedstuffMeasurementsResult: boolean) => {
-                return feedstuffService.listUserFeedstuffMeasurements(validUserFeedstuffId);
+            ], validUsername).then((saveUserFeedstuffMeasurementsResult: boolean) => {
+                return feedstuffService.listUserFeedstuffMeasurements(validUserFeedstuffId, validUsername);
             }).then((listUserFeedstuffMeasurementsResult: DomainFeedstuffMeasurement[]) => {
                 expect(listUserFeedstuffMeasurementsResult).to.be.not.null;
                 expect(listUserFeedstuffMeasurementsResult.length).to.be.eq(1);

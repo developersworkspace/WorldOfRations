@@ -27,14 +27,14 @@ export class FeedstuffService {
         return this.feedstuffRepository.findSuggestedValuesByFormulaIdAndFeedstuffId(formulaId, feedstuffId);
     }
 
-    public populateElementsOfFeedstuffs(feedstuffs: DomainFeedstuff[]): Promise<DomainFeedstuff[]> {
+    public populateElementsOfFeedstuffs(feedstuffs: DomainFeedstuff[], username: string): Promise<DomainFeedstuff[]> {
         const self = this;
 
         return co(function*() {
 
             const listOfPromise = [];
             for (const feedstuff of feedstuffs) {
-                listOfPromise.push(self.populateElementsOfFeedstuff(feedstuff));
+                listOfPromise.push(self.populateElementsOfFeedstuff(feedstuff, username));
             }
 
             const feedstuffsResult: DomainFeedstuff[] = yield listOfPromise;
@@ -79,16 +79,16 @@ export class FeedstuffService {
         return this.feedstuffRepository.findUserFeedstuffByFeedstuffId(feedstuffId, username);
     }
 
-    public saveUserFeedstuffMeasurements(feedstuffId: string, measurements: DomainFeedstuffMeasurement[]): Promise<boolean> {
+    public saveUserFeedstuffMeasurements(feedstuffId: string, measurements: DomainFeedstuffMeasurement[], username: string): Promise<boolean> {
         const self = this;
 
         return co(function*() {
 
-            const listElementsByUserFeedstuffIdResult: DomainFeedstuffMeasurement[] = yield self.feedstuffRepository.listElementsByUserFeedstuffId(feedstuffId);
+            const listElementsByUserFeedstuffIdResult: DomainFeedstuffMeasurement[] = yield self.feedstuffRepository.listElementsByUserFeedstuffId(feedstuffId, username);
 
-            const tasksInsert = measurements.filter((x) => listElementsByUserFeedstuffIdResult.find((y) => y.id === x.id) === undefined).map((x) => self.feedstuffRepository.insertUserFeedstuffMeasurement(feedstuffId, x.id, x.value));
+            const tasksInsert = measurements.filter((x) => listElementsByUserFeedstuffIdResult.find((y) => y.id === x.id) === undefined).map((x) => self.feedstuffRepository.insertUserFeedstuffMeasurement(feedstuffId, x.id, x.value, username));
 
-            const tasksUpdate = measurements.filter((x) => listElementsByUserFeedstuffIdResult.find((y) => y.id === x.id) !== undefined).map((x) => self.feedstuffRepository.updateUserFeedstuffMeasurement(feedstuffId, x.id, x.value));
+            const tasksUpdate = measurements.filter((x) => listElementsByUserFeedstuffIdResult.find((y) => y.id === x.id) !== undefined).map((x) => self.feedstuffRepository.updateUserFeedstuffMeasurement(feedstuffId, x.id, x.value, username));
 
             const results: any[] = yield [tasksInsert, tasksUpdate];
 
@@ -96,11 +96,11 @@ export class FeedstuffService {
         });
     }
 
-    public listUserFeedstuffMeasurements(feedstuffId: string): Promise<DomainFeedstuffMeasurement[]> {
+    public listUserFeedstuffMeasurements(feedstuffId: string, username: string): Promise<DomainFeedstuffMeasurement[]> {
         const self = this;
 
         return co(function*() {
-            const listElementsByUserFeedstuffIdResult: DomainFeedstuffMeasurement[] = yield self.feedstuffRepository.listElementsByUserFeedstuffId(feedstuffId);
+            const listElementsByUserFeedstuffIdResult: DomainFeedstuffMeasurement[] = yield self.feedstuffRepository.listElementsByUserFeedstuffId(feedstuffId, username);
 
             if (listElementsByUserFeedstuffIdResult.length === 0) {
                 const listElementsResult: DomainElement[] = yield self.elementRepository.listElements();
@@ -112,13 +112,13 @@ export class FeedstuffService {
 
     }
 
-    private populateElementsOfFeedstuff(feedstuff: DomainFeedstuff): Promise<DomainFeedstuff> {
+    private populateElementsOfFeedstuff(feedstuff: DomainFeedstuff, username: string): Promise<DomainFeedstuff> {
         const self = this;
 
         return co(function*() {
             const listElementsByFeedstuffIdResult: DomainFeedstuffMeasurement[] = yield self.feedstuffRepository.listElementsByFeedstuffId(feedstuff.id);
 
-            const listElementsByUserFeedstuffIdResult: DomainFeedstuffMeasurement[] = yield self.feedstuffRepository.listElementsByUserFeedstuffId(feedstuff.id);
+            const listElementsByUserFeedstuffIdResult: DomainFeedstuffMeasurement[] = yield self.feedstuffRepository.listElementsByUserFeedstuffId(feedstuff.id, username);
 
             if (listElementsByFeedstuffIdResult !== null && listElementsByFeedstuffIdResult.length !== 0) {
                 feedstuff.elements = listElementsByFeedstuffIdResult;

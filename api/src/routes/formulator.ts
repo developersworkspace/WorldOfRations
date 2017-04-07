@@ -22,7 +22,7 @@ router.post('/formulate', (req: Request, res: Response, next: () => void) => {
     const formulationRepository = new FormulationRepository(config.db);
     const formulatorService = new FormulatorService(formulaRepository, feedstuffRepository, formulationRepository);
 
-    formulatorService.createFormulation(req.body.feedstuffs, req.body.formulaId, req.body.currencyCode).then((createFormulationResult: DomainFormulation) => {
+    formulatorService.createFormulation(req.body.feedstuffs, req.body.formulaId, req.body.currencyCode, req.user == null ? null : req.user.username).then((createFormulationResult: DomainFormulation) => {
         formulatorService.formulate(createFormulationResult).then((formulateResult: any) => {
             res.json(formulateResult);
         });
@@ -37,7 +37,7 @@ router.get('/formulation', (req: Request, res: Response, next: () => void) => {
     const formulationRepository = new FormulationRepository(config.db);
     const formulatorService = new FormulatorService(formulaRepository, feedstuffRepository, formulationRepository);
 
-    formulatorService.findFormulation(req.query.formulationId).then((findFormulationResult: DomainFormulation) => {
+    formulatorService.findFormulation(req.query.formulationId, req.user == null ? null : req.user.username).then((findFormulationResult: DomainFormulation) => {
         res.json({
             composition: findFormulationResult.composition.map((x) => {
                 return {

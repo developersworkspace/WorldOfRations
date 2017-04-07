@@ -112,7 +112,7 @@ export class FeedstuffRepository extends Base implements IFeedstuffRepository {
         });
     }
 
-    public listElementsByUserFeedstuffId(feedstuffId: string): Promise<DomainFeedstuffMeasurement[]> {
+    public listElementsByUserFeedstuffId(feedstuffId: string, username: string): Promise<DomainFeedstuffMeasurement[]> {
         const self = this;
 
         return co(function*() {
@@ -140,7 +140,7 @@ export class FeedstuffRepository extends Base implements IFeedstuffRepository {
         });
     }
 
-    public insertUserFeedstuffMeasurement(feedstuffId: string, elementId: string, value: number): Promise<boolean> {
+    public insertUserFeedstuffMeasurement(feedstuffId: string, elementId: string, value: number, username: string): Promise<boolean> {
         const self = this;
 
         return co(function*() {
@@ -149,7 +149,7 @@ export class FeedstuffRepository extends Base implements IFeedstuffRepository {
         });
     }
 
-    public updateUserFeedstuffMeasurement(feedstuffId: string, elementId: string, value: number): Promise<boolean> {
+    public updateUserFeedstuffMeasurement(feedstuffId: string, elementId: string, value: number, username: string): Promise<boolean> {
         const self = this;
 
         return co(function*() {
