@@ -38,9 +38,10 @@ export class FormulatorService {
         const self = this;
 
         return co(function*() {
-            const populateElementsOfFeedstuffsResult = yield self.feedstuffService.populateElementsOfFeedstuffs(feedstuffs, username);
-            const findFormulaByFormulaIdResult = yield self.formulaRepository.findFormulaByFormulaId(formula.id);
-            const listElementsByFormulaIdResult = yield self.formulaRepository.listElementsByFormulaId(formula.id);
+
+            const populateElementsOfFeedstuffsResult: DomainFeedstuff[] = yield self.feedstuffService.populateElementsOfFeedstuffs(feedstuffs, username);
+            const findFormulaByFormulaIdResult: DomainFormula = yield self.formulaRepository.findFormulaByFormulaId(formula.id);
+            const listElementsByFormulaIdResult: DomainFormulaMeasurement[] = yield self.formulaRepository.listElementsByFormulaId(formula.id);
 
             formulation.feedstuffs = populateElementsOfFeedstuffsResult;
 

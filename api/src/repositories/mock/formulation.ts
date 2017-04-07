@@ -18,18 +18,18 @@ export class MockFormulationRepository implements IFormulationRepository {
     }
 
     public insertFormulation(formulation: DomainFormulation): Promise<boolean> {
-        return null;
+        return Promise.resolve(true);
     }
 
     public findFormulationById(formulationId: string): Promise<DomainFormulation> {
-        return null;
+        return Promise.resolve(null);
     }
 
     public listFormulationFeedstuffByFormulationId(formulationId: string): Promise<DomainFeedstuff[]> {
-       return null;
+        return Promise.resolve([]);
     }
 
     public listFormulations(): Promise<DomainFormulation[]> {
-        return null;
+        return Promise.resolve([]);
     }
 }

@@ -14,29 +14,23 @@ import { Formulation as DomainFormulation } from './../../models/formulation';
 
 export class MockFormulaRepository implements IFormulaRepository {
 
-    private formulas = [
-        new DomainFormula('1', 'Formula1'),
-    ];
-
     constructor(private config: any) {
 
     }
 
     public listFormulas(): Promise<DomainFormula[]> {
-        return Promise.resolve(this.formulas);
+        return Promise.resolve([]);
     }
 
     public listElementsByFormulaId(formulaId: string): Promise<DomainFormulaMeasurement[]> {
-        return Promise.resolve([
-            new DomainFormulaMeasurement('1', 'Element1', 0, 100, '%', 1),
-        ]);
+        return Promise.resolve([]);
     }
 
     public findFormulaByFormulaId(formulaId: string): Promise<DomainFormula> {
-        return Promise.resolve(this.formulas.find((x) => x.id === formulaId));
+       return Promise.resolve(null);
     }
 
     public findComparisonFormulaByFormulaId(formulaId: string): Promise<DomainFormula> {
-        return null;
+        return Promise.resolve(null);
     }
 }
