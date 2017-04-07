@@ -1,4 +1,5 @@
 // Imports
+import * as co from 'co';
 import * as solver from 'javascript-lp-solver';
 import * as uuid from 'uuid';
 import { IFeedstuffRepository } from './../repositories/feedstuff';
@@ -34,18 +35,20 @@ export class FormulatorService {
         const formulation = new DomainFormulation(uuid.v4());
         formulation.currencyCode = currencyCode;
 
-        return Promise.all([
-            this.feedstuffService.populateElementsOfFeedstuffs(feedstuffs, username),
-            this.formulaRepository.findFormulaByFormulaId(formula.id),
-            this.formulaRepository.listElementsByFormulaId(formula.id),
-        ]).then((results: any[]) => {
+        const self = this;
 
-            formulation.feedstuffs = results[0];
+        return co(function*() {
+            const populateElementsOfFeedstuffsResult = yield self.feedstuffService.populateElementsOfFeedstuffs(feedstuffs, username);
+            const findFormulaByFormulaIdResult = yield self.formulaRepository.findFormulaByFormulaId(formula.id);
+            const listElementsByFormulaIdResult = yield self.formulaRepository.listElementsByFormulaId(formula.id);
 
-            formulation.formula = results[1];
-            formulation.formula.elements = results[2];
+            formulation.feedstuffs = populateElementsOfFeedstuffsResult;
+
+            formulation.formula = findFormulaByFormulaIdResult;
+            formulation.formula.elements = listElementsByFormulaIdResult;
 
             return formulation;
+
         });
     }
 
