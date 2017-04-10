@@ -2,10 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 
-// Services
+// imports services
 import { FeedstuffService } from '../services/feedstuff.service';
 import { FormulaService } from '../services/formula.service';
 import { FormulatorService } from '../services/formulator.service';
+
+// Imports models
+import { Feedstuff } from './../models/feedstuff';
 
 @Component({
   selector: 'app-formulator',
@@ -19,7 +22,7 @@ export class FormulatorComponent implements OnInit {
   selectedFormulaName: string;
   selectedFormula: any = null;
 
-  feedstuffList: any[] = [];
+  feedstuffList: Feedstuff[] = [];
 
   currencyList: string[] = [];
   selectedCurrencyNames: string[];
@@ -229,7 +232,7 @@ export class FormulatorComponent implements OnInit {
   }
 
   private loadFeedstuffList() {
-    this.feedstuffService.listFeedstuffs().subscribe((result: any[]) => {
+    this.feedstuffService.listFeedstuffs().subscribe((result: Feedstuff[]) => {
       this.feedstuffList = result;
     }, (error: Error) => {
       this.errorMessage = 'An error has occurred while loading feedstuff';

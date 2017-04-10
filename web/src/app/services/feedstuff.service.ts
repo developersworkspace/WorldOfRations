@@ -9,6 +9,8 @@ import 'rxjs/add/operator/catch';
 import { environment } from './../../environments/environment';
 import { BaseService } from './baseService'; 
 
+import { Feedstuff } from './../models/feedstuff';
+
 @Injectable()
 export class FeedstuffService extends BaseService {
 
@@ -16,7 +18,7 @@ export class FeedstuffService extends BaseService {
     super(http);
    }
 
-  public listFeedstuffs() {
+  public listFeedstuffs(): Observable<Feedstuff[]> {
     return this.get(environment.api.uri + '/api/feedstuff/listFeedstuffs')
       .map((res: Response) => res.json());
   }
