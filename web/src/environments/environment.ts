@@ -6,7 +6,7 @@
 export const environment = {
     production: false,
     api: {
-        uri: 'http://localhost:8083'
+        uri: 'http://localhost:8083',
     },
     // oauth: {
     //     worldofrations: {

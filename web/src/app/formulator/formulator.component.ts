@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
+import { Observable } from 'rxjs/Observable';
 
 // imports services
 import { FeedstuffService } from '../services/feedstuff.service';
@@ -14,30 +14,29 @@ import { Formula } from './../models/formula';
 @Component({
   selector: 'app-formulator',
   templateUrl: './formulator.component.html',
-  styleUrls: ['./formulator.component.css']
+  styleUrls: ['./formulator.component.css'],
 })
 export class FormulatorComponent implements OnInit {
 
-  formulaList: Formula[] = [];
-  formulaListDataSource: Observable<any> = null;
-  selectedFormulaName: string;
-  selectedFormula: Formula = null;
+  public formulaList: Formula[] = [];
+  public formulaListDataSource: Observable<any> = null;
+  public selectedFormulaName: string;
+  public selectedFormula: Formula = null;
 
-  feedstuffList: Feedstuff[] = [];
+  public feedstuffList: Feedstuff[] = [];
 
-  currencyList: string[] = [];
-  selectedCurrencyNames: string[];
+  public currencyList: string[] = [];
+  public selectedCurrencyNames: string[];
 
-  errorMessage: string = null;
-  isFormulating: boolean = false;
+  public errorMessage: string = null;
+  public isFormulating: boolean = false;
 
-  feedstuffs: any[] = [];
-  formulatorResult: any = null;
+  public feedstuffs: any[] = [];
+  public formulatorResult: any = null;
 
   constructor(private feedstuffService: FeedstuffService, private formulaService: FormulaService, private formulatorService: FormulatorService) { }
 
-  ngOnInit() {
-
+  public ngOnInit() {
 
     this.initializeCurrencyControl();
     this.loadFeedstuffList();
@@ -45,37 +44,35 @@ export class FormulatorComponent implements OnInit {
     this.onClick_ResetToDefaults();
   }
 
-
-  getFormulaListAsDataSource(token: string): Observable<any> {
-
+  public getFormulaListAsDataSource(token: string): Observable<any> {
 
     return Observable.of(
       this.formulaList.filter((item: any) => {
-        let isValid = false;
+        const isValid = false;
 
-        let splittedName = item.name.split(' ');
-        let splittedToken = token.split(' ');
+        const splittedName = item.name.split(' ');
+        const splittedToken = token.split(' ');
 
         for (let i = 0; i < splittedToken.length; i++) {
           if (splittedToken[i] == null || splittedToken[i] == '') {
             return false;
           }
-          let query = new RegExp(splittedToken[i], 'ig');
+          const query = new RegExp(splittedToken[i], 'ig');
           if (query.test(item.name)) {
             return true;
           }
         }
 
         return false;
-      })
+      }),
     );
   }
 
-  onSelect_Currency(selectedCurrency) {
+  public onSelect_Currency(selectedCurrency) {
     this.selectedCurrencyNames = [selectedCurrency.id];
   }
 
-  onUpdate_SuggestedValues(item: any, instance: any) {
+ public onUpdate_SuggestedValues(item: any, instance: any) {
     if (item.item != null) {
       instance.selectedFeedstuff = item.item;
       instance.selectedFeedstuffName = item.item.name;
@@ -95,31 +92,31 @@ export class FormulatorComponent implements OnInit {
     }
   }
 
-  onSelect_Formula(item: any) {
+  public onSelect_Formula(item: any) {
     this.selectedFormula = item.item;
     for (let i = 0; i < this.feedstuffs.length; i++) {
       this.onUpdate_SuggestedValues({
-        item: this.feedstuffs[i].selectedFeedstuff
+        item: this.feedstuffs[i].selectedFeedstuff,
       }, this.feedstuffs[i]);
     }
   }
 
-  onClick_AddFeedstuff() {
+  public onClick_AddFeedstuff() {
     this.feedstuffs.push({
       selectedFeedstuffName: null,
       selectedFeedstuff: null,
       minimum: 0,
       maximum: 1000,
       cost: null,
-      isLoading: false
+      isLoading: false,
     });
   }
 
-  onClick_RemoveFeedstuff(item: any) {
+  public onClick_RemoveFeedstuff(item: any) {
     this.feedstuffs.splice(this.feedstuffs.indexOf(item), 1);
   }
 
-  onClick_ResetToDefaults() {
+  public onClick_ResetToDefaults() {
     this.feedstuffService.listExampleFeedstuffs().subscribe((result: any[]) => {
       this.feedstuffs = result;
     }, (error: Error) => {
@@ -127,7 +124,7 @@ export class FormulatorComponent implements OnInit {
     });
   }
 
-  onClick_Formulate() {
+  public onClick_Formulate() {
     this.formulatorResult = null;
     if (this.selectedFormula == null) {
       this.errorMessage = 'Please select a formula';
@@ -143,12 +140,11 @@ export class FormulatorComponent implements OnInit {
           isValid = false;
         }
 
-        if (this.feedstuffs[i].selectedFeedstuff != null && this.feedstuffs.filter(x => x.selectedFeedstuff != null && x.selectedFeedstuff.id == this.feedstuffs[i].selectedFeedstuff.id).length > 1) {
+        if (this.feedstuffs[i].selectedFeedstuff != null && this.feedstuffs.filter((x) => x.selectedFeedstuff != null && x.selectedFeedstuff.id == this.feedstuffs[i].selectedFeedstuff.id).length > 1) {
           this.errorMessage = 'Cannot have duplicate feedstuffs';
           isValid = false;
         }
       }
-
 
       if (!isValid) {
         return;
@@ -156,21 +152,21 @@ export class FormulatorComponent implements OnInit {
 
       this.isFormulating = true;
       this.errorMessage = null;
-      let feedstuffs: any[] = [];
+      const feedstuffs: any[] = [];
       for (let i = 0; i < this.feedstuffs.length; i++) {
         if (this.feedstuffs[i].selectedFeedstuff != null) {
           feedstuffs.push({
             id: this.feedstuffs[i].selectedFeedstuff.id,
             cost: this.feedstuffs[i].cost,
             minimum: this.feedstuffs[i].minimum,
-            maximum: this.feedstuffs[i].maximum
+            maximum: this.feedstuffs[i].maximum,
           });
         }
       }
-      let obj = {
+      const obj = {
         formulaId: this.selectedFormula.id,
-        feedstuffs: feedstuffs,
-        currencyCode: this.selectedCurrencyNames[0]
+        feedstuffs,
+        currencyCode: this.selectedCurrencyNames[0],
       };
 
       this.formulatorService.formulate(obj).subscribe((result: any) => {
@@ -186,14 +182,14 @@ export class FormulatorComponent implements OnInit {
   private updateFeedstuffErrorMessages() {
     for (let i = 0; i < this.feedstuffs.length; i++) {
       this.feedstuffs[i].errorMessage = this.validateFeedstuff(this.feedstuffs[i]);
-      if (this.feedstuffs[i].selectedFeedstuff != null && this.feedstuffs.filter(x => x.selectedFeedstuff != null && x.selectedFeedstuff.id == this.feedstuffs[i].selectedFeedstuff.id).length > 1) {
+      if (this.feedstuffs[i].selectedFeedstuff != null && this.feedstuffs.filter((x) => x.selectedFeedstuff != null && x.selectedFeedstuff.id == this.feedstuffs[i].selectedFeedstuff.id).length > 1) {
         this.errorMessage = 'Cannot have duplicate feedstuffs';
       }
     }
   }
 
   private validateFeedstuff(item: any) {
-    
+
     if (!item.selectedFeedstuff) {
       return 'Please select a feedstuff';
     }
@@ -243,7 +239,7 @@ export class FormulatorComponent implements OnInit {
   private initializeCurrencyControl() {
     this.currencyList = [
       'USD',
-      'ZAR'
+      'ZAR',
     ];
 
     this.selectedCurrencyNames = ['USD'];

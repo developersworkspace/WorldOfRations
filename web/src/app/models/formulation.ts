@@ -1,6 +1,6 @@
-import { Formula } from './formula';
-import { Feedstuff } from './feedstuff';
 import { Element } from './element';
+import { Feedstuff } from './feedstuff';
+import { Formula } from './formula';
 
 export class Formulation {
 

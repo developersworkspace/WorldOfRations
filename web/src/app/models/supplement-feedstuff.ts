@@ -1,5 +1,5 @@
 export class SupplementFeedstuff {
-    
+
     id: string;
     text: string;
     weight: number;

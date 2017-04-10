@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
+import { Observable } from 'rxjs/Observable';
 
 // Imports services
 import { FormulatorService } from './../services/formulator.service';
@@ -11,19 +11,19 @@ import { Formulation } from './../models/formulation';
 @Component({
   selector: 'app-footer',
   templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.css']
+  styleUrls: ['./footer.component.css'],
 })
 export class FooterComponent implements OnInit {
 
-  formulations: Formulation[];
+  public formulations: Formulation[];
 
   constructor(private formulatorService: FormulatorService) { }
 
-  ngOnInit() {
+  public ngOnInit() {
     this.formulatorService.listFormulations().subscribe((result: Formulation[]) => {
       this.formulations = result;
     }, (error: Error) => {
-      
+      console.log(error);
     });
   }
 

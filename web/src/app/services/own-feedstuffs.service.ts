@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
+import { Headers, Http, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
 
 // Import RxJs required methods
-import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
 
 import { environment } from './../../environments/environment';
 import { BaseService } from './baseService';
@@ -23,8 +23,8 @@ export class OwnFeedstuffsService extends BaseService {
 
   public createFeedstuffForUser(name: string, description: string) {
     return this.post(environment.api.uri + '/api/feedstuff/createUserFeedstuff', {
-      name: name,
-      description: description
+      name,
+      description,
     })
       .map((res: Response) => res.json());
   }
@@ -41,8 +41,8 @@ export class OwnFeedstuffsService extends BaseService {
 
   public saveUserFeedstuffMeasurements(feedstuffId: string, measurements: any[]) {
     return this.post(environment.api.uri + `/api/feedstuff/saveUserFeedstuffMeasurements`, {
-      feedstuffId: feedstuffId,
-      measurements: measurements
+      feedstuffId,
+      measurements,
     })
       .map((res: Response) => res.json());
   }

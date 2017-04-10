@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
+import { Headers, Http, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
 
 // Import RxJs required methods
-import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
 
 import { environment } from './../../environments/environment';
-import { BaseService } from './baseService'; 
+import { BaseService } from './baseService';
 
 import { Feedstuff } from './../models/feedstuff';
 
@@ -31,8 +31,8 @@ export class FeedstuffService extends BaseService {
   public listExampleFeedstuffs() {
     return this.get(environment.api.uri + '/api/feedstuff/listExampleFeedstuffs')
       .map((res: Response) => {
-        let result: any[] = res.json();
-        let resultArr: any[] = []
+        const result: any[] = res.json();
+        const resultArr: any[] = [];
 
         for (let i = 0; i < result.length; i++) {
           resultArr.push({
@@ -40,12 +40,12 @@ export class FeedstuffService extends BaseService {
             selectedFeedstuff: {
               id: result[i].id,
               name: result[i].name,
-              searchText: result[i].searchText
+              searchText: result[i].searchText,
             },
             minimum: result[i].minimum,
             maximum: result[i].maximum,
             cost: result[i].cost,
-            isLoading: false
+            isLoading: false,
           });
         }
 

@@ -2,16 +2,16 @@
 import { SupplementFeedstuff } from './supplement-feedstuff';
 
 export class Element {
-    id: string;
-    name: string;
-    minimum: number;
-    maximum: number;
-    value: number;
-    unit: string;
-    sortOrder: number;
+    public id: string;
+    public name: string;
+    public minimum: number;
+    public maximum: number;
+    public value: number;
+    public unit: string;
+    public sortOrder: number;
 
-    selectedSupplementFeedstuffs: SupplementFeedstuff[];
-    supplementFeedstuffs: SupplementFeedstuff[];
+    public selectedSupplementFeedstuffs: SupplementFeedstuff[];
+    public supplementFeedstuffs: SupplementFeedstuff[];
 
     constructor(id: string, name: string, minimum: number, maximum: number, value: number, unit: string, sortOrder: number) {
         this.id = id;

@@ -7,18 +7,18 @@ import { OwnFeedstuffsService } from '../services/own-feedstuffs.service';
 @Component({
   selector: 'app-own-feedstuff-edit',
   templateUrl: './own-feedstuff-edit.component.html',
-  styleUrls: ['./own-feedstuff-edit.component.css']
+  styleUrls: ['./own-feedstuff-edit.component.css'],
 })
 export class OwnFeedstuffEditComponent implements OnInit {
 
-  feedstuff: any = null;
-  elements: any[] = [];
+  public feedstuff: any = null;
+  public elements: any[] = [];
 
   constructor(private activatedRoute: ActivatedRoute, private ownFeedstuffsService: OwnFeedstuffsService) { }
 
-  ngOnInit() {
+  public ngOnInit() {
     this.activatedRoute.queryParams.subscribe((params: Params) => {
-      let feedstuffId = params['feedstuffId'];
+      const feedstuffId = params.feedstuffId;
       this.ownFeedstuffsService.findUserFeedstuff(feedstuffId).subscribe((getFeedstuffResult: any) => {
         this.feedstuff = getFeedstuffResult;
         this.feedstuff.id = feedstuffId;
@@ -31,13 +31,13 @@ export class OwnFeedstuffEditComponent implements OnInit {
     });
   }
 
-  onClick_Save() {
-    this.ownFeedstuffsService.saveUserFeedstuffMeasurements(this.feedstuff.id, this.elements.map(x => {
+  public onClick_Save() {
+    this.ownFeedstuffsService.saveUserFeedstuffMeasurements(this.feedstuff.id, this.elements.map((x) => {
       return {
         id: x.id,
-        value: x.value
+        value: x.value,
       };
-    })).subscribe((saveUserFeedstuffMeasurementsResult: Boolean) => {
+    })).subscribe((saveUserFeedstuffMeasurementsResult: boolean) => {
       window.location.href = '/ownfeedstuffs';
     });
   }

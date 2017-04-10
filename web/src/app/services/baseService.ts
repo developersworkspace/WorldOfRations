@@ -1,9 +1,8 @@
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { Headers, Http, RequestOptions, Response } from '@angular/http';
 
 // Import RxJs required methods
-import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-
+import 'rxjs/add/operator/map';
 
 export class BaseService {
 
@@ -11,31 +10,31 @@ export class BaseService {
 
     }
 
-    post(uri, obj) {
-        let headers = new Headers();
+    protected post(uri, obj) {
+        const headers = new Headers();
 
-        let jwtToken = localStorage.getItem('jwt.token');
+        const jwtToken = localStorage.getItem('jwt.token');
 
         if (jwtToken != null || jwtToken == '') {
             headers.append('Authorization', 'Bearer ' + jwtToken);
         }
 
         return this.http.post(uri, obj, {
-            headers: headers
+            headers,
         });
     }
 
-    get(uri) {
-        let headers = new Headers();
+    protected get(uri) {
+        const headers = new Headers();
 
-        let jwtToken = localStorage.getItem('jwt.token');
+        const jwtToken = localStorage.getItem('jwt.token');
 
         if (jwtToken != null || jwtToken == '') {
             headers.append('Authorization', 'Bearer ' + jwtToken);
         }
-        
+
         return this.http.get(uri, {
-            headers: headers
+            headers,
         });
     }
 }

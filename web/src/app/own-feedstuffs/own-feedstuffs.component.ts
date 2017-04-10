@@ -6,23 +6,23 @@ import { OwnFeedstuffsService } from '../services/own-feedstuffs.service';
 @Component({
   selector: 'app-own-feedstuffs',
   templateUrl: './own-feedstuffs.component.html',
-  styleUrls: ['./own-feedstuffs.component.css']
+  styleUrls: ['./own-feedstuffs.component.css'],
 })
 export class OwnFeedstuffsComponent implements OnInit {
 
-  feedstuffs: any[] = [];
-  currentTimestamp = new Date();
+  public feedstuffs: any[] = [];
+  public currentTimestamp = new Date();
 
-  errorMessage = null;
+  public errorMessage = null;
 
-  newFeedstuff: any = {
+  public newFeedstuff: any = {
     name: null,
-    errorMessage: null
+    errorMessage: null,
   };
 
   constructor(private ownFeedstuffsService: OwnFeedstuffsService) { }
 
-  ngOnInit() {
+  public ngOnInit() {
     this.ownFeedstuffsService.listFeedstuffsForUser().subscribe((result: any[]) => {
       this.feedstuffs = result;
     }, (error: Error) => {
@@ -30,7 +30,7 @@ export class OwnFeedstuffsComponent implements OnInit {
     });
   }
 
-  onClick_CreateFeedstuff() {
+  public onClick_CreateFeedstuff() {
 
     if (this.newFeedstuff.name == null) {
       this.newFeedstuff.errorMessage = 'Please enter a name';
@@ -45,7 +45,7 @@ export class OwnFeedstuffsComponent implements OnInit {
     this.newFeedstuff.name = null;
   }
 
-  onClick_EditFeedstuff(item: any) {
+  public onClick_EditFeedstuff(item: any) {
     window.location.href = `/ownfeedstuffedit?feedstuffId=${item.id}`;
   }
 

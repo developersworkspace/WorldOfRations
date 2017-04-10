@@ -3,7 +3,7 @@ export class Feedstuff {
         public id: string,
         public name: string,
         public weight: number,
-        public cost: number
+        public cost: number,
     ) {
     }
 }
