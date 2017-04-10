@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 
-// Services
+// Imports services
 import { FormulatorService } from '../services/formulator.service';
+
+// Imports models
+import { Formulation } from './../models/formulation';
 
 @Component({
   selector: 'app-formulation',
@@ -11,18 +14,18 @@ import { FormulatorService } from '../services/formulator.service';
 })
 export class FormulationComponent implements OnInit {
 
-  formulation: any;
+  formulation: Formulation;
 
-  totalWeightOfFeedstuffInFormulation: number;
-  totalCostOfFeedstuffInFormulation: number;
+  totalWeightOfFeedstuffInFormulation: string;
+  totalCostOfFeedstuffInFormulation: string;
   totalWeightOfSupplementFeedstuffInFormulation: number;
 
   constructor(private activatedRoute: ActivatedRoute, private formulatorService: FormulatorService) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params: Params) => {
       let formulationId = params['formulationId'];
-      this.formulatorService.getFormulation(formulationId).subscribe((formulation: any) => {
+      this.formulatorService.findFormulation(formulationId).subscribe((formulation: Formulation) => {
         formulation.feedstuffs.sort(function (a, b) {
           return (b.weight < a.weight) ? -1 : 1;
         });
@@ -35,7 +38,7 @@ export class FormulationComponent implements OnInit {
     });
   }
 
-  onSelect_SupplementFeedstuff(supplementElement, selectedSupplementFeedstuff) {
+  onSelect_SupplementFeedstuff(supplementElement, selectedSupplementFeedstuff): void {
     if (supplementElement == null || selectedSupplementFeedstuff == null || supplementElement.supplementFeedstuffs == null) {
       return;
     }
@@ -49,7 +52,7 @@ export class FormulationComponent implements OnInit {
     this.updateTotals();
   }
 
-  private updateTotals() {
+  private updateTotals(): void {
     this.totalWeightOfFeedstuffInFormulation = this.getTotalWeightOfFeedstuffInFormulation();
     this.totalCostOfFeedstuffInFormulation = this.getTotalCostOfFeedstuffInFormulation();
     this.totalWeightOfSupplementFeedstuffInFormulation = this.getTotalWeightOfSupplementFeedstuffInFormulation();
@@ -59,11 +62,11 @@ export class FormulationComponent implements OnInit {
     return this.formulation.feedstuffs.map(x => x.weight).reduce((a, b) => a + b, 0).toFixed(2);
   }
 
-  private getTotalCostOfFeedstuffInFormulation() {
+  private getTotalCostOfFeedstuffInFormulation(): string {
     return this.formulation.feedstuffs.map(x => x.weight * (x.cost / 1000)).reduce((a, b) => a + b, 0).toFixed(2);
   }
 
-  private getTotalWeightOfSupplementFeedstuffInFormulation() {
+  private getTotalWeightOfSupplementFeedstuffInFormulation(): number {
     return this.formulation.supplementComposition.map(x => x.selectedSupplementFeedstuffs[0] == undefined? 0 : x.selectedSupplementFeedstuffs[0].weight).reduce((a, b) => a + b, 0);
   }
 }

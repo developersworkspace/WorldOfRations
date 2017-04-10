@@ -2,8 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 
-// Services
-import { FormulatorService } from '../services/formulator.service';
+// Imports services
+import { FormulatorService } from './../services/formulator.service';
+
+// Imports models
+import { Formulation } from './../models/formulation';
 
 @Component({
   selector: 'app-footer',
@@ -12,12 +15,12 @@ import { FormulatorService } from '../services/formulator.service';
 })
 export class FooterComponent implements OnInit {
 
-  formulations: any[];
+  formulations: Formulation[];
 
   constructor(private formulatorService: FormulatorService) { }
 
   ngOnInit() {
-    this.formulatorService.getFormulations().subscribe((result: any[]) => {
+    this.formulatorService.listFormulations().subscribe((result: Formulation[]) => {
       this.formulations = result;
     }, (error: Error) => {
       

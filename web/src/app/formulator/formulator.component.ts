@@ -9,6 +9,7 @@ import { FormulatorService } from '../services/formulator.service';
 
 // Imports models
 import { Feedstuff } from './../models/feedstuff';
+import { Formula } from './../models/formula';
 
 @Component({
   selector: 'app-formulator',
@@ -17,10 +18,10 @@ import { Feedstuff } from './../models/feedstuff';
 })
 export class FormulatorComponent implements OnInit {
 
-  formulaList: any[] = [];
+  formulaList: Formula[] = [];
   formulaListDataSource: Observable<any> = null;
   selectedFormulaName: string;
-  selectedFormula: any = null;
+  selectedFormula: Formula = null;
 
   feedstuffList: Feedstuff[] = [];
 

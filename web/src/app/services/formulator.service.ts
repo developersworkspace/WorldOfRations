@@ -9,6 +9,8 @@ import 'rxjs/add/operator/catch';
 import { environment } from './../../environments/environment';
 import { BaseService } from './baseService'; 
 
+import { Formulation } from './../models/formulation';
+
 @Injectable()
 export class FormulatorService extends BaseService {
 
@@ -21,12 +23,12 @@ export class FormulatorService extends BaseService {
     .map((res: Response) => res.json());
   }
 
-  public getFormulation(formulationId: string) {
+  public findFormulation(formulationId: string): Observable<Formulation> {
     return this.get(environment.api.uri + '/api/formulator/findFormulation?formulationId=' + formulationId)
     .map((res: Response) => res.json());
   }
 
-  public getFormulations() {
+  public listFormulations(): Observable<Formulation[]> {
     return this.get(environment.api.uri + '/api/formulator/listFormulations')
     .map((res: Response) => res.json());
   }
