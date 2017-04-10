@@ -94,8 +94,11 @@ export class FormulatorService {
 
         return co(function* () {
             const findFormulationByIdResult: DomainFormulation = yield self.formulationRepository.findFormulationById(formulationId);
-
+            
             let formulation: DomainFormulation = findFormulationByIdResult;
+
+            const findFormulaByFormulaIdResult: DomainFormula = yield self.formulaRepository.findFormulaByFormulaId(formulation.formula.id);
+            formulation.formula.name = findFormulaByFormulaIdResult.name;
 
             const populateFormulationFeedstuffOfFormulationResult: DomainFormulation = yield self.populateFormulationFeedstuffOfFormulation(findFormulationByIdResult);
             formulation = populateFormulationFeedstuffOfFormulationResult;
@@ -163,7 +166,7 @@ export class FormulatorService {
                 elementMinimum = element.minimum === null ? 0 : element.minimum;
                 elementMaximum = element.maximum === null ? 1000000 : element.maximum;
 
-                formulation.composition.push(new DomainCompositionElement(elementId, elementName, this.roundToTwoDecimal(elementMinimum), this.roundToTwoDecimal(elementMaximum), this.roundToTwoDecimal(sum / 1000), elementUnit, elementSortOrder));
+                formulation.composition.push(new DomainCompositionElement(elementId, elementName, self.roundToTwoDecimal(elementMinimum), self.roundToTwoDecimal(elementMaximum), self.roundToTwoDecimal(sum / 1000), elementUnit, elementSortOrder));
             }
             return formulation;
 

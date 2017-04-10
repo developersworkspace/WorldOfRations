@@ -34,7 +34,7 @@ export class FormulaRepository extends Base implements IFormulaRepository {
         const self = this;
 
         return co(function* () {
-            let listElementsForFormulaResult: DataFormulaMeasurement[] = yield self.query(util.format('CALL listElementsForFormula(%s);', this.escapeAndFormat(formulaId)));
+            let listElementsForFormulaResult: DataFormulaMeasurement[] = yield self.query(util.format('CALL listElementsForFormula(%s);', self.escapeAndFormat(formulaId)));
 
             return listElementsForFormulaResult.map((x) => new DomainFormulaMeasurement(x.id, x.name, x.minimum, x.maximum, x.unit, x.sortOrder));
         });
@@ -44,7 +44,7 @@ export class FormulaRepository extends Base implements IFormulaRepository {
         const self = this;
 
         return co(function* () {
-            let findFormulaByFormulaIdResult: DataFormula[] = yield self.query(util.format('CALL findFormulaByFormulaId(%s);', this.escapeAndFormat(formulaId)));
+            let findFormulaByFormulaIdResult: DataFormula[] = yield self.query(util.format('CALL findFormulaByFormulaId(%s);', self.escapeAndFormat(formulaId)));
 
             return new DomainFormula(findFormulaByFormulaIdResult[0].id, findFormulaByFormulaIdResult[0].name);
         });
@@ -54,7 +54,7 @@ export class FormulaRepository extends Base implements IFormulaRepository {
         const self = this;
 
         return co(function* () {
-            let findComparisonFormulaByFormulaIdResult: any[] = yield self.query(util.format('CALL findComparisonFormulaByFormulaId(%s);', this.escapeAndFormat(formulaId)));
+            let findComparisonFormulaByFormulaIdResult: any[] = yield self.query(util.format('CALL findComparisonFormulaByFormulaId(%s);', self.escapeAndFormat(formulaId)));
 
            return new DomainFormula(findComparisonFormulaByFormulaIdResult[0].formulaId, null);
         });

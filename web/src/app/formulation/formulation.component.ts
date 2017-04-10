@@ -24,7 +24,7 @@ export class FormulationComponent implements OnInit {
 
   public ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params: Params) => {
-      const formulationId = params.formulationId;
+      const formulationId = params['formulationId'];
       this.formulatorService.findFormulation(formulationId).subscribe((formulation: Formulation) => {
         formulation.feedstuffs.sort((a, b) => {
           return (b.weight < a.weight) ? -1 : 1;
