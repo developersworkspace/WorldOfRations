@@ -4,6 +4,9 @@ import * as express from 'express';
 import * as request from 'request';
 import { config } from './../config';
 
+// Imports repositories
+import { UserRepository } from './../repositories/mysql/user';
+
 // Imports services
 import { AuthService } from './../services/auth';
 import { UserService } from './../services/user';
@@ -29,7 +32,8 @@ router.get('/google', (req: Request, res: Response, next: () => void) => {
 
 router.get('/google/callback', (req: Request, res: Response, next: () => void) => {
     const authService = new AuthService(config.baseUri, config.oauth.jwtSecret, config.oauth.jwtIssuer, config.oauth);
-    const userService = new UserService(config.db);
+    const userRepository = new UserRepository(config.db);
+    const userService = new UserService(userRepository);
     const auth = authService.createClientAuths();
     auth.googleAuth.code.getToken(req.originalUrl)
         .then((user: any) => {

@@ -37,7 +37,7 @@ export class FormulatorService {
 
         const self = this;
 
-        return co(function* () {
+        return co(function*() {
 
             const populateElementsOfFeedstuffsResult: DomainFeedstuff[] = yield self.feedstuffService.populateElementsOfFeedstuffs(feedstuffs, username);
             const findFormulaByFormulaIdResult: DomainFormula = yield self.formulaRepository.findFormulaByFormulaId(formula.id);
@@ -74,7 +74,7 @@ export class FormulatorService {
 
         const self = this;
 
-        return co(function* () {
+        return co(function*() {
 
             const insertFormulationResult: any = yield self.formulationRepository.insertFormulation(formulation);
 
@@ -92,9 +92,9 @@ export class FormulatorService {
 
         const self = this;
 
-        return co(function* () {
+        return co(function*() {
             const findFormulationByIdResult: DomainFormulation = yield self.formulationRepository.findFormulationById(formulationId);
-            
+
             let formulation: DomainFormulation = findFormulationByIdResult;
 
             const findFormulaByFormulaIdResult: DomainFormula = yield self.formulaRepository.findFormulaByFormulaId(formulation.formula.id);
@@ -141,10 +141,9 @@ export class FormulatorService {
 
         const self = this;
 
-        return co(function* () {
+        return co(function*() {
             const findComparisonFormulaByFormulaIdResult: DomainFormula = yield self.formulaRepository.findComparisonFormulaByFormulaId(formulation.formula.id);
-            const listElementsForFormulaResult: DomainFormulaMeasurement[] = yield self.formulaRepository.listElementsByFormulaId(findComparisonFormulaByFormulaIdResult.id)
-
+            const listElementsForFormulaResult: DomainFormulaMeasurement[] = yield self.formulaRepository.listElementsByFormulaId(findComparisonFormulaByFormulaIdResult.id);
 
             formulation.composition = [];
 
@@ -177,7 +176,7 @@ export class FormulatorService {
 
         const self = this;
 
-        return co(function* () {
+        return co(function*() {
             const listFormulationFeedstuffByFormulationIdResult: DomainFeedstuff[] = yield self.formulationRepository.listFormulationFeedstuffByFormulationId(formulation.id);
 
             formulation.feedstuffs = listFormulationFeedstuffByFormulationIdResult;

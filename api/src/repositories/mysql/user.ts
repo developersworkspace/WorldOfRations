@@ -1,5 +1,6 @@
 // Imports
 import * as util from 'util';
+import { IUserRepository } from './../user';
 import { Base } from './base';
 
 // Imports data models
@@ -8,7 +9,7 @@ import { User as DataUser } from './../../data-models/user';
 // Imports domain models
 import { User as DomainUser } from './../../models/user';
 
-export class UserRepository extends Base {
+export class UserRepository extends Base implements IUserRepository {
 
     constructor(config: any) {
         super(config);

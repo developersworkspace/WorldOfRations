@@ -20,9 +20,9 @@ export class ElementRepository extends Base implements IElementRepository {
         const self = this;
 
         return co(function*() {
-            let listElementsResult: DataElement[] = yield self.query('CALL listElements();');
+            const listElementsResult: DataElement[] = yield self.query('CALL listElements();');
 
-             return listElementsResult.map((x) => new DomainElement(x.id, x.name, 0, 0, 0, x.unit, x.sortOrder));
+            return listElementsResult.map((x) => new DomainElement(x.id, x.name, 0, 0, 0, x.unit, x.sortOrder));
         });
     }
 }

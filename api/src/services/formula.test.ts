@@ -24,7 +24,7 @@ describe('FormulaService', () => {
 
             sinon.stub(formulaRepository, 'listFormulas').callsFake(() => {
                 return Promise.resolve([
-                    new DomainFormula('1', 'Formula1')
+                    new DomainFormula('1', 'Formula1'),
                 ]);
             });
 
@@ -33,7 +33,7 @@ describe('FormulaService', () => {
 
         it('should return list of formulas', () => {
 
-            return co(function* () {
+            return co(function*() {
                 const listFormulaResult: DomainFormula[] = yield formulaService.listFormula();
 
                 expect(listFormulaResult.length).to.be.eq(1);

@@ -1,15 +1,12 @@
 // Imports repositories
-import { UserRepository } from './../repositories/mysql/user';
+import { IUserRepository } from './../repositories/user';
 
 // Imports domain models
 import { User as DomainUser } from './../models/user';
 
 export class UserService {
 
-    public userRepository: UserRepository;
-
-    constructor(private config: any) {
-        this.userRepository = new UserRepository(this.config.db);
+    constructor(private userRepository: IUserRepository) {
      }
 
     public login(username: string): Promise<boolean> {
