@@ -46,8 +46,6 @@ describe('FormualtorService', () => {
                     return Promise.resolve([
                         new DomainFeedstuffMeasurement('1', 'Element1', 0, '%', 0),
                     ]);
-                } else {
-                    return Promise.resolve([]);
                 }
             });
 

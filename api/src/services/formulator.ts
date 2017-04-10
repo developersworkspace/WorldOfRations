@@ -121,7 +121,7 @@ export class FormulatorService {
     }
 
     private populateSupplementFeedstuffsOfFormulation(formulation: DomainFormulation): Promise<DomainFormulation> {
-        const parent = this;
+
         const supplementElements: DomainCompositionElement[] = formulation.composition.filter((x) => x.value < x.minimum);
         formulation.supplementComposition = [];
 
@@ -131,7 +131,11 @@ export class FormulatorService {
             listOfPromise.push(this.feedstuffRepository.listSupplementFeedstuffByElementId(supplementElement));
         }
 
-        return Promise.all(listOfPromise).then((elementsResult: DomainSupplementElement[]) => {
+        const self = this;
+
+        return co(function*() {
+            const elementsResult: DomainSupplementElement[] = yield listOfPromise;
+
             formulation.supplementComposition = elementsResult;
             return formulation;
         });

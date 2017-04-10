@@ -341,8 +341,6 @@ describe('FeedstuffService', () => {
                     return Promise.resolve(null);
                 } else if (feedstuffId === '5') {
                     return Promise.resolve(new DomainFeedstuff(feedstuffId, 'Feedstuff' + feedstuffId, 50, 1000, 600));
-                } else {
-                    return Promise.resolve(null);
                 }
             });
 
@@ -441,8 +439,6 @@ describe('FeedstuffService', () => {
                     return Promise.resolve([
                         new DomainFeedstuffMeasurement('1', 'Element1', 5, null, null),
                     ]);
-                } else {
-                    return Promise.resolve([]);
                 }
             });
 

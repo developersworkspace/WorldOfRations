@@ -18,46 +18,6 @@ import { SupplementFeedstuff as DataSupplementFeedstuff } from './../../data-mod
 
 export class MockFeedstuffRepository implements IFeedstuffRepository {
 
-    private exampleFeedstuffs = [
-        new DomainFeedstuff('1', 'Feedstuff1', 50, 1000, 600),
-        new DomainFeedstuff('2', 'Feedstuff2', 200, 800, 300),
-        new DomainFeedstuff('3', 'Feedstuff3', 100, 700, 400),
-    ];
-
-    private userFeedstuffs = {
-        ValidUsername: [
-            new DomainFeedstuff('5', 'Feedstuff5', null, null, null),
-            new DomainFeedstuff('6', 'Feedstuff6', null, null, null),
-            new DomainFeedstuff('7', 'Feedstuff7', null, null, null),
-            new DomainFeedstuff('8', 'Feedstuff8', null, null, null),
-        ],
-    };
-
-    private feedstuffMeasurements = {
-        1: [
-            new DomainFeedstuffMeasurement('1', 'Element1', 5, '%', 1),
-        ],
-        2: [
-            new DomainFeedstuffMeasurement('1', 'Element1', 5, '%', 1),
-        ],
-        3: [
-            new DomainFeedstuffMeasurement('1', 'Element1', 5, '%', 1),
-        ],
-        4: [
-            new DomainFeedstuffMeasurement('1', 'Element1', 5, '%', 1),
-        ],
-        5: [
-            new DomainFeedstuffMeasurement('1', 'Element1', 5, '%', 1),
-        ],
-        6: [
-            new DomainFeedstuffMeasurement('1', 'Element1', 5, '%', 1),
-        ],
-        7: [
-            new DomainFeedstuffMeasurement('1', 'Element1', 5, '%', 1),
-        ],
-        8: [],
-    };
-
     constructor(private config: any) {
 
     }

@@ -20,8 +20,8 @@ export class FormulationRepository extends Base implements IFormulationRepositor
 
     public insertFormulation(formulation: DomainFormulation): Promise<boolean> {
 
-        const dataFormulation = formulation.getDataFormalation();
-        const dataFormulationFeedstuffs = formulation.getDataFormulationFeedstuffs();
+        const dataFormulation = formulation.toDataFormulation();
+        const dataFormulationFeedstuffs = formulation.toDataFormulationFeedstuffs();
 
         const formulationP = this.query(util.format('CALL insertFormulation(%s, %s, %s, %s, %s, %s);',
             this.escapeAndFormat(formulation.id),

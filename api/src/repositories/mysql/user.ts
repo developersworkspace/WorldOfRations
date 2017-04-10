@@ -1,4 +1,5 @@
 // Imports
+import * as co from 'co';
 import * as util from 'util';
 import { IUserRepository } from './../user';
 import { Base } from './base';
@@ -16,13 +17,21 @@ export class UserRepository extends Base implements IUserRepository {
     }
 
     public insertUser(username: string): Promise<boolean> {
-        return this.query(util.format('CALL insertUser(%s, %s)', this.escapeAndFormat(username), new Date().getTime() / 1000)).then((insertUserResult: any[]) => {
+        const self = this;
+
+        return co(function*() {
+            const insertUserResult = yield self.query(util.format('CALL insertUser(%s, %s)', self.escapeAndFormat(username), new Date().getTime() / 1000));
+
             return true;
         });
     }
 
     public findUserByUsername(username: string): Promise<DomainUser> {
-        return this.query(util.format('CALL findUserByUsername(%s)', this.escapeAndFormat(username))).then((findUserByUsernameResult: DataUser[]) => {
+        const self = this;
+
+        return co(function*() {
+            const findUserByUsernameResult: DataUser[] = yield self.query(util.format('CALL insertUser(%s, %s)', self.escapeAndFormat(username), new Date().getTime() / 1000));
+
             if (findUserByUsernameResult.length === 0) {
                 return null;
             } else {
@@ -32,7 +41,11 @@ export class UserRepository extends Base implements IUserRepository {
     }
 
     public updateLastLoginTimestamp(username: string): Promise<boolean> {
-        return this.query(util.format('CALL updateLastLoginTimestamp(%s, %s)', this.escapeAndFormat(username), new Date().getTime() / 1000)).then((insertUserResult: any[]) => {
+        const self = this;
+
+        return co(function*() {
+            const insertUserResult = yield self.query(util.format('CALL updateLastLoginTimestamp(%s, %s)', self.escapeAndFormat(username), new Date().getTime() / 1000));
+
             return true;
         });
     }

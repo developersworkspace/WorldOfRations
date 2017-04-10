@@ -21,13 +21,11 @@ export class Formulation {
 
     }
 
-    // TODO: toDataFormulation
-    public getDataFormalation() {
+    public toDataFormulation() {
         return new DataFormulation(this.id, this.formula.id, null, this.feasible, this.cost, this.currencyCode, new Date().getTime());
     }
 
-    // TODO: toDataFormulationFeedstuffs
-    public getDataFormulationFeedstuffs() {
+    public toDataFormulationFeedstuffs() {
         return this.feedstuffs.map((x) => new DataFormulationFeedstuff(this.id, x.id, x.name, x.minimum, x.maximum, x.cost, x.weight));
     }
 }
