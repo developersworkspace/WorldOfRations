@@ -67,9 +67,8 @@
           <tr *ngFor="let item of formulation.composition;">
             <td>{{item.name}}</td>
             <td>{{item.value | number:'1.2-2'}} {{item.unit}}</td>
-            <td [ngClass]="item.value < item.minimum? 'text-warning' : item.value > item.maximum? 'text-danger' : 'text-success'">
-              {{item.value
-              < item.minimum? 'Inadequate' : item.value> item.maximum? 'Excessive' : 'Adequate'}}
+            <td [ngClass]="item.status == 'Inadequate'? 'text-warning' : item.status == 'Excessive'? 'text-danger' : 'text-success'">
+              {{item.status}}
             </td>
           </tr>
         </tbody>
