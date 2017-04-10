@@ -1,4 +1,5 @@
 // Imports
+import * as co from 'co';
 import * as util from 'util';
 import { IElementRepository } from './../element';
 import { Base } from './base';
@@ -16,8 +17,12 @@ export class ElementRepository extends Base implements IElementRepository {
     }
 
     public listElements(): Promise<DomainElement[]> {
-        return this.query('CALL listElements();').then((result: DataElement[]) => {
-            return result.map((x) => new DomainElement(x.id, x.name, 0, 0, 0, x.unit, x.sortOrder));
+        const self = this;
+
+        return co(function*() {
+            let listElementsResult: DataElement[] = yield self.query('CALL listElements();');
+
+             return listElementsResult.map((x) => new DomainElement(x.id, x.name, 0, 0, 0, x.unit, x.sortOrder));
         });
     }
 }

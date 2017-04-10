@@ -1,3 +1,6 @@
+// Imports
+import { IFormulaRepository } from './../repositories/formula';
+
 // Imports repositories
 import { FormulaRepository } from './../repositories/mysql/formula';
 
@@ -6,10 +9,7 @@ import { Formula as DomainFormula } from './../models/formula';
 
 export class FormulaService {
 
-    public formulaRepository: FormulaRepository;
-
-    constructor(private config: any) {
-        this.formulaRepository = new FormulaRepository(this.config.db);
+    constructor(private formulaRepository: IFormulaRepository) {
      }
 
     public listFormula(): Promise<DomainFormula[]> {

@@ -1,4 +1,5 @@
 // Imports
+import * as co from 'co';
 import * as util from 'util';
 import { IFormulaRepository } from './../formula';
 import { Base } from './base';
@@ -20,28 +21,42 @@ export class FormulaRepository extends Base implements IFormulaRepository {
     }
 
     public listFormulas(): Promise<DomainFormula[]> {
-        return this.query('CALL listFormulas();').then((result: DataFormula[]) => {
-            return result.map((x) => new DomainFormula(x.id, x.name));
+        const self = this;
+
+        return co(function* () {
+            let listFormulasResult: DataFormula[] = yield self.query('CALL listFormulas();');
+
+            return listFormulasResult.map((x) => new DomainFormula(x.id, x.name));
         });
     }
 
     public listElementsByFormulaId(formulaId: string): Promise<DomainFormulaMeasurement[]> {
-        return this.query(util.format('CALL listElementsForFormula(%s);', this.escapeAndFormat(formulaId)))
-            .then((listElementsForFormulaRecordSet: DataFormulaMeasurement[]) => {
-                return listElementsForFormulaRecordSet.map((x) => new DomainFormulaMeasurement(x.id, x.name, x.minimum, x.maximum, x.unit, x.sortOrder));
-            });
+        const self = this;
+
+        return co(function* () {
+            let listElementsForFormulaResult: DataFormulaMeasurement[] = yield self.query(util.format('CALL listElementsForFormula(%s);', this.escapeAndFormat(formulaId)));
+
+            return listElementsForFormulaResult.map((x) => new DomainFormulaMeasurement(x.id, x.name, x.minimum, x.maximum, x.unit, x.sortOrder));
+        });
     }
 
     public findFormulaByFormulaId(formulaId: string): Promise<DomainFormula> {
-        return this.query(util.format('CALL findFormulaByFormulaId(%s);', this.escapeAndFormat(formulaId)))
-            .then((findFormulaByFormulaIdResult: DataFormula[]) => {
-                return new DomainFormula(findFormulaByFormulaIdResult[0].id, findFormulaByFormulaIdResult[0].name);
-            });
+        const self = this;
+
+        return co(function* () {
+            let findFormulaByFormulaIdResult: DataFormula[] = yield self.query(util.format('CALL findFormulaByFormulaId(%s);', this.escapeAndFormat(formulaId)));
+
+            return new DomainFormula(findFormulaByFormulaIdResult[0].id, findFormulaByFormulaIdResult[0].name);
+        });
     }
 
     public findComparisonFormulaByFormulaId(formulaId: string): Promise<DomainFormula> {
-        return this.query(util.format('CALL findComparisonFormulaByFormulaId(%s);', this.escapeAndFormat(formulaId))).then((findComparisonFormulaByFormulaIdResult: any[]) => {
-            return new DomainFormula(findComparisonFormulaByFormulaIdResult[0].formulaId, null);
+        const self = this;
+
+        return co(function* () {
+            let findComparisonFormulaByFormulaIdResult: any[] = yield self.query(util.format('CALL findComparisonFormulaByFormulaId(%s);', this.escapeAndFormat(formulaId)));
+
+           return new DomainFormula(findComparisonFormulaByFormulaIdResult[0].formulaId, null);
         });
     }
 }
