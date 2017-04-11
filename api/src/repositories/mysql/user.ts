@@ -30,7 +30,7 @@ export class UserRepository extends Base implements IUserRepository {
         const self = this;
 
         return co(function*() {
-            const findUserByUsernameResult: DataUser[] = yield self.query(util.format('CALL insertUser(%s, %s)', self.escapeAndFormat(username), new Date().getTime() / 1000));
+            const findUserByUsernameResult: DataUser[] = yield self.query(util.format('CALL findUserByUsername(%s)', self.escapeAndFormat(username)));
 
             if (findUserByUsernameResult.length === 0) {
                 return null;

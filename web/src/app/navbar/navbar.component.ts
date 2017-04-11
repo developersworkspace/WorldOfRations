@@ -41,7 +41,11 @@ export class NavbarComponent implements OnInit {
     }, (error: Error) => {
       this.decodedToken = null;
       this.isAuthenticated = false;
-      localStorage.removeItem('jwt.token');
+
+      if (window.location.pathname != '/login') {
+        localStorage.removeItem('jwt.token');
+      }
+      
     });
   }
 
