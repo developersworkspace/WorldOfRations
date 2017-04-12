@@ -1,6 +1,6 @@
 DELIMITER //
 
-CREATE PROCEDURE listFormulations ()
+CREATE PROCEDURE listFormulations()
 BEGIN
 SELECT 
 `formulations`.`id` AS `id`,
