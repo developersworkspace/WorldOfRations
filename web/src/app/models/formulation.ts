@@ -4,7 +4,7 @@ import { Formula } from './formula';
 
 export class Formulation {
 
-    constructor(public id: string, public formula: Formula, public feedstuffs: Feedstuff[], public composition: Element[], public supplementComposition: Element[]) {
+    constructor(public id: string, public formula: Formula, public currencyCode, public feedstuffs: Feedstuff[], public composition: Element[], public supplementComposition: Element[]) {
 
     }
 }
