@@ -4,7 +4,6 @@ CREATE PROCEDURE listFormulationFeedstuffByFormulationId (
 p_formulationId CHAR(36))
 BEGIN
 SELECT 
-SELECT 
 p_formulationId AS `formulationId`,
 `feedstuffId` AS `feedstuffId`,
 `feedstuffs`.`name` AS `name`,
