@@ -53,7 +53,7 @@ describe('FormualtorService', () => {
         });
 
         it('should return formulation where elements of feedstuffs are populated', () => {
-            return co(function*() {
+            return co(function* () {
                 const createFormulationResult: DomainFormulation = yield formulatorService.createFormulation([
                     new DomainFeedstuff('1', null, 0, 100, 400),
                     new DomainFeedstuff('2', null, 50, 200, 400),
@@ -64,7 +64,7 @@ describe('FormualtorService', () => {
         });
 
         it('should return formulation where elements of formula are populated', () => {
-            return co(function*() {
+            return co(function* () {
                 const createFormulationResult: DomainFormulation = yield formulatorService.createFormulation([
                     new DomainFeedstuff('1', null, 0, 100, 400),
                     new DomainFeedstuff('2', null, 50, 200, 400),
@@ -74,7 +74,7 @@ describe('FormualtorService', () => {
         });
 
         it('should return formulation where name of formula are populated', () => {
-            return co(function*() {
+            return co(function* () {
                 const createFormulationResult: DomainFormulation = yield formulatorService.createFormulation([
                     new DomainFeedstuff('1', null, 0, 100, 400),
                     new DomainFeedstuff('2', null, 50, 200, 400),
@@ -101,7 +101,7 @@ describe('FormualtorService', () => {
         });
 
         it('should call insertFormulation on repository', () => {
-            return co(function*() {
+            return co(function* () {
                 const formulation: DomainFormulation = new DomainFormulation('1');
 
                 formulation.formula = new DomainFormula('1', null);
@@ -136,31 +136,63 @@ describe('FormualtorService', () => {
             const formulationRepository = new MockFormulationRepository(null);
 
             sinon.stub(formulationRepository, 'findFormulationById').callsFake((formulationId: string) => {
-                const formulation: DomainFormulation = new DomainFormulation('1');
-                formulation.cost = 1000;
-                formulation.currencyCode = 'ZAR';
-                formulation.formula = new DomainFormula('1', null);
+                if (formulationId === '1') {
+                    const formulation: DomainFormulation = new DomainFormulation('1');
+                    formulation.cost = 1000;
+                    formulation.currencyCode = 'ZAR';
+                    formulation.formula = new DomainFormula('1', null);
 
-                return Promise.resolve(formulation);
-            });
-
-            sinon.stub(formulaRepository, 'findFormulaByFormulaId').callsFake((formulaId: string) => {
-                return Promise.resolve(new DomainFormula('1', 'Formula1'));
+                    return Promise.resolve(formulation);
+                }
             });
 
             sinon.stub(formulationRepository, 'listFormulationFeedstuffByFormulationId').callsFake((formulationId: string) => {
-                return Promise.resolve([]);
+                if (formulationId === '1') {
+                    return Promise.resolve([
+                        new DomainFeedstuff('1', 'Feedstuff1', 0, 100, 300),
+                        new DomainFeedstuff('2', 'Feedstuff2', 0, 100, 300),
+                        new DomainFeedstuff('5', 'Feedstuff5', 0, 100, 300)
+                    ]);
+                }
+            });
+
+            sinon.stub(formulaRepository, 'findFormulaByFormulaId').callsFake((formulaId: string) => {
+                if (formulaId === '1') {
+                    return Promise.resolve(new DomainFormula('1', 'Formula1'));
+                }
             });
 
             sinon.stub(formulaRepository, 'findComparisonFormulaByFormulaId').callsFake((formulaId: string) => {
-                return Promise.resolve(new DomainFormula('2', 'Formula2'));
+                if (formulaId === '1') {
+                    return Promise.resolve(new DomainFormula('2', 'Formula2'));
+                }
+            });
+
+            sinon.stub(feedstuffRepository, 'listElementsByUserFeedstuffId').callsFake((feedstuffId: string, username: string) => {
+                if (feedstuffId === '5') {
+                    return Promise.resolve([
+                        new DomainFeedstuffMeasurement('1', 'Element1', 0, '%', 0),
+                    ]);
+                } else {
+                    return Promise.resolve([]);
+                }
+            });
+
+            sinon.stub(feedstuffRepository, 'listElementsByFeedstuffId').callsFake((feedstuffId: string) => {
+                if (feedstuffId === '1' || feedstuffId === '2') {
+                    return Promise.resolve([
+                        new DomainFeedstuffMeasurement('1', 'Element1', 0, '%', 0),
+                    ]);
+                } else {
+                    return Promise.resolve([]);
+                }
             });
 
             formulatorService = new FormulatorService(formulaRepository, feedstuffRepository, formulationRepository);
         });
 
         it('should return formulation with formulation properties populated', () => {
-            return co(function*() {
+            return co(function* () {
 
                 const findFormulationResult: DomainFormulation = yield formulatorService.findFormulation('1', 'User1');
 
@@ -170,11 +202,31 @@ describe('FormualtorService', () => {
         });
 
         it('should return formulation with formula name populated', () => {
-            return co(function*() {
+            return co(function* () {
 
                 const findFormulationResult: DomainFormulation = yield formulatorService.findFormulation('1', 'User1');
 
                 expect(findFormulationResult.formula.name).to.be.not.null;
+            });
+        });
+
+        it('should return formulation with feedstuffs populated', () => {
+            return co(function* () {
+
+                const findFormulationResult: DomainFormulation = yield formulatorService.findFormulation('1', 'User1');
+
+                expect(findFormulationResult.feedstuffs.length).to.be.eq(3)
+            });
+        });
+
+        it('should return formulation with elements of feedstuff populated', () => {
+            return co(function* () {
+
+                const findFormulationResult: DomainFormulation = yield formulatorService.findFormulation('1', 'User1');
+
+                expect(findFormulationResult.feedstuffs[0].elements.length).to.be.eq(1);
+                expect(findFormulationResult.feedstuffs[1].elements.length).to.be.eq(1);
+                expect(findFormulationResult.feedstuffs[2].elements.length).to.be.eq(1);
             });
         });
     });

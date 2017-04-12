@@ -53,7 +53,7 @@ describe('FeedstuffService', () => {
 
         it('should return list of feedstuffs where elements are populated', () => {
 
-            return co(function*() {
+            return co(function* () {
                 const populateElementsOfFeedstuffsResult: DomainFeedstuff[] = yield feedstuffService.populateElementsOfFeedstuffs(
                     [
                         new DomainFeedstuff('1', null, 10, 100, 5000),
@@ -73,7 +73,7 @@ describe('FeedstuffService', () => {
         });
 
         it('should return list of feedstuffs where elements are populated given user feedstuffs', () => {
-            return co(function*() {
+            return co(function* () {
                 const populateElementsOfFeedstuffsResult: DomainFeedstuff[] = yield feedstuffService.populateElementsOfFeedstuffs(
                     [
                         new DomainFeedstuff('5', null, 10, 100, 5000),
@@ -122,7 +122,7 @@ describe('FeedstuffService', () => {
         });
 
         it('should return list of feedstuffs where feedstuffs names are populated', () => {
-            return co(function*() {
+            return co(function* () {
                 const populateNamesOfFeedstuffsResult: DomainFeedstuff[] = yield feedstuffService.populateNamesOfFeedstuffs(
                     [
                         new DomainFeedstuff('1', null, 10, 100, 5000),
@@ -139,7 +139,7 @@ describe('FeedstuffService', () => {
         });
 
         it('should return list of feedstuffs where feedstuffs names are populated given user feedstuffs', () => {
-            return co(function*() {
+            return co(function* () {
                 const populateNamesOfFeedstuffsResult: DomainFeedstuff[] = yield feedstuffService.populateNamesOfFeedstuffs(
                     [
                         new DomainFeedstuff('5', null, 10, 100, 5000),
@@ -191,7 +191,7 @@ describe('FeedstuffService', () => {
         });
 
         it('should return list of feedstuffs given null username', () => {
-            return co(function*() {
+            return co(function* () {
                 const listFeedstuffsResult: DomainFeedstuff[] = yield feedstuffService.listFeedstuffs(null);
 
                 expect(listFeedstuffsResult.length).to.be.eq(4);
@@ -199,7 +199,7 @@ describe('FeedstuffService', () => {
         });
 
         it('should return list of feedstuffs given valid username', () => {
-            return co(function*() {
+            return co(function* () {
                 const listFeedstuffsResult: DomainFeedstuff[] = yield feedstuffService.listFeedstuffs('ValidUsername');
 
                 expect(listFeedstuffsResult.length).to.be.eq(7);
@@ -228,7 +228,7 @@ describe('FeedstuffService', () => {
         });
 
         it('should return list of feedstuffs', () => {
-            return co(function*() {
+            return co(function* () {
                 const listExampleFeedstuffsResult: DomainFeedstuff[] = yield feedstuffService.listExampleFeedstuffs();
 
                 expect(listExampleFeedstuffsResult.length).to.be.eq(3);
@@ -247,14 +247,18 @@ describe('FeedstuffService', () => {
             const elementRepository = new MockElementRepository(null);
 
             sinon.stub(feedstuffRepository, 'findSuggestedValuesByFormulaIdAndFeedstuffId').callsFake((formulaId: string, feedstuffId: string) => {
-                return Promise.resolve(new DomainSuggestedValue(0, 1000));
+                if (formulaId === '1' && feedstuffId === '1') {
+                    return Promise.resolve(new DomainSuggestedValue(0, 1000));
+                } else {
+                    return Promise.resolve(null);
+                }
             });
 
             feedstuffService = new FeedstuffService(feedstuffRepository, elementRepository);
         });
 
         it('should return suggested value', () => {
-            return co(function*() {
+            return co(function* () {
                 const findSuggestedValuesResult: DomainSuggestedValue = yield feedstuffService.findSuggestedValues('1', '1');
 
                 expect(findSuggestedValuesResult).to.be.not.null;
@@ -287,7 +291,7 @@ describe('FeedstuffService', () => {
         });
 
         it('should return list of feedstuffs given null username', () => {
-            return co(function*() {
+            return co(function* () {
                 const listUserFeedstuffsResult: DomainFeedstuff[] = yield feedstuffService.listUserFeedstuffs(null);
 
                 expect(listUserFeedstuffsResult.length).to.be.eq(0);
@@ -295,7 +299,7 @@ describe('FeedstuffService', () => {
         });
 
         it('should return list of feedstuffs given valid username', () => {
-            return co(function*() {
+            return co(function* () {
                 const listUserFeedstuffsResult: DomainFeedstuff[] = yield feedstuffService.listUserFeedstuffs('ValidUsername');
 
                 expect(listUserFeedstuffsResult.length).to.be.eq(3);
@@ -319,7 +323,7 @@ describe('FeedstuffService', () => {
         });
 
         it('should be inserted into repository', () => {
-            return co(function*() {
+            return co(function* () {
                 const createUserFeedstuffResult: DomainFeedstuff = yield feedstuffService.createUserFeedstuff('ValidUsername', 'Feedstuff9', null);
 
                 sinon.assert.calledOnce(insertUserFeedstuffSpy);
@@ -348,7 +352,7 @@ describe('FeedstuffService', () => {
         });
 
         it('should return null given null username with valid user feedstuff id', () => {
-            return co(function*() {
+            return co(function* () {
                 const findUserFeedstuffResult: DomainFeedstuff = yield feedstuffService.findUserFeedstuff('5', null);
 
                 expect(findUserFeedstuffResult).to.be.null;
@@ -356,7 +360,7 @@ describe('FeedstuffService', () => {
         });
 
         it('should return feedstuff given valid username with valid user feedstuff id', () => {
-            return co(function*() {
+            return co(function* () {
                 const findUserFeedstuffResult: DomainFeedstuff = yield feedstuffService.findUserFeedstuff('5', 'ValidUsername');
 
                 expect(findUserFeedstuffResult).to.be.not.null;
@@ -364,7 +368,7 @@ describe('FeedstuffService', () => {
         });
 
         it('should return null given null username with valid feedstuff id', () => {
-            return co(function*() {
+            return co(function* () {
                 const findUserFeedstuffResult: DomainFeedstuff = yield feedstuffService.findUserFeedstuff('1', null);
 
                 expect(findUserFeedstuffResult).to.be.null;
@@ -405,7 +409,7 @@ describe('FeedstuffService', () => {
         });
 
         it('should return list of feedstuff measurements given valid user feedstuff id', () => {
-            return co(function*() {
+            return co(function* () {
                 const listUserFeedstuffMeasurementsResult: DomainFeedstuffMeasurement[] = yield feedstuffService.listUserFeedstuffMeasurements('5', 'ValidUsername');
 
                 expect(listUserFeedstuffMeasurementsResult).to.be.not.null;
@@ -414,7 +418,7 @@ describe('FeedstuffService', () => {
         });
 
         it('should return list of feedstuff measurements given valid user feedstuff id with no feedstuff measurements', () => {
-            return co(function*() {
+            return co(function* () {
                 const listUserFeedstuffMeasurementsResult: DomainFeedstuffMeasurement[] = yield feedstuffService.listUserFeedstuffMeasurements('7', 'ValidUsername');
 
                 expect(listUserFeedstuffMeasurementsResult).to.be.not.null;
@@ -449,7 +453,7 @@ describe('FeedstuffService', () => {
         });
 
         it('should return true', () => {
-            return co(function*() {
+            return co(function* () {
                 const saveUserFeedstuffMeasurementsResult: boolean = yield feedstuffService.saveUserFeedstuffMeasurements('5', [
                     new DomainFeedstuffMeasurement('2', 'Element2', 10, null, null),
                 ], 'ValidUsername');
@@ -459,7 +463,7 @@ describe('FeedstuffService', () => {
         });
 
         it('should call insertUserFeedstuffMeasurement on repository', () => {
-            return co(function*() {
+            return co(function* () {
                 const saveUserFeedstuffMeasurementsResult: boolean = yield feedstuffService.saveUserFeedstuffMeasurements('5', [
                     new DomainFeedstuffMeasurement('2', 'Element2', 10, null, null),
                 ], 'ValidUsername');
@@ -469,7 +473,7 @@ describe('FeedstuffService', () => {
         });
 
         it('should call updateUserFeedstuffMeasurement on repository', () => {
-            return co(function*() {
+            return co(function* () {
                 const saveUserFeedstuffMeasurementsResult: boolean = yield feedstuffService.saveUserFeedstuffMeasurements('5', [
                     new DomainFeedstuffMeasurement('1', 'Element1', 10, null, null),
                 ], 'ValidUsername');
