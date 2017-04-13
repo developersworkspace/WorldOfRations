@@ -10,6 +10,7 @@ SELECT
 FROM worldofrations.feedstuffs AS `feedstuffs`
 WHERE 
 `feedstuffs`.`id` = p_feedstuffId
+AND p_username  IS NULL
 UNION
 SELECT 
 `userFeedstuffs`.`name`
