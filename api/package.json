@@ -7,7 +7,7 @@
     "build": "gulp build:prod",
     "lint": "tslint --fix --exclude ./src/**/config.* ./src/**/*.ts",
     "start": "gulp build:dev & node ./dist/app.js",
-    "test": "gulp build:dev & mocha --timeout=5000 ./dist/**/*.test.js",
+    "test": "gulp build:dev & mocha --timeout=5000 ./dist/**/*.test.js & gulp clean:js",
     "cover": "gulp build:dev & istanbul cover node_modules/mocha/bin/_mocha --root ./dist ./dist/**/*.test.js & gulp clean:js"
   },
   "author": "Barend Erasmus",
