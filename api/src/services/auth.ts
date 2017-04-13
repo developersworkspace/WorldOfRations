@@ -24,7 +24,7 @@ export class AuthService {
     }
 
     public encodeToken(username: string): string {
-        const token = jwt.sign({ username }, this.jwtSecret, {
+        const token = jwt.sign({ username: username }, this.jwtSecret, {
             audience: 'worldofrations.com',
             expiresIn: 3600,
             issuer: this.jwtIssuer,

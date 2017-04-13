@@ -3,6 +3,7 @@ import { Express, Request, Response } from "express";
 import * as express from 'express';
 import * as request from 'request';
 import { config } from './../config';
+import { WorldOfRationsApi } from './../app';
 
 import { IRepositoryFactory } from './../repositories/factory';
 
@@ -14,7 +15,7 @@ export class AuthRouter {
 
     private router = express.Router();
 
-    constructor(private repositoryFactory: IRepositoryFactory) {
+    constructor() {
         this.router.get('/verify', this.verify);
         this.router.get('/google', this.google);
         this.router.get('/google/callback', this.googleCallback);
@@ -43,7 +44,7 @@ export class AuthRouter {
 
     private googleCallback(req: Request, res: Response, next: () => void) {
         const authService = new AuthService(config.baseUri, config.oauth.jwtSecret, config.oauth.jwtIssuer, config.oauth);
-        const userRepository = this.repositoryFactory.getInstanceOfUserRepository(config.db);
+        const userRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfUserRepository(config.db);
         const userService = new UserService(userRepository);
         const auth = authService.createClientAuths();
         auth.googleAuth.code.getToken(req.originalUrl)

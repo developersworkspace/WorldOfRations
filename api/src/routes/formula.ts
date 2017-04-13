@@ -2,6 +2,7 @@
 import { Express, Request, Response } from "express";
 import * as express from 'express';
 import { config } from './../config';
+import { WorldOfRationsApi } from './../app';
 
 import { IRepositoryFactory } from './../repositories/factory';
 
@@ -12,7 +13,7 @@ export class FormulaRouter {
 
     private router = express.Router();
 
-    constructor(private repositoryFactory: IRepositoryFactory) {
+    constructor() {
         this.router.get('/listFormula', this.listFormula);
     }
 
@@ -21,7 +22,7 @@ export class FormulaRouter {
     }
 
     private listFormula(req: Request, res: Response, next: () => void) {
-        const formulaRepository = this.repositoryFactory.getInstanceOfFormulaRepository(config.db);
+        const formulaRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfFormulaRepository(config.db);
         const formulaService = new FormulaService(formulaRepository);
         formulaService.listFormula().then((listFormulaResult: any[]) => {
             res.json(listFormulaResult.map((x) => {

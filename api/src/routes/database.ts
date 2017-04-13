@@ -10,7 +10,7 @@ export class DatabaseRouter {
 
     private router = express.Router();
 
-    constructor(private repositoryFactory: IRepositoryFactory) {
+    constructor() {
         this.router.get('/export', this.export);
     }
 

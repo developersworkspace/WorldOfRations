@@ -24,7 +24,11 @@ import { config } from './config';
 
 export class WorldOfRationsApi {
 
-    constructor(private repositoryFactory: IRepositoryFactory, private app: express.Express, private port: number) {
+    public static repositoryFactory: IRepositoryFactory;
+
+    constructor(repositoryFactory: IRepositoryFactory, private app: express.Express, private port: number) {
+        WorldOfRationsApi.repositoryFactory = repositoryFactory;
+
         this.configureMiddleware(app);
         this.configureRoutes(app);
         this.configureErrorHandling(app);
@@ -64,11 +68,11 @@ export class WorldOfRationsApi {
     }
 
     private configureRoutes(app: express.Express) {
-        app.use("/api/feedstuff", new FeedstuffRouter(this.repositoryFactory).GetRouter());
-        app.use("/api/formula", new FormulaRouter(this.repositoryFactory).GetRouter());
-        app.use("/api/formulator", new FormulatorRouter(this.repositoryFactory).GetRouter());
-        app.use("/api/auth", new AuthRouter(this.repositoryFactory).GetRouter());
-        app.use("/api/database", new DatabaseRouter(this.repositoryFactory).GetRouter());
+        app.use("/api/feedstuff", new FeedstuffRouter().GetRouter());
+        app.use("/api/formula", new FormulaRouter().GetRouter());
+        app.use("/api/formulator", new FormulatorRouter().GetRouter());
+        app.use("/api/auth", new AuthRouter().GetRouter());
+        app.use("/api/database", new DatabaseRouter().GetRouter());
     }
 
     private configureErrorHandling(app: express.Express) {

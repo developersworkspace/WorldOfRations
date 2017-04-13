@@ -2,6 +2,7 @@
 import { Express, Request, Response } from "express";
 import * as express from 'express';
 import { config } from './../config';
+import { WorldOfRationsApi } from './../app';
 
 import { IRepositoryFactory } from './../repositories/factory';
 
@@ -17,7 +18,7 @@ export class FeedstuffRouter {
 
     private router = express.Router();
 
-    constructor(private repositoryFactory: IRepositoryFactory) {
+    constructor() {
         this.router.get('/listFeedstuffs', this.listFeedstuffs);
         this.router.get('/listUserFeedstuffs', this.listUserFeedstuffs);
         this.router.get('/findUserFeedstuff', this.findUserFeedstuff);
@@ -33,8 +34,9 @@ export class FeedstuffRouter {
     }
 
     private listFeedstuffs(req: Request, res: Response, next: () => void) {
-        const feedstuffRepository = this.repositoryFactory.getInstanceOfFeedstuffRepository(config.db);
-        const elementRepository = this.repositoryFactory.getInstanceOfElementRepository(config.db);
+        
+        const feedstuffRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfFeedstuffRepository(config.db);
+        const elementRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfElementRepository(config.db);
         const feedstuffService = new FeedstuffService(feedstuffRepository, elementRepository);
         feedstuffService.listFeedstuffs(req.user == null ? null : req.user.username).then((listFeedstuffsResult: DomainFeedstuff[]) => {
             res.json(listFeedstuffsResult.map((x) => {
@@ -55,8 +57,8 @@ export class FeedstuffRouter {
             return;
         }
 
-        const feedstuffRepository = this.repositoryFactory.getInstanceOfFeedstuffRepository(config.db);
-        const elementRepository = this.repositoryFactory.getInstanceOfElementRepository(config.db);
+        const feedstuffRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfFeedstuffRepository(config.db);
+        const elementRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfElementRepository(config.db);
         const feedstuffService = new FeedstuffService(feedstuffRepository, elementRepository);
 
         feedstuffService.listUserFeedstuffs(req.user.username).then((listFeedstuffsForUserResult: DomainFeedstuff[]) => {
@@ -78,8 +80,8 @@ export class FeedstuffRouter {
             return;
         }
 
-        const feedstuffRepository = this.repositoryFactory.getInstanceOfFeedstuffRepository(config.db);
-        const elementRepository = this.repositoryFactory.getInstanceOfElementRepository(config.db);
+        const feedstuffRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfFeedstuffRepository(config.db);
+        const elementRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfElementRepository(config.db);
         const feedstuffService = new FeedstuffService(feedstuffRepository, elementRepository);
 
         feedstuffService.findUserFeedstuff(req.query.feedstuffId, req.user.username).then((findUserFeedstuffResult: DomainFeedstuff) => {
@@ -99,8 +101,8 @@ export class FeedstuffRouter {
             return;
         }
 
-        const feedstuffRepository = this.repositoryFactory.getInstanceOfFeedstuffRepository(config.db);
-        const elementRepository = this.repositoryFactory.getInstanceOfElementRepository(config.db);
+        const feedstuffRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfFeedstuffRepository(config.db);
+        const elementRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfElementRepository(config.db);
         const feedstuffService = new FeedstuffService(feedstuffRepository, elementRepository);
 
         feedstuffService.createUserFeedstuff(req.user.username, req.body.name, req.body.description).then((createUserFeedstuffResult: DomainFeedstuff) => {
@@ -114,8 +116,8 @@ export class FeedstuffRouter {
     }
 
     private findSuggestedValues(req: Request, res: Response, next: () => void) {
-        const feedstuffRepository = this.repositoryFactory.getInstanceOfFeedstuffRepository(config.db);
-        const elementRepository = this.repositoryFactory.getInstanceOfElementRepository(config.db);
+        const feedstuffRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfFeedstuffRepository(config.db);
+        const elementRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfElementRepository(config.db);
         const feedstuffService = new FeedstuffService(feedstuffRepository, elementRepository);
         feedstuffService.findSuggestedValues(req.query.formulaId, req.query.feedstuffId).then((findSuggestedValuesResult: DomainSuggestedValue) => {
             if (findSuggestedValuesResult == null) {
@@ -135,8 +137,8 @@ export class FeedstuffRouter {
     }
 
     private listExampleFeedstuffs(req: Request, res: Response, next: () => void) {
-        const feedstuffRepository = this.repositoryFactory.getInstanceOfFeedstuffRepository(config.db);
-        const elementRepository = this.repositoryFactory.getInstanceOfElementRepository(config.db);
+        const feedstuffRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfFeedstuffRepository(config.db);
+        const elementRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfElementRepository(config.db);
         const feedstuffService = new FeedstuffService(feedstuffRepository, elementRepository);
         feedstuffService.listExampleFeedstuffs().then((listExampleFeedstuffsResult: DomainFeedstuff[]) => {
             res.json(listExampleFeedstuffsResult.map((x) => {
@@ -160,8 +162,8 @@ export class FeedstuffRouter {
             return;
         }
 
-        const feedstuffRepository = this.repositoryFactory.getInstanceOfFeedstuffRepository(config.db);
-        const elementRepository = this.repositoryFactory.getInstanceOfElementRepository(config.db);
+        const feedstuffRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfFeedstuffRepository(config.db);
+        const elementRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfElementRepository(config.db);
         const feedstuffService = new FeedstuffService(feedstuffRepository, elementRepository);
         feedstuffService.saveUserFeedstuffMeasurements(req.body.feedstuffId, req.body.measurements, req.user.username).then((saveUserFeedstuffMeasurementsResult: boolean) => {
             res.json(saveUserFeedstuffMeasurementsResult);
@@ -177,8 +179,8 @@ export class FeedstuffRouter {
             return;
         }
 
-        const feedstuffRepository = this.repositoryFactory.getInstanceOfFeedstuffRepository(config.db);
-        const elementRepository = this.repositoryFactory.getInstanceOfElementRepository(config.db);
+        const feedstuffRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfFeedstuffRepository(config.db);
+        const elementRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfElementRepository(config.db);
         const feedstuffService = new FeedstuffService(feedstuffRepository, elementRepository);
         feedstuffService.listUserFeedstuffMeasurements(req.query.feedstuffId, req.user.username).then((listUserFeedstuffMeasurementsResult: DomainFeedstuffMeasurement[]) => {
             res.json(listUserFeedstuffMeasurementsResult.map((x) => {

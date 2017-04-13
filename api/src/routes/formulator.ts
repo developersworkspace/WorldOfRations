@@ -2,16 +2,12 @@
 import { Express, Request, Response } from "express";
 import * as express from 'express';
 import { config } from './../config';
+import { WorldOfRationsApi } from './../app';
 
 import { IRepositoryFactory } from './../repositories/factory';
 
 // Imports domain models
 import { Formulation as DomainFormulation } from './../models/formulation';
-
-// Imports repositories
-import { FeedstuffRepository } from './../repositories/mysql/feedstuff';
-import { FormulaRepository } from './../repositories/mysql/formula';
-import { FormulationRepository } from './../repositories/mysql/formulation';
 
 // Imports services
 import { FormulatorService } from './../services/formulator';
@@ -20,7 +16,7 @@ export class FormulatorRouter {
 
     private router = express.Router();
 
-    constructor(private repositoryFactory: IRepositoryFactory) {
+    constructor() {
         this.router.get('/formulate', this.formulate);
         this.router.get('/findFormulation', this.findFormulation);
         this.router.get('/listFormulations', this.listFormulations);
@@ -31,9 +27,9 @@ export class FormulatorRouter {
     }
 
     private formulate(req: Request, res: Response, next: () => void) {
-        const feedstuffRepository = new FeedstuffRepository(config.db);
-        const formulaRepository = new FormulaRepository(config.db);
-        const formulationRepository = new FormulationRepository(config.db);
+        const feedstuffRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfFeedstuffRepository(config.db);
+        const formulaRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfFormulaRepository(config.db);
+        const formulationRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfFormulationRepository(config.db);
         const formulatorService = new FormulatorService(formulaRepository, feedstuffRepository, formulationRepository);
 
         formulatorService.createFormulation(req.body.feedstuffs, req.body.formulaId, req.body.currencyCode, req.user == null ? null : req.user.username).then((createFormulationResult: DomainFormulation) => {
@@ -46,9 +42,9 @@ export class FormulatorRouter {
     }
 
     private findFormulation(req: Request, res: Response, next: () => void) {
-        const feedstuffRepository = new FeedstuffRepository(config.db);
-        const formulaRepository = new FormulaRepository(config.db);
-        const formulationRepository = new FormulationRepository(config.db);
+        const feedstuffRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfFeedstuffRepository(config.db);
+        const formulaRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfFormulaRepository(config.db);
+        const formulationRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfFormulationRepository(config.db);
         const formulatorService = new FormulatorService(formulaRepository, feedstuffRepository, formulationRepository);
 
         formulatorService.findFormulation(req.query.formulationId, req.user == null ? null : req.user.username).then((findFormulationResult: DomainFormulation) => {
@@ -95,9 +91,9 @@ export class FormulatorRouter {
     }
 
     private listFormulations(req: Request, res: Response, next: () => void) {
-        const feedstuffRepository = new FeedstuffRepository(config.db);
-        const formulaRepository = new FormulaRepository(config.db);
-        const formulationRepository = new FormulationRepository(config.db);
+        const feedstuffRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfFeedstuffRepository(config.db);
+        const formulaRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfFormulaRepository(config.db);
+        const formulationRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfFormulationRepository(config.db);
         const formulatorService = new FormulatorService(formulaRepository, feedstuffRepository, formulationRepository);
 
         formulatorService.listFormulations().then((listFormulationsResult: DomainFormulation[]) => {
