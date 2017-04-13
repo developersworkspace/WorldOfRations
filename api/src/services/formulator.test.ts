@@ -118,7 +118,7 @@ describe('FormualtorService', () => {
                     new DomainFeedstuffMeasurement('1', 'Element1', 0, '%', 0),
                 ];
 
-                const formulateResult: any = yield formulatorService.formulate(formulation);
+                const formulateResult: any = yield formulatorService.formulate(formulation, 'User1');
 
                 sinon.assert.calledOnce(insertFormulationSpy);
             });

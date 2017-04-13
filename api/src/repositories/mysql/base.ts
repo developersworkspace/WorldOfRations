@@ -20,6 +20,12 @@ export class Base {
         }
     }
 
+    public queryForTest(query: string): Promise<any> {
+        getLogger('mysql').debug(query);
+
+        return this.query(query);
+    }
+
     protected query(query: string): Promise<any> {
         getLogger('mysql').debug(query);
 

@@ -1,8 +1,8 @@
 // Imports
 import { Express, Request, Response } from "express";
 import * as express from 'express';
-import { config } from './../config';
 import { WorldOfRationsApi } from './../app';
+import { config } from './../config';
 
 import { IRepositoryFactory } from './../repositories/factory';
 
@@ -33,7 +33,7 @@ export class FormulatorRouter {
         const formulatorService = new FormulatorService(formulaRepository, feedstuffRepository, formulationRepository);
 
         formulatorService.createFormulation(req.body.feedstuffs, req.body.formulaId, req.body.currencyCode, req.user == null ? null : req.user.username).then((createFormulationResult: DomainFormulation) => {
-            formulatorService.formulate(createFormulationResult).then((formulateResult: any) => {
+            formulatorService.formulate(createFormulationResult, req.user == null ? null : req.user.username).then((formulateResult: any) => {
                 res.json(formulateResult);
             });
         }).catch((err: Error) => {

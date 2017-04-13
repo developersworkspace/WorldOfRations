@@ -4,11 +4,11 @@ import { Formulation as DomainFormulation } from './../models/formulation';
 
 export interface IFormulationRepository {
 
-   insertFormulation(formulation: DomainFormulation): Promise<boolean>;
+   insertFormulation(formulation: DomainFormulation, username: string): Promise<boolean>;
 
-   findFormulationById(formulationId: string): Promise<DomainFormulation>;
+   findFormulationById(formulationId: string, username: string): Promise<DomainFormulation>;
 
-   listFormulationFeedstuffByFormulationId(formulationId: string): Promise<DomainFeedstuff[]>;
-   listFormulations(): Promise<DomainFormulation[]>;
+   listFormulationFeedstuffByFormulationId(formulationId: string, username: string): Promise<DomainFeedstuff[]>;
+   listFormulations(username: string): Promise<DomainFormulation[]>;
 
 }

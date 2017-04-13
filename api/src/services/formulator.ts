@@ -53,7 +53,7 @@ export class FormulatorService {
         });
     }
 
-    public formulate(formulation: DomainFormulation): Promise<any> {
+    public formulate(formulation: DomainFormulation, username: string): Promise<any> {
 
         let results: any;
         const model = {
@@ -76,7 +76,7 @@ export class FormulatorService {
 
         return co(function*() {
 
-            const insertFormulationResult: any = yield self.formulationRepository.insertFormulation(formulation);
+            const insertFormulationResult: any = yield self.formulationRepository.insertFormulation(formulation, username);
 
             return {
                 cost: formulation.cost,
@@ -93,14 +93,14 @@ export class FormulatorService {
         const self = this;
 
         return co(function*() {
-            const findFormulationByIdResult: DomainFormulation = yield self.formulationRepository.findFormulationById(formulationId);
+            const findFormulationByIdResult: DomainFormulation = yield self.formulationRepository.findFormulationById(formulationId, username);
 
             let formulation: DomainFormulation = findFormulationByIdResult;
 
             const findFormulaByFormulaIdResult: DomainFormula = yield self.formulaRepository.findFormulaByFormulaId(formulation.formula.id);
             formulation.formula.name = findFormulaByFormulaIdResult.name;
 
-            const populateFormulationFeedstuffOfFormulationResult: DomainFormulation = yield self.populateFormulationFeedstuffOfFormulation(findFormulationByIdResult);
+            const populateFormulationFeedstuffOfFormulationResult: DomainFormulation = yield self.populateFormulationFeedstuffOfFormulation(findFormulationByIdResult, username);
             formulation = populateFormulationFeedstuffOfFormulationResult;
 
             const populateElementsOfFeedstuffsResult: DomainFeedstuff[] = yield self.feedstuffService.populateElementsOfFeedstuffs(populateFormulationFeedstuffOfFormulationResult.feedstuffs, username);
@@ -117,7 +117,7 @@ export class FormulatorService {
     }
 
     public listFormulations(): Promise<DomainFormulation[]> {
-        return this.formulationRepository.listFormulations();
+        return this.formulationRepository.listFormulations(null);
     }
 
     private populateSupplementFeedstuffsOfFormulation(formulation: DomainFormulation): Promise<DomainFormulation> {
@@ -176,12 +176,12 @@ export class FormulatorService {
         });
     }
 
-    private populateFormulationFeedstuffOfFormulation(formulation: DomainFormulation): Promise<DomainFormulation> {
+    private populateFormulationFeedstuffOfFormulation(formulation: DomainFormulation, username: string): Promise<DomainFormulation> {
 
         const self = this;
 
         return co(function*() {
-            const listFormulationFeedstuffByFormulationIdResult: DomainFeedstuff[] = yield self.formulationRepository.listFormulationFeedstuffByFormulationId(formulation.id);
+            const listFormulationFeedstuffByFormulationIdResult: DomainFeedstuff[] = yield self.formulationRepository.listFormulationFeedstuffByFormulationId(formulation.id, username);
 
             formulation.feedstuffs = listFormulationFeedstuffByFormulationIdResult;
             return formulation;

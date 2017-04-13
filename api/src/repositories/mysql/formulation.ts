@@ -18,7 +18,7 @@ export class FormulationRepository extends Base implements IFormulationRepositor
         super(config);
     }
 
-    public insertFormulation(formulation: DomainFormulation): Promise<boolean> {
+    public insertFormulation(formulation: DomainFormulation, username: string): Promise<boolean> {
 
         const dataFormulation = formulation.toDataFormulation();
         const dataFormulationFeedstuffs = formulation.toDataFormulationFeedstuffs();
@@ -47,7 +47,7 @@ export class FormulationRepository extends Base implements IFormulationRepositor
         });
     }
 
-    public findFormulationById(formulationId: string): Promise<DomainFormulation> {
+    public findFormulationById(formulationId: string, username: string): Promise<DomainFormulation> {
         return this.query(util.format('CALL findFormulationById(%s);', this.escapeAndFormat(formulationId))).then((result: DataFormulation[]) => {
 
             const formulation = new DomainFormulation(result[0].id);
@@ -60,7 +60,7 @@ export class FormulationRepository extends Base implements IFormulationRepositor
         });
     }
 
-    public listFormulationFeedstuffByFormulationId(formulationId: string): Promise<DomainFeedstuff[]> {
+    public listFormulationFeedstuffByFormulationId(formulationId: string, username: string): Promise<DomainFeedstuff[]> {
         return this.query(util.format('CALL listFormulationFeedstuffByFormulationId(%s);', this.escapeAndFormat(formulationId))).then((result: DataFormulationFeedstuff[]) => {
             return result.map((x) => {
                 const feedstuff = new DomainFeedstuff(x.feedstuffId, x.name, x.minimum, x.maximum, x.cost);
@@ -70,7 +70,7 @@ export class FormulationRepository extends Base implements IFormulationRepositor
         });
     }
 
-    public listFormulations(): Promise<DomainFormulation[]> {
+    public listFormulations(username: string): Promise<DomainFormulation[]> {
         return this.query('CALL listFormulations();').then((result: DataFormulation[]) => {
 
             return result.map((x) => {

@@ -1,8 +1,8 @@
 // Imports
 import { Express, Request, Response } from "express";
 import * as express from 'express';
-import { config } from './../config';
 import { WorldOfRationsApi } from './../app';
+import { config } from './../config';
 
 import { IRepositoryFactory } from './../repositories/factory';
 

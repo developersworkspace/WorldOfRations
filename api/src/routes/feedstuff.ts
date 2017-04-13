@@ -1,8 +1,8 @@
 // Imports
 import { Express, Request, Response } from "express";
 import * as express from 'express';
-import { config } from './../config';
 import { WorldOfRationsApi } from './../app';
+import { config } from './../config';
 
 import { IRepositoryFactory } from './../repositories/factory';
 
@@ -34,7 +34,7 @@ export class FeedstuffRouter {
     }
 
     private listFeedstuffs(req: Request, res: Response, next: () => void) {
-        
+
         const feedstuffRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfFeedstuffRepository(config.db);
         const elementRepository = WorldOfRationsApi.repositoryFactory.getInstanceOfElementRepository(config.db);
         const feedstuffService = new FeedstuffService(feedstuffRepository, elementRepository);

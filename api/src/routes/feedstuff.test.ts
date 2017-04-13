@@ -1,8 +1,8 @@
 // Imports
 import { expect } from 'chai';
+import * as jwt from 'jsonwebtoken';
 import 'mocha';
 import * as request from 'supertest';
-import * as jwt from 'jsonwebtoken';
 import * as uuid from 'uuid';
 import express = require("express");
 
@@ -36,7 +36,7 @@ describe('GET /api//feedstuff/listFeedstuffs', () => {
     request(api.getApp())
       .get('/api/feedstuff/listFeedstuffs')
       .set({
-        'Authorization': 'Bearer ' + token
+        Authorization: 'Bearer ' + token,
       })
       .expect(200, done);
   });
@@ -58,7 +58,7 @@ describe('GET /api//feedstuff/listUserFeedstuffs', () => {
     request(api.getApp())
       .get('/api/feedstuff/listUserFeedstuffs')
       .set({
-        'Authorization': 'Bearer ' + token
+        Authorization: 'Bearer ' + token,
       })
       .expect(200, done);
   });

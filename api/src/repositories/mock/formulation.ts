@@ -17,19 +17,19 @@ export class MockFormulationRepository implements IFormulationRepository {
 
     }
 
-    public insertFormulation(formulation: DomainFormulation): Promise<boolean> {
+    public insertFormulation(formulation: DomainFormulation, username: string): Promise<boolean> {
         return Promise.resolve(true);
     }
 
-    public findFormulationById(formulationId: string): Promise<DomainFormulation> {
+    public findFormulationById(formulationId: string, username: string): Promise<DomainFormulation> {
         return Promise.resolve(null);
     }
 
-    public listFormulationFeedstuffByFormulationId(formulationId: string): Promise<DomainFeedstuff[]> {
+    public listFormulationFeedstuffByFormulationId(formulationId: string, username: string): Promise<DomainFeedstuff[]> {
         return Promise.resolve([]);
     }
 
-    public listFormulations(): Promise<DomainFormulation[]> {
+    public listFormulations(username: string): Promise<DomainFormulation[]> {
         return Promise.resolve([]);
     }
 }
