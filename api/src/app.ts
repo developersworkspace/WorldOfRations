@@ -1,18 +1,20 @@
 // Imports
 import express = require("express");
-import bodyParser = require('body-parser');
+import { IRepositoryFactory } from './repositories/factory';
+import { RepositoryFactory } from './repositories/mysql/factory';
 
 // Imports middleware
+import bodyParser = require('body-parser');
 import * as cors from 'cors';
 import jwt = require('express-jwt');
 import expressWinston = require('express-winston');
 
 // Imports routes
-import feedstuffRoute = require('./routes/feedstuff');
-import formulaRoute = require('./routes/formula');
-import formulatorRoute = require('./routes/formulator');
-import authRoute = require('./routes/auth');
-import databaseRoute = require('./routes/database');
+import { AuthRouter } from './routes/auth';
+import { DatabaseRouter } from './routes/database';
+import { FeedstuffRouter } from './routes/feedstuff';
+import { FormulaRouter } from './routes/formula';
+import { FormulatorRouter } from './routes/formulator';
 
 // Imports logger
 import { logger } from './logger';
@@ -20,9 +22,9 @@ import { logger } from './logger';
 // Imports configurations
 import { config } from './config';
 
-export class WebApi {
+export class WorldOfRationsApi {
 
-    constructor(private app: express.Express, private port: number) {
+    constructor(private repositoryFactory: IRepositoryFactory, private app: express.Express, private port: number) {
         this.configureMiddleware(app);
         this.configureRoutes(app);
         this.configureErrorHandling(app);
@@ -62,11 +64,11 @@ export class WebApi {
     }
 
     private configureRoutes(app: express.Express) {
-        app.use("/api/feedstuff", feedstuffRoute);
-        app.use("/api/formula", formulaRoute);
-        app.use("/api/formulator", formulatorRoute);
-        app.use("/api/auth", authRoute);
-        app.use("/api/database", databaseRoute);
+        app.use("/api/feedstuff", new FeedstuffRouter(this.repositoryFactory).GetRouter());
+        app.use("/api/formula", new FormulaRouter(this.repositoryFactory).GetRouter());
+        app.use("/api/formulator", new FormulatorRouter(this.repositoryFactory).GetRouter());
+        app.use("/api/auth", new AuthRouter(this.repositoryFactory).GetRouter());
+        app.use("/api/database", new DatabaseRouter(this.repositoryFactory).GetRouter());
     }
 
     private configureErrorHandling(app: express.Express) {
@@ -82,6 +84,6 @@ export class WebApi {
 }
 
 const port = 8083;
-const api = new WebApi(express(), port);
+const api = new WorldOfRationsApi(new RepositoryFactory(), express(), port);
 api.run();
 logger.info(`Listening on ${port}`);

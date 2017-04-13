@@ -4,22 +4,33 @@ import * as express from 'express';
 import { config } from './../config';
 import mysqldump = require('mysqldump');
 
-const router = express.Router();
+import { IRepositoryFactory } from './../repositories/factory';
 
-router.get('/export', (req: Request, res: Response, next: () => void) => {
-    mysqldump({
-        database: config.db.database,
-        dest: './data.sql',
-        host: config.db.server,
-        password: 'password',
-        user: 'root',
-    }, (err: Error) => {
-        res.sendfile('./data.sql', {
-            headers: {
-                "content-disposition": "attachment; filename=\"data.sql\"",
-            },
+export class DatabaseRouter {
+
+    private router = express.Router();
+
+    constructor(private repositoryFactory: IRepositoryFactory) {
+        this.router.get('/export', this.export);
+    }
+
+    public GetRouter() {
+        return this.router;
+    }
+
+    private export(req: Request, res: Response, next: () => void) {
+        mysqldump({
+            database: config.db.database,
+            dest: './data.sql',
+            host: config.db.server,
+            password: 'password',
+            user: 'root',
+        }, (err: Error) => {
+            res.sendfile('./data.sql', {
+                headers: {
+                    "content-disposition": "attachment; filename=\"data.sql\"",
+                },
+            });
         });
-    });
-});
-
-export = router;
+    }
+}

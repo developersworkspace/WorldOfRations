@@ -3,27 +3,36 @@ import { Express, Request, Response } from "express";
 import * as express from 'express';
 import { config } from './../config';
 
-// Imports repositories
-import { FormulaRepository } from './../repositories/mysql/formula';
+import { IRepositoryFactory } from './../repositories/factory';
 
 // Imports services
 import { FormulaService } from './../services/formula';
 
-const router = express.Router();
+export class FormulaRouter {
 
-router.get('/listFormula', (req: Request, res: Response, next: () => void) => {
-    const formulaRepository = new FormulaRepository(config.db);
-    const formulaService = new FormulaService(formulaRepository);
-    formulaService.listFormula().then((listFormulaResult: any[]) => {
-        res.json(listFormulaResult.map((x) => {
-            return {
-                id: x.id,
-                name: x.name,
-            };
-        }));
-    }).catch((err: Error) => {
-        res.json(err.message);
-    });
-});
+    private router = express.Router();
 
-export = router;
+    constructor(private repositoryFactory: IRepositoryFactory) {
+        this.router.get('/listFormula', this.listFormula);
+    }
+
+    public GetRouter() {
+        return this.router;
+    }
+
+    private listFormula(req: Request, res: Response, next: () => void) {
+        const formulaRepository = this.repositoryFactory.getInstanceOfFormulaRepository(config.db);
+        const formulaService = new FormulaService(formulaRepository);
+        formulaService.listFormula().then((listFormulaResult: any[]) => {
+            res.json(listFormulaResult.map((x) => {
+                return {
+                    id: x.id,
+                    name: x.name,
+                };
+            }));
+        }).catch((err: Error) => {
+            res.json(err.message);
+        });
+    }
+
+}
